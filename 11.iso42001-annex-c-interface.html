@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annex C: AI Objectives + Risk Universe Builder | ISO 42001 AIMS</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #1e40af;
+            --secondary-blue: #3b82f6;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+            --danger-red: #ef4444;
+            --light-gray: #f3f4f6;
+            --medium-gray: #6b7280;
+            --dark-gray: #1f2937;
+            --white: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        .main-container {
+            max-width: 1920px;
+            margin: 0 auto;
+            background: var(--white);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-blue);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Story Banner */
+        .story-banner {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--warning-orange);
+            padding: 1.5rem;
+            margin: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .story-banner h3 {
+            color: #92400e;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .story-banner p {
+            color: #78350f;
+            line-height: 1.8;
+        }
+
+        .story-highlight {
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        /* Dashboard Metrics */
+        .dashboard-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            background: var(--light-gray);
+        }
+
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid var(--secondary-blue);
+            transition: transform 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .metric-card h4 {
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--medium-gray);
+            font-size: 0.85rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-green) 0%, #34d399 100%);
+            transition: width 0.5s;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--medium-gray);
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+        }
+
+        .tab:hover {
+            color: var(--secondary-blue);
+        }
+
+        /* Filters and Search */
+        .controls-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--secondary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--medium-gray);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1rem;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--secondary-blue);
+            color: var(--secondary-blue);
+        }
+
+        .filter-btn.active {
+            background: var(--secondary-blue);
+            color: white;
+            border-color: var(--secondary-blue);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .objective-card, .risk-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .objective-card:hover, .risk-card:hover {
+            border-color: var(--secondary-blue);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark-gray);
+            margin-bottom: 0.3rem;
+        }
+
+        .card-id {
+            font-size: 0.75rem;
+            color: var(--medium-gray);
+            font-weight: 600;
+            background: var(--light-gray);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .card-description {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tag-characteristic {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .tag-clause {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .tag-control {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .tag-severity {
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .severity-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .severity-medium {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+
+        .severity-low {
+            background: #fef3c7;
+            color: #854d0e;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-add {
+            flex: 1;
+            padding: 0.7rem;
+            background: var(--success-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-add:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-details {
+            padding: 0.7rem 1rem;
+            background: white;
+            color: var(--secondary-blue);
+            border: 2px solid var(--secondary-blue);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-details:hover {
+            background: var(--secondary-blue);
+            color: white;
+        }
+
+        /* Side Panel */
+        .side-panel {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 450px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+            padding: 2rem;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .side-panel-header {
+            margin-bottom: 2rem;
+        }
+
+        .side-panel h3 {
+            color: var(--dark-gray);
+            margin-bottom: 1rem;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-gray);
+            margin-bottom: 1rem;
+        }
+
+        /* Risk Heat Map */
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.1);
+        }
+
+        .risk-critical {
+            background: #7f1d1d;
+        }
+
+        .risk-high {
+            background: #dc2626;
+        }
+
+        .risk-medium {
+            background: #f59e0b;
+        }
+
+        .risk-low {
+            background: #fbbf24;
+        }
+
+        .risk-minimal {
+            background: #86efac;
+        }
+
+        /* Completion Score */
+        .completion-score {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .score-value {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .score-label {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .score-target {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Statistics */
+        .statistics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+            margin-top: 0.3rem;
+        }
+
+        /* Links Section */
+        .links-section {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .links-section h4 {
+            color: var(--dark-gray);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .link-item {
+            padding: 0.8rem;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .link-item:hover {
+            background: var(--secondary-blue);
+            color: white;
+        }
+
+        .link-item:hover .link-arrow {
+            color: white;
+        }
+
+        .link-arrow {
+            color: var(--medium-gray);
+        }
+
+        /* Recommendations */
+        .recommendations {
+            background: #eff6ff;
+            border-left: 4px solid var(--secondary-blue);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+        }
+
+        .recommendations h4 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .recommendations li {
+            padding: 0.5rem 0;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .recommendations li:before {
+            content: "✓ ";
+            color: var(--success-green);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-gray);
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--light-gray);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: var(--danger-red);
+            color: white;
+        }
+
+        .modal-body {
+            color: var(--dark-gray);
+            line-height: 1.8;
+        }
+
+        .modal-body h4 {
+            margin: 1.5rem 0 0.5rem 0;
+            color: var(--primary-blue);
+        }
+
+        .modal-body ul {
+            margin-left: 1.5rem;
+        }
+
+        .modal-footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border-color);
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Success Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--success-green);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            z-index: 3000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.active {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .side-panel {
+                width: 380px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-metrics {
+                grid-template-columns: 1fr;
+            }
+            
+            .side-panel {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo-section">
+                    <div class="logo">AI</div>
+                    <div class="header-title">
+                        <h1>Annex C: AI Objectives + Risk Universe Builder</h1>
+                        <p>ISO/IEC 42001:2023 - Artificial Intelligence Management System</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">📊 Export Report</button>
+                    <button class="btn btn-primary">💾 Save Progress</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Story Banner -->
+        <div class="story-banner">
+            <h3>📖 Use Case: Rapid AIMS Implementation</h3>
+            <p>
+                <span class="story-highlight">Lila, Chief Risk Officer at InsurTech Innovate,</span> opens this screen on day 1 of their ISO 42001 project. 
+                She needs to populate Clause 4 (context) and Clause 6 (risks & objectives) fast. Using Annex C's comprehensive library, she clicks 
+                <span class="story-highlight">"Fairness & non-discrimination"</span> → The system auto-creates: 
+                <strong>(1)</strong> An internal/external issue in Clause 4.1, 
+                <strong>(2)</strong> A risk in Clause 6.1.2 with pre-filled likelihood/impact scores, 
+                <strong>(3)</strong> Three suggested objectives in Clause 6.2, and 
+                <strong>(4)</strong> Links to relevant Annex A controls (A.8.5, A.9.3). 
+                <span class="story-highlight">Within 20 minutes she has 85% of Clause 4 and Clause 6 pre-filled with traceable Annex C content.</span>
+            </p>
+        </div>
+
+        <!-- Dashboard Metrics -->
+        <div class="dashboard-metrics">
+            <div class="metric-card">
+                <h4>Objectives Added</h4>
+                <div class="metric-value">21<span style="font-size: 1.5rem; color: var(--medium-gray);">/28</span></div>
+                <div class="metric-label">Organizational Objectives</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%;"></div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <h4>Risk Sources Added</h4>
+                <div class="metric-value">26<span style="font-size: 1.5rem; color: var(--medium-gray);">/35</span></div>
+                <div class="metric-label">Risk Sources Mapped</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 74%;"></div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <h4>Annex C Completion</h4>
+                <div class="metric-value" style="color: var(--success-green);">74%</div>
+                <div class="metric-label">Certification Readiness</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 74%;"></div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <h4>Controls Linked</h4>
+                <div class="metric-value">28<span style="font-size: 1.5rem; color: var(--medium-gray);">/39</span></div>
+                <div class="metric-label">Annex A Controls</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 72%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('objectives')">
+                    🎯 Objectives Library (28)
+                </button>
+                <button class="tab" onclick="switchTab('risks')">
+                    ⚠️ Risk Sources Library (35)
+                </button>
+            </div>
+
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Search objectives, risk sources, or keywords..." id="searchInput">
+                </div>
+                <div class="filter-group">
+                    <button class="filter-btn active" onclick="filterByCharacteristic('all')">All</button>
+                    <button class="filter-btn" onclick="filterByCharacteristic('fairness')">Fairness</button>
+                    <button class="filter-btn" onclick="filterByCharacteristic('transparency')">Transparency</button>
+                    <button class="filter-btn" onclick="filterByCharacteristic('safety')">Safety</button>
+                    <button class="filter-btn" onclick="filterByCharacteristic('security')">Security</button>
+                    <button class="filter-btn" onclick="filterByCharacteristic('accountability')">Accountability</button>
+                    <button class="filter-btn" onclick="filterByCharacteristic('privacy')">Privacy</button>
+                </div>
+            </div>
+
+            <!-- Objectives Tab Content -->
+            <div id="objectivesContent" class="tab-content">
+                <div class="cards-grid">
+                    <!-- Objective Card 1 -->
+                    <div class="objective-card" data-characteristic="accountability">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Accountability</div>
+                                <div class="card-id">C.2.1</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Establish clear responsibility and answerability for AI system behaviors, decisions, and outcomes. 
+                            Ensure traceable decision-making processes and documented accountability mechanisms.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Accountability</span>
+                            <span class="tag tag-clause">Clause 4.1</span>
+                            <span class="tag tag-clause">Clause 6.2</span>
+                            <span class="tag tag-control">A.2.1, A.5.2</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Accountability')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('accountability-obj')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Objective Card 2 -->
+                    <div class="objective-card" data-characteristic="fairness">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Fairness & Non-discrimination</div>
+                                <div class="card-id">C.2.2</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Ensure AI systems produce equitable outcomes free from unjust bias. Achieve demographic parity 
+                            within acceptable thresholds (≤0.05) and prevent systematic disadvantaging of any group.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Fairness</span>
+                            <span class="tag tag-clause">Clause 4.1</span>
+                            <span class="tag tag-clause">Clause 6.1.2</span>
+                            <span class="tag tag-control">A.8.5, A.9.3</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Fairness')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('fairness-obj')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Objective Card 3 -->
+                    <div class="objective-card" data-characteristic="transparency">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Transparency & Explainability</div>
+                                <div class="card-id">C.2.3</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Make AI decision-making processes understandable and interpretable to stakeholders. 
+                            Provide clear documentation of system logic, data flows, and decision rationales.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Transparency</span>
+                            <span class="tag tag-clause">Clause 4.1</span>
+                            <span class="tag tag-clause">Clause 6.2</span>
+                            <span class="tag tag-control">A.5.1, A.6.1</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Transparency')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('transparency-obj')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Objective Card 4 -->
+                    <div class="objective-card" data-characteristic="environmental">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Environmental Impact & Sustainability</div>
+                                <div class="card-id">C.2.4</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Minimize AI system environmental footprint through efficient resource and energy use. 
+                            Consider lifecycle impact from development through decommissioning.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Environmental</span>
+                            <span class="tag tag-clause">Clause 5.2</span>
+                            <span class="tag tag-clause">Clause 6.1</span>
+                            <span class="tag tag-control">A.4.5</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Environmental')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('environmental-obj')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Objective Card 5 -->
+                    <div class="objective-card" data-characteristic="safety">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Safety & Reliability</div>
+                                <div class="card-id">C.2.5</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Ensure AI systems operate safely under normal and edge conditions. Implement fail-safes, 
+                            robustness testing, and continuous monitoring to prevent harm to users and stakeholders.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Safety</span>
+                            <span class="tag tag-clause">Clause 6.1.2</span>
+                            <span class="tag tag-clause">Clause 8.1</span>
+                            <span class="tag tag-control">A.7.6, A.9.5</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Safety')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('safety-obj')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Objective Card 6 -->
+                    <div class="objective-card" data-characteristic="security">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Security & Resilience</div>
+                                <div class="card-id">C.2.6</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Protect AI systems from cyber threats, adversarial attacks, and unauthorized access. 
+                            Implement robust security controls and incident response mechanisms.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Security</span>
+                            <span class="tag tag-clause">Clause 4.1</span>
+                            <span class="tag tag-clause">Clause 6.1.2</span>
+                            <span class="tag tag-control">A.8.1, A.8.2, A.9.6</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Security')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('security-obj')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Objective Card 7 -->
+                    <div class="objective-card" data-characteristic="privacy">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Privacy & Data Protection</div>
+                                <div class="card-id">C.2.7</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Safeguard personal data throughout AI lifecycle. Ensure compliance with GDPR, CCPA, 
+                            and other regulations through data minimization, consent, and purpose limitation.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Privacy</span>
+                            <span class="tag tag-clause">Clause 4.2</span>
+                            <span class="tag tag-clause">Clause 6.2</span>
+                            <span class="tag tag-control">A.7.1, A.7.2, A.7.3</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Privacy')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('privacy-obj')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Objective Card 8 -->
+                    <div class="objective-card" data-characteristic="quality">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Data Quality & Integrity</div>
+                                <div class="card-id">C.2.8</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Ensure high-quality, accurate, and representative data for AI training and operations. 
+                            Implement data validation, cleansing, and lineage tracking mechanisms.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Data Quality</span>
+                            <span class="tag tag-clause">Clause 6.1.2</span>
+                            <span class="tag tag-clause">Clause 8.3</span>
+                            <span class="tag tag-control">A.7.4, A.7.5</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Data Quality')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('quality-obj')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Objective Card 9 -->
+                    <div class="objective-card" data-characteristic="human">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Human Oversight & Control</div>
+                                <div class="card-id">C.2.9</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Maintain meaningful human control over AI systems. Ensure human-in-the-loop for 
+                            critical decisions and provide override mechanisms for automated processes.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Human Agency</span>
+                            <span class="tag tag-clause">Clause 5.3</span>
+                            <span class="tag tag-clause">Clause 8.1</span>
+                            <span class="tag tag-control">A.6.2, A.9.1</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Human Oversight')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('human-obj')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Objective Card 10 -->
+                    <div class="objective-card" data-characteristic="compliance">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Regulatory Compliance</div>
+                                <div class="card-id">C.2.10</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Ensure AI systems comply with applicable laws, regulations, and industry standards. 
+                            Monitor evolving requirements including EU AI Act, NIST AI RMF, and sector-specific rules.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Compliance</span>
+                            <span class="tag tag-clause">Clause 4.2</span>
+                            <span class="tag tag-clause">Clause 9.2</span>
+                            <span class="tag tag-control">A.3.1, A.10.1</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Compliance')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('compliance-obj')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Objective Card 11 -->
+                    <div class="objective-card" data-characteristic="performance">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Performance & Accuracy</div>
+                                <div class="card-id">C.2.11</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Achieve and maintain specified performance metrics and accuracy targets. 
+                            Implement continuous testing, validation, and performance monitoring throughout lifecycle.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Performance</span>
+                            <span class="tag tag-clause">Clause 8.2</span>
+                            <span class="tag tag-clause">Clause 9.1</span>
+                            <span class="tag tag-control">A.6.3, A.9.4</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Performance')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('performance-obj')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Additional objectives (abbreviated for space) -->
+                    <div class="objective-card" data-characteristic="societal">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Societal Well-being</div>
+                                <div class="card-id">C.2.12</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Ensure AI systems contribute positively to society and don't cause societal harm. 
+                            Consider broader impacts on communities, culture, and social structures.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Societal Impact</span>
+                            <span class="tag tag-clause">Clause 4.2</span>
+                            <span class="tag tag-control">A.5.2</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Societal')">➕ Add to My AIMS</button>
+                            <button class="btn-details">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- 16 more objective cards would be here in production -->
+                    <div class="objective-card" data-characteristic="traceability">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Traceability & Auditability</div>
+                                <div class="card-id">C.2.13</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Maintain comprehensive records of AI system development, decisions, and changes. 
+                            Enable full audit trails for compliance and accountability purposes.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Traceability</span>
+                            <span class="tag tag-clause">Clause 7.5</span>
+                            <span class="tag tag-control">A.2.1, A.6.1</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Traceability')">➕ Add to My AIMS</button>
+                            <button class="btn-details">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="objective-card" data-characteristic="resilience">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">System Resilience</div>
+                                <div class="card-id">C.2.14</div>
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            Build AI systems that maintain functionality under adverse conditions. 
+                            Implement redundancy, fault tolerance, and graceful degradation mechanisms.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Resilience</span>
+                            <span class="tag tag-clause">Clause 8.1</span>
+                            <span class="tag tag-control">A.9.5</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('objective', 'Resilience')">➕ Add to My AIMS</button>
+                            <button class="btn-details">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Sources Tab Content -->
+            <div id="risksContent" class="tab-content" style="display: none;">
+                <div class="cards-grid">
+                    <!-- Risk Card 1 -->
+                    <div class="risk-card" data-characteristic="transparency">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Lack of Transparency</div>
+                                <div class="card-id">C.3.1</div>
+                            </div>
+                            <span class="tag-severity severity-high">HIGH</span>
+                        </div>
+                        <div class="card-description">
+                            Insufficient documentation or explainability of AI system logic, decision-making processes, 
+                            and data flows. Creates risks of stakeholder distrust and regulatory non-compliance.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Transparency</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.5.1, A.6.1</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Transparency Risk')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('transparency-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Card 2 -->
+                    <div class="risk-card" data-characteristic="quality">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Data Quality Issues</div>
+                                <div class="card-id">C.3.2</div>
+                            </div>
+                            <span class="tag-severity severity-high">HIGH</span>
+                        </div>
+                        <div class="card-description">
+                            Poor quality training data including incompleteness, inaccuracy, bias, or lack of 
+                            representativeness. Leads to unreliable model outputs and discriminatory outcomes.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Data Quality</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.7.4, A.7.5</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Data Quality')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('data-quality-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Card 3 -->
+                    <div class="risk-card" data-characteristic="fairness">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Algorithmic Bias</div>
+                                <div class="card-id">C.3.3</div>
+                            </div>
+                            <span class="tag-severity severity-high">HIGH</span>
+                        </div>
+                        <div class="card-description">
+                            Systematic and unfair discrimination against individuals or groups based on protected 
+                            characteristics. May result from biased data, flawed design, or inappropriate model selection.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Fairness</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.8.5, A.9.3</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Algorithmic Bias')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('bias-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Card 4 -->
+                    <div class="risk-card" data-characteristic="security">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Adversarial Attacks</div>
+                                <div class="card-id">C.3.4</div>
+                            </div>
+                            <span class="tag-severity severity-high">HIGH</span>
+                        </div>
+                        <div class="card-description">
+                            Malicious manipulation of AI inputs or models to cause incorrect outputs, system 
+                            compromise, or data breaches. Includes poisoning, evasion, and model extraction attacks.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Security</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.8.1, A.8.2, A.9.6</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Adversarial Attacks')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('adversarial-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Card 5 -->
+                    <div class="risk-card" data-characteristic="safety">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Model Robustness Issues</div>
+                                <div class="card-id">C.3.5</div>
+                            </div>
+                            <span class="tag-severity severity-medium">MEDIUM</span>
+                        </div>
+                        <div class="card-description">
+                            AI system fails to perform reliably under edge cases, distributional shift, or 
+                            unexpected conditions. May cause safety incidents or operational failures.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Safety</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.7.6, A.9.4, A.9.5</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Robustness')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('robustness-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Card 6 -->
+                    <div class="risk-card" data-characteristic="privacy">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Privacy Violations</div>
+                                <div class="card-id">C.3.6</div>
+                            </div>
+                            <span class="tag-severity severity-high">HIGH</span>
+                        </div>
+                        <div class="card-description">
+                            Unauthorized access, processing, or disclosure of personal data. Failure to comply with 
+                            GDPR, CCPA, or other privacy regulations. Includes re-identification and inference risks.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Privacy</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.7.1, A.7.2, A.7.3</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Privacy')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('privacy-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Card 7 -->
+                    <div class="risk-card" data-characteristic="accountability">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Insufficient Governance</div>
+                                <div class="card-id">C.3.7</div>
+                            </div>
+                            <span class="tag-severity severity-high">HIGH</span>
+                        </div>
+                        <div class="card-description">
+                            Lack of clear roles, responsibilities, or oversight mechanisms for AI systems. 
+                            Inadequate policies, procedures, or decision-making frameworks.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Accountability</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.2.1, A.3.1, A.5.2</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Governance')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('governance-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Card 8 -->
+                    <div class="risk-card" data-characteristic="lifecycle">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Lifecycle Management Gaps</div>
+                                <div class="card-id">C.3.8</div>
+                            </div>
+                            <span class="tag-severity severity-medium">MEDIUM</span>
+                        </div>
+                        <div class="card-description">
+                            Inadequate processes for AI system development, deployment, monitoring, or decommissioning. 
+                            Lack of version control, change management, or documentation practices.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Lifecycle</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.6.1, A.6.2, A.9.1</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Lifecycle')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('lifecycle-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Card 9 -->
+                    <div class="risk-card" data-characteristic="performance">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Model Drift & Degradation</div>
+                                <div class="card-id">C.3.9</div>
+                            </div>
+                            <span class="tag-severity severity-medium">MEDIUM</span>
+                        </div>
+                        <div class="card-description">
+                            AI model performance deteriorates over time due to changing data patterns or 
+                            environmental conditions. Failure to detect or respond to drift appropriately.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Performance</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.9.1, A.9.4</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Model Drift')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('drift-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Card 10 -->
+                    <div class="risk-card" data-characteristic="human">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Over-reliance on Automation</div>
+                                <div class="card-id">C.3.10</div>
+                            </div>
+                            <span class="tag-severity severity-medium">MEDIUM</span>
+                        </div>
+                        <div class="card-description">
+                            Excessive trust in AI systems leading to lack of human oversight, verification, or 
+                            intervention. Automation bias and deskilling of human operators.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Human Agency</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.6.2, A.9.1</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Over-reliance')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('overreliance-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Card 11 -->
+                    <div class="risk-card" data-characteristic="compliance">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Regulatory Non-compliance</div>
+                                <div class="card-id">C.3.11</div>
+                            </div>
+                            <span class="tag-severity severity-high">HIGH</span>
+                        </div>
+                        <div class="card-description">
+                            Failure to meet applicable legal or regulatory requirements including EU AI Act, 
+                            GDPR, sector-specific rules, or emerging AI governance frameworks.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Compliance</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.3.1, A.10.1</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Non-compliance')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('compliance-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Card 12 -->
+                    <div class="risk-card" data-characteristic="environmental">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Environmental Impact</div>
+                                <div class="card-id">C.3.12</div>
+                            </div>
+                            <span class="tag-severity severity-low">LOW</span>
+                        </div>
+                        <div class="card-description">
+                            Excessive energy consumption and carbon footprint from AI training and inference. 
+                            Failure to consider lifecycle environmental sustainability.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Environmental</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.4.5</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Environmental')">➕ Add to My AIMS</button>
+                            <button class="btn-details" onclick="showDetails('environmental-risk')">Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Additional risk cards (abbreviated) -->
+                    <div class="risk-card" data-characteristic="supply-chain">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Supply Chain Risks</div>
+                                <div class="card-id">C.3.13</div>
+                            </div>
+                            <span class="tag-severity severity-medium">MEDIUM</span>
+                        </div>
+                        <div class="card-description">
+                            Dependencies on third-party AI components, models, or data sources without adequate 
+                            vetting, monitoring, or controls. Vendor lock-in and loss of control.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Supply Chain</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.4.1, A.4.2</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Supply Chain')">➕ Add to My AIMS</button>
+                            <button class="btn-details">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="risk-card" data-characteristic="skills">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Lack of AI Expertise</div>
+                                <div class="card-id">C.3.14</div>
+                            </div>
+                            <span class="tag-severity severity-medium">MEDIUM</span>
+                        </div>
+                        <div class="card-description">
+                            Insufficient organizational knowledge, skills, or resources to develop, deploy, and 
+                            manage AI systems responsibly. Inadequate training and competence.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-characteristic">Competence</span>
+                            <span class="tag tag-clause">Risk 6.1.2</span>
+                            <span class="tag tag-control">Mitigated by: A.3.2</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-add" onclick="addToAIMS('risk', 'Expertise Gap')">➕ Add to My AIMS</button>
+                            <button class="btn-details">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side Panel -->
+        <div class="side-panel">
+            <div class="side-panel-header">
+                <h3>📊 AIMS Dashboard</h3>
+            </div>
+
+            <!-- Completion Score -->
+            <div class="completion-score">
+                <div class="score-label">Annex C Completion Score</div>
+                <div class="score-value">74%</div>
+                <div class="progress-bar" style="background: rgba(255,255,255,0.3);">
+                    <div class="progress-fill" style="width: 74%; background: white;"></div>
+                </div>
+                <div class="score-target">🎯 Target: 100% for Certification Readiness</div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="statistics-grid">
+                <div class="stat-item">
+                    <div class="stat-number">47</div>
+                    <div class="stat-label">Total Items Added</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">16</div>
+                    <div class="stat-label">Items Remaining</div>
+                </div>
+            </div>
+
+            <!-- Spider Chart -->
+            <div class="chart-container">
+                <div class="chart-title">Trustworthiness Characteristics Coverage</div>
+                <canvas id="radarChart"></canvas>
+            </div>
+
+            <!-- Risk Heat Map -->
+            <div class="chart-container">
+                <div class="chart-title">Risk Heat Map (Clause 6.1.2)</div>
+                <div style="display: flex; gap: 1rem; margin-bottom: 0.5rem; font-size: 0.8rem;">
+                    <div><strong>Impact →</strong></div>
+                    <div style="margin-left: auto;"><strong>Likelihood ↓</strong></div>
+                </div>
+                <div class="heatmap-grid">
+                    <div class="heatmap-cell risk-low" title="Low Impact, Low Likelihood">3</div>
+                    <div class="heatmap-cell risk-low" title="Low Impact, Medium Likelihood">2</div>
+                    <div class="heatmap-cell risk-medium" title="Medium Impact, Low Likelihood">4</div>
+                    <div class="heatmap-cell risk-medium" title="Medium Impact, Medium Likelihood">5</div>
+                    <div class="heatmap-cell risk-high" title="High Impact, Low Likelihood">2</div>
+                    
+                    <div class="heatmap-cell risk-low" title="Low Impact, Medium Likelihood">1</div>
+                    <div class="heatmap-cell risk-medium" title="Low Impact, High Likelihood">3</div>
+                    <div class="heatmap-cell risk-medium" title="Medium Impact, Medium Likelihood">6</div>
+                    <div class="heatmap-cell risk-high" title="Medium Impact, High Likelihood">4</div>
+                    <div class="heatmap-cell risk-high" title="High Impact, Medium Likelihood">3</div>
+                    
+                    <div class="heatmap-cell risk-medium" title="Medium Impact, Low Likelihood">2</div>
+                    <div class="heatmap-cell risk-medium" title="Medium Impact, Medium Likelihood">4</div>
+                    <div class="heatmap-cell risk-high" title="Medium Impact, High Likelihood">5</div>
+                    <div class="heatmap-cell risk-critical" title="High Impact, Medium Likelihood">2</div>
+                    <div class="heatmap-cell risk-critical" title="Critical Risk">1</div>
+                    
+                    <div class="heatmap-cell risk-medium" title="Medium Risk">1</div>
+                    <div class="heatmap-cell risk-high" title="High Risk">2</div>
+                    <div class="heatmap-cell risk-high" title="High Risk">3</div>
+                    <div class="heatmap-cell risk-critical" title="Critical Risk">3</div>
+                    <div class="heatmap-cell risk-critical" title="Critical Risk">2</div>
+                    
+                    <div class="heatmap-cell risk-minimal" title="Minimal Risk">0</div>
+                    <div class="heatmap-cell risk-low" title="Low Risk">1</div>
+                    <div class="heatmap-cell risk-medium" title="Medium Risk">2</div>
+                    <div class="heatmap-cell risk-high" title="High Risk">1</div>
+                    <div class="heatmap-cell risk-high" title="High Risk">1</div>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--medium-gray); margin-top: 0.5rem;">
+                    Numbers indicate risk count in each category
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="links-section">
+                <h4>Quick Links to AIMS Clauses</h4>
+                <div class="link-item">
+                    <span>Clause 4.1 - Understanding the Organization</span>
+                    <span class="link-arrow">→</span>
+                </div>
+                <div class="link-item">
+                    <span>Clause 6.1.2 - AI Risk Assessment</span>
+                    <span class="link-arrow">→</span>
+                </div>
+                <div class="link-item">
+                    <span>Clause 6.2 - AI Objectives</span>
+                    <span class="link-arrow">→</span>
+                </div>
+                <div class="link-item">
+                    <span>Clause 8.3 - AI Risk Treatment</span>
+                    <span class="link-arrow">→</span>
+                </div>
+                <div class="link-item">
+                    <span>Annex A - Control Objectives</span>
+                    <span class="link-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="recommendations">
+                <h4>💡 AI-Powered Recommendations</h4>
+                <ul>
+                    <li>Consider adding "Resilience" objective for InsurTech context</li>
+                    <li>Add "Third-Party Risk" source given your vendor dependencies</li>
+                    <li>Complete privacy objectives to reach 80% threshold</li>
+                    <li>Link fairness objectives to A.8.5 control</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div id="detailsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalTitle">Objective Details</h3>
+                    <button class="close-btn" onclick="closeModal()">✕</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Content populated by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                    <button class="btn btn-primary" onclick="addFromModal()">➕ Add to My AIMS</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Toast -->
+        <div id="successToast" class="toast">
+            <span>✓</span>
+            <span id="toastMessage">Successfully added to AIMS!</span>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Radar Chart
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: [
+                    'Accountability',
+                    'Fairness',
+                    'Transparency',
+                    'Safety',
+                    'Security',
+                    'Privacy',
+                    'Data Quality',
+                    'Human Oversight',
+                    'Environmental',
+                    'Compliance',
+                    'Performance'
+                ],
+                datasets: [{
+                    label: 'Current Coverage',
+                    data: [85, 78, 65, 72, 88, 75, 70, 68, 45, 82, 75],
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                }, {
+                    label: 'Target (100%)',
+                    data: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderColor: 'rgba(16, 185, 129, 0.5)',
+                    borderWidth: 1,
+                    borderDash: [5, 5],
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Tab Switching
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('objectivesContent').style.display = 
+                tabName === 'objectives' ? 'block' : 'none';
+            document.getElementById('risksContent').style.display = 
+                tabName === 'risks' ? 'block' : 'none';
+        }
+
+        // Filter by Characteristic
+        function filterByCharacteristic(characteristic) {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const cards = document.querySelectorAll('.objective-card, .risk-card');
+            cards.forEach(card => {
+                if (characteristic === 'all' || card.dataset.characteristic === characteristic) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Add to AIMS
+        function addToAIMS(type, name) {
+            showToast(`${name} added to your AIMS successfully!`);
+            
+            // Update metrics (simulated)
+            setTimeout(() => {
+                const completionElement = document.querySelector('.completion-score .score-value');
+                const currentScore = parseInt(completionElement.textContent);
+                if (currentScore < 100) {
+                    completionElement.textContent = (currentScore + 1) + '%';
+                }
+            }, 500);
+        }
+
+        // Show Details Modal
+        function showDetails(itemId) {
+            const modal = document.getElementById('detailsModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            // Sample detailed content
+            const details = {
+                'fairness-obj': {
+                    title: 'Fairness & Non-discrimination - Detailed View',
+                    content: `
+                        <h4>Overview</h4>
+                        <p>Fairness in AI systems means ensuring outcomes are equitable and free from unjust bias or discrimination. 
+                        This objective is crucial to prevent systems from systematically disadvantaging any group based on protected characteristics.</p>
+                        
+                        <h4>Key Implementation Steps</h4>
+                        <ul>
+                            <li>Conduct demographic parity analysis (target ≤0.05 disparity)</li>
+                            <li>Implement bias testing across all protected groups</li>
+                            <li>Establish fairness metrics and monitoring dashboards</li>
+                            <li>Create remediation procedures for identified biases</li>
+                            <li>Document fairness considerations in impact assessments</li>
+                        </ul>
+
+                        <h4>Related AIMS Components</h4>
+                        <ul>
+                            <li><strong>Clause 4.1:</strong> Document fairness as an internal/external issue</li>
+                            <li><strong>Clause 6.1.2:</strong> Create risk entry for algorithmic bias</li>
+                            <li><strong>Clause 6.2:</strong> Set measurable fairness objectives</li>
+                            <li><strong>Control A.8.5:</strong> Bias testing and monitoring</li>
+                            <li><strong>Control A.9.3:</strong> Impact assessment procedures</li>
+                        </ul>
+
+                        <h4>Success Criteria</h4>
+                        <ul>
+                            <li>Demographic parity ≤0.05 across all protected groups</li>
+                            <li>Equal opportunity ratio >0.80</li>
+                            <li>Documented bias testing in development and production</li>
+                            <li>Regular fairness audits (quarterly minimum)</li>
+                        </ul>
+
+                        <h4>Industry Examples</h4>
+                        <p><strong>InsurTech:</strong> Ensure premium calculations don't discriminate by race, gender, or age beyond actuarially justified factors.</p>
+                        <p><strong>FinTech:</strong> Credit scoring models maintain equal opportunity across demographic groups.</p>
+                        <p><strong>HR Tech:</strong> Hiring algorithms achieve demographic parity in candidate screening.</p>
+                    `
+                },
+                'transparency-risk': {
+                    title: 'Lack of Transparency - Risk Details',
+                    content: `
+                        <h4>Risk Description</h4>
+                        <p>Insufficient documentation or explainability of AI system logic creates serious risks including 
+                        stakeholder distrust, regulatory penalties, inability to debug issues, and ethical concerns.</p>
+                        
+                        <h4>Potential Impacts</h4>
+                        <ul>
+                            <li>Regulatory fines (GDPR Article 22 violations up to €20M or 4% revenue)</li>
+                            <li>Loss of customer trust and reputational damage</li>
+                            <li>Inability to identify and fix algorithmic issues</li>
+                            <li>Failed audits and certification attempts</li>
+                            <li>Legal liability in disputed decisions</li>
+                        </ul>
+
+                        <h4>Risk Scoring</h4>
+                        <ul>
+                            <li><strong>Likelihood:</strong> High (75%) - Common in complex ML systems</li>
+                            <li><strong>Impact:</strong> High (4/5) - Significant regulatory and reputational consequences</li>
+                            <li><strong>Risk Level:</strong> Critical - Requires immediate mitigation</li>
+                        </ul>
+
+                        <h4>Mitigation Controls</h4>
+                        <ul>
+                            <li><strong>A.5.1:</strong> AI system impact assessment procedures</li>
+                            <li><strong>A.6.1:</strong> AI system documentation and records</li>
+                            <li><strong>A.6.3:</strong> Model cards and data sheets</li>
+                            <li>Implement LIME/SHAP for model explainability</li>
+                            <li>Create decision explanation interfaces for end users</li>
+                        </ul>
+
+                        <h4>Treatment Plan</h4>
+                        <ol>
+                            <li>Conduct transparency audit of all AI systems (Week 1-2)</li>
+                            <li>Implement model documentation templates (Week 3)</li>
+                            <li>Deploy explainability tools for high-risk systems (Week 4-6)</li>
+                            <li>Create user-facing explanation interfaces (Week 7-8)</li>
+                            <li>Establish ongoing documentation standards (Week 9+)</li>
+                        </ol>
+                    `
+                }
+            };
+
+            const detail = details[itemId] || {
+                title: 'Item Details',
+                content: '<p>Detailed information about this item...</p>'
+            };
+
+            modalTitle.textContent = detail.title;
+            modalBody.innerHTML = detail.content;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('detailsModal').classList.remove('active');
+        }
+
+        function addFromModal() {
+            showToast('Item added to your AIMS successfully!');
+            closeModal();
+        }
+
+        // Show Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('successToast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('active');
+            
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // Search Functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.objective-card, .risk-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                const description = card.querySelector('.card-description').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailsModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO 42001 AIMS | Annex B Implementation Workbench</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+        }
+        
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .sidebar {
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #667eea #f1f1f1;
+        }
+        
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+        
+        .main-content {
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+        
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .main-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .main-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+        
+        .clause-lane {
+            min-width: 320px;
+            border-radius: 16px;
+            padding: 20px;
+            margin-right: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .clause-lane:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        
+        .guidance-card {
+            cursor: move;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid transparent;
+        }
+        
+        .guidance-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            border-left-color: #667eea;
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+            filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.3));
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(102, 126, 234, 0.8);
+            }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        .toc-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 3px solid transparent;
+        }
+        
+        .toc-item:hover {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, transparent 100%);
+            border-left-color: #667eea;
+            padding-left: 20px;
+        }
+        
+        .toc-item.active {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.15) 0%, rgba(102, 126, 234, 0.05) 100%);
+            border-left-color: #667eea;
+            padding-left: 20px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transition: all 0.6s ease;
+        }
+        
+        .metric-card:hover::before {
+            transform: translate(-25%, -25%);
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.4);
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+        
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .badge-glow {
+            animation: badge-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes badge-pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .chart-container {
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .alert-banner {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            animation: alert-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes alert-pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
+            }
+        }
+        
+        .roadmap-line {
+            position: relative;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #ddd 50%, #ddd 100%);
+            border-radius: 2px;
+        }
+        
+        .roadmap-milestone {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .tooltip {
+            position: relative;
+        }
+        
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 100;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="glass-morphism fixed w-full top-0 z-50 shadow-lg">
+        <div class="px-8 py-5 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg floating">
+                        <i class="fas fa-brain text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black gradient-text">ISO 42001 AIMS Manager</h1>
+                        <p class="text-xs text-gray-600 font-medium">Annex B: Step-by-Step AI Controls Builder</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2 bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2 rounded-xl border border-green-200">
+                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span class="text-sm font-bold text-green-800">Auto-save Active</span>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-indigo-50 px-4 py-3 rounded-xl border border-blue-200">
+                        <i class="fas fa-project-diagram text-blue-600"></i>
+                        <div>
+                            <div class="text-xs text-gray-500 font-medium">Current Project</div>
+                            <div class="text-sm font-bold text-gray-900">Credit Scoring AI - XYZ Bank</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-2xl transition font-bold text-sm">
+                    <i class="fas fa-download mr-2"></i>Export Playbook
+                </button>
+                <div class="flex items-center space-x-3">
+                    <button class="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center hover:bg-gray-200 transition">
+                        <i class="fas fa-bell text-gray-600"></i>
+                    </button>
+                    <div class="w-11 h-11 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-sm font-bold text-white">RJ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex mt-20 px-4 pb-4 gap-4">
+        <!-- Left Sidebar - Annex B ToC -->
+        <aside class="sidebar w-96 glass-morphism rounded-2xl p-6 shadow-xl">
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-black text-gray-900">Annex B Guide</h2>
+                    <span class="tag bg-purple-100 text-purple-700">39 Controls</span>
+                </div>
+                <p class="text-xs text-gray-600 mb-4 leading-relaxed">Implementation guidance mapped to your credit scoring AI system</p>
+                
+                <div class="relative mb-4">
+                    <input type="text" placeholder="Search guidance sections..." 
+                           class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+                    <i class="fas fa-search absolute right-4 top-4 text-gray-400"></i>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 mb-4">
+                    <div class="bg-green-50 p-2 rounded-lg text-center">
+                        <div class="text-lg font-bold text-green-700">18</div>
+                        <div class="text-xs text-green-600">Relevant</div>
+                    </div>
+                    <div class="bg-blue-50 p-2 rounded-lg text-center">
+                        <div class="text-lg font-bold text-blue-700">12</div>
+                        <div class="text-xs text-blue-600">Applied</div>
+                    </div>
+                    <div class="bg-red-50 p-2 rounded-lg text-center">
+                        <div class="text-lg font-bold text-red-700">6</div>
+                        <div class="text-xs text-red-600">Gaps</div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="space-y-2">
+                <!-- A.2 Policies -->
+                <div class="toc-item p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-file-contract text-blue-600"></i>
+                            <div>
+                                <span class="text-sm font-bold text-gray-900 block">A.2 Policies for AI Use</span>
+                                <span class="text-xs text-gray-500">B.2 Implementation Guide</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                </div>
+
+                <!-- A.3 Internal Organization -->
+                <div class="toc-item active p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-sitemap text-purple-600"></i>
+                            <div>
+                                <span class="text-sm font-bold text-gray-900 block">A.3 Internal Organization</span>
+                                <span class="text-xs text-gray-500">B.3 - Roles & Responsibilities</span>
+                            </div>
+                        </div>
+                        <span class="tag bg-blue-100 text-blue-700">3 items</span>
+                    </div>
+                    <div class="ml-10 mt-3 space-y-2 pl-4 border-l-2 border-blue-200">
+                        <div class="text-xs text-gray-700 hover:text-blue-600 cursor-pointer py-1 flex items-center justify-between">
+                            <span>B.3.1 Segregation of duties</span>
+                            <i class="fas fa-check text-green-500 text-xs"></i>
+                        </div>
+                        <div class="text-xs text-gray-700 hover:text-blue-600 cursor-pointer py-1 flex items-center justify-between">
+                            <span>B.3.2 Contact with authorities</span>
+                            <i class="fas fa-check text-green-500 text-xs"></i>
+                        </div>
+                        <div class="text-xs text-gray-700 hover:text-blue-600 cursor-pointer py-1 flex items-center justify-between">
+                            <span>B.3.3 Contact with groups</span>
+                            <i class="fas fa-clock text-yellow-500 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- A.4 Resources -->
+                <div class="toc-item p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-server text-green-600"></i>
+                            <div>
+                                <span class="text-sm font-bold text-gray-900 block">A.4 Resources for AI</span>
+                                <span class="text-xs text-gray-500">B.4 - Data, Compute, Human</span>
+                            </div>
+                        </div>
+                        <span class="tag bg-green-100 text-green-700">6 items</span>
+                    </div>
+                </div>
+
+                <!-- A.5 AI System Inventory -->
+                <div class="toc-item p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-list-alt text-indigo-600"></i>
+                            <div>
+                                <span class="text-sm font-bold text-gray-900 block">A.5 AI System Inventory</span>
+                                <span class="text-xs text-gray-500">B.5 - Tracking & Documentation</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                </div>
+
+                <!-- A.6 Impact Assessment -->
+                <div class="toc-item p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-balance-scale text-orange-600"></i>
+                            <div>
+                                <span class="text-sm font-bold text-gray-900 block">A.6 AI Impact Assessment</span>
+                                <span class="text-xs text-gray-500">B.6 - Societal & Ethical Impact</span>
+                            </div>
+                        </div>
+                        <span class="tag bg-yellow-100 text-yellow-700">In Review</span>
+                    </div>
+                </div>
+
+                <!-- A.7 Data Management -->
+                <div class="toc-item p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-database text-cyan-600"></i>
+                            <div>
+                                <span class="text-sm font-bold text-gray-900 block">A.7 Data Management</span>
+                                <span class="text-xs text-gray-500">B.7 - Quality, Provenance, Privacy</span>
+                            </div>
+                        </div>
+                        <span class="tag bg-red-100 text-red-700 badge-glow">2 Gaps</span>
+                    </div>
+                </div>
+
+                <!-- A.8 AI System Development -->
+                <div class="toc-item p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-code text-pink-600"></i>
+                            <div>
+                                <span class="text-sm font-bold text-gray-900 block">A.8 AI System Development</span>
+                                <span class="text-xs text-gray-500">B.8 - Model Cards, Testing</span>
+                            </div>
+                        </div>
+                        <span class="tag bg-blue-100 text-blue-700">8 items</span>
+                    </div>
+                </div>
+
+                <!-- A.9 Monitoring -->
+                <div class="toc-item p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-chart-line text-teal-600"></i>
+                            <div>
+                                <span class="text-sm font-bold text-gray-900 block">A.9 Monitoring & Performance</span>
+                                <span class="text-xs text-gray-500">B.9 - Drift, Metrics, KPIs</span>
+                            </div>
+                        </div>
+                        <span class="tag bg-yellow-100 text-yellow-700">In Progress</span>
+                    </div>
+                </div>
+
+                <!-- A.10 Communication -->
+                <div class="toc-item p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-bullhorn text-rose-600"></i>
+                            <div>
+                                <span class="text-sm font-bold text-gray-900 block">A.10 Interested Parties</span>
+                                <span class="text-xs text-gray-500">B.10 - Transparency & Disclosure</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="mt-6 p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200">
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-lightbulb text-blue-600 text-xl mt-1"></i>
+                    <div>
+                        <h4 class="text-sm font-bold text-blue-900 mb-2">AI Assistant Available</h4>
+                        <p class="text-xs text-blue-700 leading-relaxed mb-3">Get personalized guidance for your credit scoring implementation. Ask about FCRA compliance, fairness testing, or model documentation.</p>
+                        <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg text-xs font-bold hover:bg-blue-700 transition">
+                            <i class="fas fa-robot mr-2"></i>Launch AI Assistant
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content flex-1">
+            <!-- Hero Section -->
+            <div class="glass-morphism rounded-2xl p-8 mb-6 shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full filter blur-3xl opacity-20"></div>
+                <div class="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-blue-400 to-cyan-400 rounded-full filter blur-3xl opacity-20"></div>
+                
+                <div class="relative z-10 flex items-start justify-between">
+                    <div class="flex-1 pr-8">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <span class="tag bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 border border-green-300">
+                                <i class="fas fa-rocket mr-2"></i>Implementation Journey
+                            </span>
+                            <span class="tag bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 border border-blue-300">
+                                <i class="fas fa-calendar-check mr-2"></i>Week 8 of 16
+                            </span>
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-star text-yellow-500"></i>
+                                <i class="fas fa-star text-yellow-500"></i>
+                                <i class="fas fa-star text-yellow-500"></i>
+                                <i class="fas fa-star text-yellow-500"></i>
+                                <i class="fas fa-star-half-alt text-yellow-500"></i>
+                                <span class="text-xs text-gray-600 ml-2 font-semibold">4.5/5 Quality Score</span>
+                            </div>
+                        </div>
+                        
+                        <h2 class="text-4xl font-black gradient-text mb-3">Annex B: AI Controls Builder</h2>
+                        <p class="text-gray-600 text-lg mb-6 leading-relaxed">Visual implementation roadmap tailored for your <strong>Credit-Scoring AI System</strong> with regulatory compliance built-in</p>
+                        
+                        <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-purple-200 shadow-lg">
+                            <div class="flex items-start space-x-4">
+                                <div class="stat-icon bg-gradient-to-br from-purple-500 to-pink-500 flex-shrink-0">
+                                    <i class="fas fa-user-tie text-white text-2xl"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <p class="text-sm font-black text-gray-900">Raj's Implementation Story</p>
+                                        <span class="tag bg-blue-100 text-blue-700">Financial Services</span>
+                                    </div>
+                                    <p class="text-sm text-gray-700 leading-relaxed">
+                                        As a consultant helping <strong>XYZ Bank</strong> implement ISO 42001, you've selected <strong>"Credit-Scoring AI"</strong> as your primary use case. The intelligent system has automatically:
+                                    </p>
+                                    <div class="grid grid-cols-3 gap-3 mt-4">
+                                        <div class="bg-green-50 p-3 rounded-xl border border-green-200">
+                                            <div class="text-2xl font-black text-green-700 mb-1">18</div>
+                                            <div class="text-xs text-green-600 font-semibold">Relevant Guidance Sections</div>
+                                        </div>
+                                        <div class="bg-blue-50 p-3 rounded-xl border border-blue-200">
+                                            <div class="text-2xl font-black text-blue-700 mb-1">7</div>
+                                            <div class="text-xs text-blue-600 font-semibold">Regulatory Requirements</div>
+                                        </div>
+                                        <div class="bg-purple-50 p-3 rounded-xl border border-purple-200">
+                                            <div class="text-2xl font-black text-purple-700 mb-1">45</div>
+                                            <div class="text-xs text-purple-600 font-semibold">Control Mappings</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-shrink-0">
+                        <div class="w-56 h-56 relative pulse-glow rounded-full">
+                            <svg class="w-full h-full" viewBox="0 0 200 200">
+                                <!-- Background circle -->
+                                <circle cx="100" cy="100" r="85" fill="none" stroke="#e5e7eb" stroke-width="12"/>
+                                <!-- Progress circle -->
+                                <circle cx="100" cy="100" r="85" fill="none" stroke="url(#gradient)" stroke-width="12" 
+                                        stroke-dasharray="534" stroke-dashoffset="192" stroke-linecap="round" class="progress-ring"/>
+                                
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                
+                                <text x="100" y="90" text-anchor="middle" font-size="42" font-weight="900" fill="#1f2937">64%</text>
+                                <text x="100" y="115" text-anchor="middle" font-size="14" font-weight="600" fill="#6b7280">Complete</text>
+                                <text x="100" y="132" text-anchor="middle" font-size="11" font-weight="500" fill="#9ca3af">8 weeks left</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Metrics Grid -->
+            <div class="grid grid-cols-4 gap-4 mb-6">
+                <div class="metric-card relative z-10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks text-3xl"></i>
+                        </div>
+                        <span class="tag bg-white/30 text-white border border-white/40">Clauses 4-10</span>
+                    </div>
+                    <div class="text-4xl font-black mb-1">45/70</div>
+                    <div class="text-sm opacity-90 font-semibold mb-2">Controls Implemented</div>
+                    <div class="w-full bg-white/20 rounded-full h-2">
+                        <div class="bg-white rounded-full h-2 transition-all" style="width: 64%"></div>
+                    </div>
+                </div>
+                
+                <div class="glass-morphism rounded-2xl p-6 relative overflow-hidden group hover:shadow-2xl transition">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-200 to-emerald-200 rounded-full filter blur-2xl opacity-30 group-hover:opacity-50 transition"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="stat-icon bg-green-100">
+                                <i class="fas fa-shield-alt text-3xl text-green-600"></i>
+                            </div>
+                            <span class="tag bg-green-100 text-green-700 border border-green-300">
+                                <i class="fas fa-check mr-1"></i>On Track
+                            </span>
+                        </div>
+                        <div class="text-4xl font-black text-gray-900 mb-1">23</div>
+                        <div class="text-sm text-gray-600 font-semibold mb-2">Risk Controls Active</div>
+                        <div class="text-xs text-gray-500">
+                            <i class="fas fa-arrow-up text-green-600 mr-1"></i>+3 this week
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-morphism rounded-2xl p-6 relative overflow-hidden group hover:shadow-2xl transition">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-200 to-orange-200 rounded-full filter blur-2xl opacity-30 group-hover:opacity-50 transition"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="stat-icon bg-yellow-100">
+                                <i class="fas fa-exclamation-triangle text-3xl text-yellow-600"></i>
+                            </div>
+                            <span class="tag bg-yellow-100 text-yellow-700 border border-yellow-300">
+                                <i class="fas fa-flag mr-1"></i>Attention
+                            </span>
+                        </div>
+                        <div class="text-4xl font-black text-gray-900 mb-1">6</div>
+                        <div class="text-sm text-gray-600 font-semibold mb-2">Critical Gaps</div>
+                        <div class="text-xs text-gray-500">
+                            <i class="fas fa-arrow-down text-red-600 mr-1"></i>-2 resolved
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-morphism rounded-2xl p-6 relative overflow-hidden group hover:shadow-2xl transition">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full filter blur-2xl opacity-30 group-hover:opacity-50 transition"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="stat-icon bg-blue-100">
+                                <i class="fas fa-file-alt text-3xl text-blue-600"></i>
+                            </div>
+                            <span class="tag bg-blue-100 text-blue-700 border border-blue-300">
+                                <i class="fas fa-sync mr-1"></i>Live
+                            </span>
+                        </div>
+                        <div class="text-4xl font-black text-gray-900 mb-1">156</div>
+                        <div class="text-sm text-gray-600 font-semibold mb-2">Evidence Documents</div>
+                        <div class="text-xs text-gray-500">
+                            <i class="fas fa-clock mr-1"></i>Updated 5 mins ago
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Industry & Use Case Selector -->
+            <div class="glass-morphism rounded-2xl p-6 mb-6 shadow-xl">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-xl font-black text-gray-900 mb-1">Industry & AI System Configuration</h3>
+                        <p class="text-sm text-gray-600">Tailored guidance based on your sector and use case</p>
+                    </div>
+                    <button class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:shadow-lg transition font-bold text-sm">
+                        <i class="fas fa-sync-alt mr-2"></i>Refresh Recommendations
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-4 gap-4 mb-6">
+                    <div class="relative border-3 border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-5 cursor-pointer group hover:shadow-xl transition">
+                        <div class="absolute top-3 right-3">
+                            <i class="fas fa-check-circle text-purple-600 text-xl"></i>
+                        </div>
+                        <i class="fas fa-university text-purple-600 text-4xl mb-3"></i>
+                        <h4 class="font-bold text-gray-900 mb-1">Financial Services</h4>
+                        <p class="text-xs text-gray-600 mb-2">Banking, Credit, Risk Assessment</p>
+                        <div class="flex items-center space-x-1">
+                            <span class="tag bg-purple-200 text-purple-800">Active</span>
+                            <span class="text-xs text-gray-500">18 controls</span>
+                        </div>
+                    </div>
+                    
+                    <div class="border-2 border-gray-200 bg-white rounded-xl p-5 cursor-pointer hover:border-blue-400 hover:shadow-lg transition">
+                        <i class="fas fa-heartbeat text-gray-400 text-4xl mb-3 group-hover:text-red-500 transition"></i>
+                        <h4 class="font-bold text-gray-900 mb-1">Healthcare</h4>
+                        <p class="text-xs text-gray-600 mb-2">Diagnostics, Patient Care, Medical AI</p>
+                        <span class="text-xs text-gray-400">Click to activate</span>
+                    </div>
+                    
+                    <div class="border-2 border-gray-200 bg-white rounded-xl p-5 cursor-pointer hover:border-blue-400 hover:shadow-lg transition">
+                        <i class="fas fa-landmark text-gray-400 text-4xl mb-3"></i>
+                        <h4 class="font-bold text-gray-900 mb-1">Public Sector</h4>
+                        <p class="text-xs text-gray-600 mb-2">Government, Defense, Civic Tech</p>
+                        <span class="text-xs text-gray-400">Click to activate</span>
+                    </div>
+                    
+                    <div class="border-2 border-gray-200 bg-white rounded-xl p-5 cursor-pointer hover:border-blue-400 hover:shadow-lg transition">
+                        <i class="fas fa-shopping-cart text-gray-400 text-4xl mb-3"></i>
+                        <h4 class="font-bold text-gray-900 mb-1">Retail & E-commerce</h4>
+                        <p class="text-xs text-gray-600 mb-2">Recommendations, Personalization</p>
+                        <span class="text-xs text-gray-400">Click to activate</span>
+                    </div>
+                </div>
+                
+                <div class="border-t-2 border-gray-200 pt-5">
+                    <label class="block text-sm font-bold text-gray-900 mb-3">
+                        <i class="fas fa-robot text-purple-600 mr-2"></i>AI System Type
+                    </label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <select class="px-4 py-3 border-2 border-purple-300 bg-purple-50 rounded-xl focus:ring-2 focus:ring-purple-500 font-semibold text-gray-900">
+                            <option selected>✓ Credit Scoring & Risk Assessment</option>
+                            <option>Fraud Detection System</option>
+                            <option>Customer Service Chatbot (NLP)</option>
+                            <option>Investment Recommendation Engine</option>
+                            <option>KYC/AML Screening System</option>
+                            <option>Portfolio Management AI</option>
+                            <option>Loan Default Prediction</option>
+                            <option>Anti-Money Laundering (AML)</option>
+                        </select>
+                        
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
+                            <div class="grid grid-cols-3 gap-3 text-center">
+                                <div>
+                                    <div class="text-2xl font-black text-green-700">18</div>
+                                    <div class="text-xs text-green-600 font-semibold">Guidance Items</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-black text-blue-700">7</div>
+                                    <div class="text-xs text-blue-600 font-semibold">Regulations</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-black text-purple-700">12</div>
+                                    <div class="text-xs text-purple-600 font-semibold">Templates</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-info-circle text-blue-600 text-lg mt-0.5"></i>
+                            <div class="flex-1">
+                                <h5 class="text-sm font-bold text-blue-900 mb-1">Regulatory Context</h5>
+                                <p class="text-xs text-blue-700 leading-relaxed">Your credit scoring AI must comply with: <strong>FCRA (Fair Credit Reporting Act)</strong>, <strong>ECOA (Equal Credit Opportunity Act)</strong>, <strong>GDPR Article 22</strong> (automated decision-making), and <strong>CCPA</strong> data rights. Annex B guidance B.6 and B.8.4 are critical for your compliance.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Implementation Roadmap -->
+            <div class="glass-morphism rounded-2xl p-6 mb-6 shadow-xl">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-xl font-black text-gray-900 mb-1">Implementation Roadmap</h3>
+                        <p class="text-sm text-gray-600">Your journey from Clause 4 through Clause 10</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-50 transition">
+                            <i class="fas fa-compress-arrows-alt mr-2"></i>Collapse All
+                        </button>
+                        <button class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-sm font-bold hover:shadow-lg transition">
+                            <i class="fas fa-play mr-2"></i>Start Guided Tour
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Timeline visualization -->
+                <div class="mb-8">
+                    <div class="roadmap-line relative">
+                        <div class="roadmap-milestone bg-green-500" style="left: 0%;" data-tooltip="Clause 4: Complete"></div>
+                        <div class="roadmap-milestone bg-green-500" style="left: 14.3%;" data-tooltip="Clause 5: Complete"></div>
+                        <div class="roadmap-milestone bg-blue-500 pulse-glow" style="left: 28.6%;" data-tooltip="Clause 6: In Progress"></div>
+                        <div class="roadmap-milestone bg-yellow-500" style="left: 42.9%;" data-tooltip="Clause 7: In Progress"></div>
+                        <div class="roadmap-milestone bg-gray-300" style="left: 57.2%;" data-tooltip="Clause 8: Not Started"></div>
+                        <div class="roadmap-milestone bg-gray-300" style="left: 71.5%;" data-tooltip="Clause 9: Not Started"></div>
+                        <div class="roadmap-milestone bg-gray-300" style="left: 85.8%;" data-tooltip="Clause 10: Not Started"></div>
+                        <div class="roadmap-milestone bg-purple-500" style="left: 100%;" data-tooltip="Certification Ready"></div>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-600 font-semibold mt-3">
+                        <span>Context</span>
+                        <span>Leadership</span>
+                        <span>Planning</span>
+                        <span>Support</span>
+                        <span>Operation</span>
+                        <span>Evaluation</span>
+                        <span>Improvement</span>
+                        <span>🎯 Cert</span>
+                    </div>
+                </div>
+                
+                <!-- Scrollable clause lanes -->
+                <div class="overflow-x-auto pb-4">
+                    <div class="flex space-x-5" style="min-width: 2400px;">
+                        <!-- Clause 4 -->
+                        <div class="clause-lane bg-gradient-to-br from-blue-400 to-blue-600 text-white">
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <div class="text-xs font-bold opacity-80 mb-1">CLAUSE 4</div>
+                                    <h4 class="text-lg font-black">Context</h4>
+                                </div>
+                                <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                                    <span class="text-2xl font-black">4</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300 drag-handle"></i>
+                                            <span class="tag bg-blue-100 text-blue-700">B.4.1</span>
+                                        </div>
+                                        <span class="tag bg-green-100 text-green-700 border border-green-300">
+                                            <i class="fas fa-check text-xs mr-1"></i>Applied
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Understanding Organization Context</h5>
+                                    <p class="text-xs text-gray-600 mb-3 leading-relaxed">Map internal/external issues affecting AI: regulatory landscape (FCRA, ECOA), market pressures, technological capabilities</p>
+                                    <div class="flex items-center justify-between text-xs">
+                                        <div class="flex items-center space-x-2 text-gray-500">
+                                            <i class="fas fa-paperclip"></i>
+                                            <span>4 documents</span>
+                                        </div>
+                                        <button class="text-blue-600 font-bold hover:text-blue-800">
+                                            <i class="fas fa-external-link-alt mr-1"></i>View
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300 drag-handle"></i>
+                                            <span class="tag bg-blue-100 text-blue-700">B.4.2</span>
+                                        </div>
+                                        <span class="tag bg-green-100 text-green-700 border border-green-300">
+                                            <i class="fas fa-check text-xs mr-1"></i>Applied
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Interested Parties Analysis</h5>
+                                    <p class="text-xs text-gray-600 mb-3 leading-relaxed">Identified: regulators (CFPB, OCC), customers, fairness advocates, data protection authorities, internal stakeholders</p>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="flex-1 bg-blue-50 text-blue-700 py-2 px-3 rounded-lg text-xs font-bold hover:bg-blue-100 transition">
+                                            <i class="fas fa-users mr-1"></i>View stakeholder map
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300 drag-handle"></i>
+                                            <span class="tag bg-blue-100 text-blue-700">B.4.3</span>
+                                        </div>
+                                        <span class="tag bg-green-100 text-green-700 border border-green-300">
+                                            <i class="fas fa-check text-xs mr-1"></i>Applied
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">AIMS Scope Definition</h5>
+                                    <p class="text-xs text-gray-600 mb-2 leading-relaxed">Scope: Credit scoring model, data pipeline, monitoring dashboard, human review process</p>
+                                    <div class="text-xs text-gray-500">
+                                        <i class="fas fa-sitemap mr-1"></i>Boundaries documented
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5 pt-4 border-t border-white/30">
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="font-bold">Progress</span>
+                                    <span class="font-black">100%</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-3">
+                                    <div class="bg-white rounded-full h-3 shadow-lg" style="width: 100%"></div>
+                                </div>
+                                <div class="mt-2 text-xs opacity-90">
+                                    <i class="fas fa-check-circle mr-1"></i>All guidance items completed
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clause 5 -->
+                        <div class="clause-lane bg-gradient-to-br from-purple-400 to-purple-600 text-white">
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <div class="text-xs font-bold opacity-80 mb-1">CLAUSE 5</div>
+                                    <h4 class="text-lg font-black">Leadership</h4>
+                                </div>
+                                <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                                    <span class="text-2xl font-black">5</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-purple-100 text-purple-700">B.5.1</span>
+                                        </div>
+                                        <span class="tag bg-green-100 text-green-700 border border-green-300">
+                                            <i class="fas fa-check text-xs mr-1"></i>Applied
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Leadership Commitment</h5>
+                                    <p class="text-xs text-gray-600 mb-3">Executive sponsorship secured. CEO & CRO signed AI governance charter</p>
+                                    <div class="bg-purple-50 p-2 rounded-lg border border-purple-200">
+                                        <div class="text-xs text-purple-900 font-semibold mb-1">Sponsor: Sarah Chen, CRO</div>
+                                        <div class="text-xs text-purple-700">Budget approved: $2.4M</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-purple-100 text-purple-700">B.5.2</span>
+                                        </div>
+                                        <span class="tag bg-green-100 text-green-700 border border-green-300">
+                                            <i class="fas fa-check text-xs mr-1"></i>Applied
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">AI Policy Framework</h5>
+                                    <p class="text-xs text-gray-600 mb-3">Responsible AI principles: fairness, transparency, accountability, privacy, security</p>
+                                    <button class="w-full bg-purple-50 text-purple-700 py-2 px-3 rounded-lg text-xs font-bold hover:bg-purple-100">
+                                        <i class="fas fa-file-pdf mr-1"></i>Download AI Policy v2.1
+                                    </button>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-purple-100 text-purple-700">B.5.3</span>
+                                        </div>
+                                        <span class="tag bg-green-100 text-green-700 border border-green-300">
+                                            <i class="fas fa-check text-xs mr-1"></i>Applied
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Organizational Roles</h5>
+                                    <p class="text-xs text-gray-600 mb-2">AI Ethics Committee, Chief AI Officer, Data Science Lead, Compliance Officer</p>
+                                    <div class="flex items-center space-x-2 text-xs">
+                                        <div class="flex -space-x-2">
+                                            <div class="w-6 h-6 rounded-full bg-blue-500 border-2 border-white"></div>
+                                            <div class="w-6 h-6 rounded-full bg-purple-500 border-2 border-white"></div>
+                                            <div class="w-6 h-6 rounded-full bg-pink-500 border-2 border-white"></div>
+                                            <div class="w-6 h-6 rounded-full bg-green-500 border-2 border-white flex items-center justify-center text-white font-bold text-xs">+2</div>
+                                        </div>
+                                        <span class="text-gray-600 font-semibold">6 roles assigned</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5 pt-4 border-t border-white/30">
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="font-bold">Progress</span>
+                                    <span class="font-black">100%</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-3">
+                                    <div class="bg-white rounded-full h-3 shadow-lg" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clause 6 -->
+                        <div class="clause-lane bg-gradient-to-br from-cyan-400 to-cyan-600 text-white border-4 border-yellow-400">
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <div class="text-xs font-bold opacity-80 mb-1">CLAUSE 6 • ACTIVE</div>
+                                    <h4 class="text-lg font-black">Planning</h4>
+                                </div>
+                                <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center pulse-glow">
+                                    <span class="text-2xl font-black">6</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-xl border-2 border-cyan-300">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-cyan-100 text-cyan-700">B.6.1</span>
+                                            <span class="tag bg-yellow-100 text-yellow-700">★ Critical</span>
+                                        </div>
+                                        <span class="tag bg-green-100 text-green-700 border border-green-300">
+                                            <i class="fas fa-check text-xs mr-1"></i>Applied
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">AI Risk Assessment</h5>
+                                    <p class="text-xs text-gray-600 mb-3">Comprehensive risk analysis: bias, fairness, explainability, data quality, drift</p>
+                                    <div class="bg-cyan-50 p-3 rounded-lg border border-cyan-200 mb-3">
+                                        <div class="text-xs font-bold text-cyan-900 mb-2">Key Risks Identified:</div>
+                                        <ul class="text-xs text-cyan-800 space-y-1">
+                                            <li>• Demographic bias (race, gender, age)</li>
+                                            <li>• Proxy discrimination via zip code</li>
+                                            <li>• Model drift from economic shifts</li>
+                                            <li>• Limited explainability for denials</li>
+                                        </ul>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button class="bg-cyan-50 text-cyan-700 py-2 px-3 rounded-lg text-xs font-bold hover:bg-cyan-100">
+                                            <i class="fas fa-chart-bar mr-1"></i>View matrix
+                                        </button>
+                                        <button class="bg-cyan-50 text-cyan-700 py-2 px-3 rounded-lg text-xs font-bold hover:bg-cyan-100">
+                                            <i class="fas fa-file-export mr-1"></i>Export
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-cyan-100 text-cyan-700">B.6.2</span>
+                                        </div>
+                                        <span class="tag bg-yellow-100 text-yellow-700 border border-yellow-300">
+                                            <i class="fas fa-spinner fa-spin text-xs mr-1"></i>In Progress
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">AI Impact Assessment (AIIA)</h5>
+                                    <p class="text-xs text-gray-600 mb-3">Evaluating societal impact: credit access, fairness to protected classes, economic effects</p>
+                                    <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                                        <div class="bg-cyan-500 rounded-full h-2" style="width: 75%"></div>
+                                    </div>
+                                    <div class="text-xs text-gray-500">75% complete • Due: Feb 28, 2025</div>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-cyan-100 text-cyan-700">B.6.3</span>
+                                        </div>
+                                        <span class="tag bg-yellow-100 text-yellow-700 border border-yellow-300">
+                                            <i class="fas fa-clock text-xs mr-1"></i>In Review
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Risk Treatment Plan</h5>
+                                    <p class="text-xs text-gray-600 mb-2">Mitigation controls: fairness constraints, adversarial testing, human oversight, explainability tools</p>
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-gray-500">12/15 controls defined</span>
+                                        <button class="text-cyan-600 font-bold">Complete →</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5 pt-4 border-t border-white/30">
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="font-bold">Progress</span>
+                                    <span class="font-black">78%</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-3">
+                                    <div class="bg-white rounded-full h-3 shadow-lg shimmer" style="width: 78%"></div>
+                                </div>
+                                <div class="mt-2 text-xs opacity-90">
+                                    <i class="fas fa-clock mr-1"></i>3 days ahead of schedule
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clause 7 -->
+                        <div class="clause-lane bg-gradient-to-br from-green-400 to-green-600 text-white">
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <div class="text-xs font-bold opacity-80 mb-1">CLAUSE 7</div>
+                                    <h4 class="text-lg font-black">Support</h4>
+                                </div>
+                                <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                                    <span class="text-2xl font-black">7</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-green-100 text-green-700">B.7.4</span>
+                                        </div>
+                                        <span class="tag bg-yellow-100 text-yellow-700 border border-yellow-300">
+                                            <i class="fas fa-spinner fa-spin text-xs mr-1"></i>Active
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Data Quality Assurance</h5>
+                                    <p class="text-xs text-gray-600 mb-3">Validation pipeline: completeness, accuracy, consistency, bias detection in credit data</p>
+                                    <div class="grid grid-cols-3 gap-2 mb-2">
+                                        <div class="bg-green-50 p-2 rounded text-center">
+                                            <div class="text-sm font-bold text-green-700">98.7%</div>
+                                            <div class="text-xs text-green-600">Accuracy</div>
+                                        </div>
+                                        <div class="bg-blue-50 p-2 rounded text-center">
+                                            <div class="text-sm font-bold text-blue-700">99.2%</div>
+                                            <div class="text-xs text-blue-600">Complete</div>
+                                        </div>
+                                        <div class="bg-yellow-50 p-2 rounded text-center">
+                                            <div class="text-sm font-bold text-yellow-700">2.3%</div>
+                                            <div class="text-xs text-yellow-600">Flagged</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-green-100 text-green-700">B.7.5</span>
+                                        </div>
+                                        <span class="tag bg-green-100 text-green-700 border border-green-300">
+                                            <i class="fas fa-check text-xs mr-1"></i>Applied
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Data Provenance & Lineage</h5>
+                                    <p class="text-xs text-gray-600 mb-3">Full audit trail: Experian, TransUnion, Equifax → ETL pipeline → training dataset → model</p>
+                                    <button class="w-full bg-green-50 text-green-700 py-2 px-3 rounded-lg text-xs font-bold hover:bg-green-100">
+                                        <i class="fas fa-project-diagram mr-1"></i>View data lineage graph
+                                    </button>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg border-2 border-red-200">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-green-100 text-green-700">B.7.8</span>
+                                        </div>
+                                        <span class="tag bg-red-100 text-red-700 border border-red-300">
+                                            <i class="fas fa-exclamation text-xs mr-1"></i>Gap
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Data Retention Policy</h5>
+                                    <p class="text-xs text-red-600 mb-3">⚠️ Missing: Training data retention policy for model reproducibility</p>
+                                    <button class="w-full bg-red-50 text-red-700 py-2 px-3 rounded-lg text-xs font-bold hover:bg-red-100">
+                                        <i class="fas fa-plus-circle mr-1"></i>Create policy from template
+                                    </button>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-green-100 text-green-700">B.7.2</span>
+                                        </div>
+                                        <span class="tag bg-green-100 text-green-700 border border-green-300">
+                                            <i class="fas fa-check text-xs mr-1"></i>Applied
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Competence & Training</h5>
+                                    <p class="text-xs text-gray-600 mb-2">Team trained in: AI ethics, fairness metrics, bias detection, explainability methods</p>
+                                    <div class="text-xs text-gray-500">
+                                        <i class="fas fa-users mr-1"></i>18 team members certified
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5 pt-4 border-t border-white/30">
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="font-bold">Progress</span>
+                                    <span class="font-black">72%</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-3">
+                                    <div class="bg-white rounded-full h-3 shadow-lg" style="width: 72%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clause 8 -->
+                        <div class="clause-lane bg-gradient-to-br from-orange-400 to-orange-600 text-white">
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <div class="text-xs font-bold opacity-80 mb-1">CLAUSE 8</div>
+                                    <h4 class="text-lg font-black">Operation</h4>
+                                </div>
+                                <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                                    <span class="text-2xl font-black">8</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-xl border-2 border-orange-300">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-orange-100 text-orange-700">B.8.4</span>
+                                            <span class="tag bg-yellow-100 text-yellow-700">★ Key</span>
+                                        </div>
+                                        <span class="tag bg-blue-100 text-blue-700 border border-blue-300">
+                                            <i class="fas fa-rocket text-xs mr-1"></i>Ready
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Model Cards & Documentation</h5>
+                                    <p class="text-xs text-gray-600 mb-3">Comprehensive docs: model architecture, training data, performance, limitations, intended use</p>
+                                    <div class="bg-orange-50 p-3 rounded-lg border border-orange-200 mb-3">
+                                        <div class="text-xs font-bold text-orange-900 mb-1">Template includes:</div>
+                                        <ul class="text-xs text-orange-800 space-y-1">
+                                            <li>• Model details & architecture</li>
+                                            <li>• Training data characteristics</li>
+                                            <li>• Performance metrics & fairness tests</li>
+                                            <li>• Known limitations & caveats</li>
+                                            <li>• Intended use & out-of-scope uses</li>
+                                        </ul>
+                                    </div>
+                                    <button class="w-full bg-orange-600 text-white py-2 px-3 rounded-lg text-xs font-bold hover:bg-orange-700">
+                                        <i class="fas fa-file-download mr-1"></i>Download Model Card Template
+                                    </button>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-orange-100 text-orange-700">B.8.2</span>
+                                        </div>
+                                        <span class="tag bg-gray-100 text-gray-700 border border-gray-300">
+                                            <i class="fas fa-hourglass text-xs mr-1"></i>Planned
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Testing & Validation</h5>
+                                    <p class="text-xs text-gray-600 mb-2">Planned: Fairness testing, adversarial examples, stress testing, boundary condition analysis</p>
+                                    <div class="text-xs text-gray-500">
+                                        <i class="fas fa-calendar mr-1"></i>Scheduled: Week 10-12
+                                    </div>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-orange-100 text-orange-700">B.8.6</span>
+                                        </div>
+                                        <span class="tag bg-gray-100 text-gray-700 border border-gray-300">
+                                            <i class="fas fa-hourglass text-xs mr-1"></i>Planned
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Human Oversight Procedures</h5>
+                                    <p class="text-xs text-gray-600 mb-2">Credit officers review edge cases, low-confidence predictions, protected class denials</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5 pt-4 border-t border-white/30">
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="font-bold">Progress</span>
+                                    <span class="font-black">38%</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-3">
+                                    <div class="bg-white rounded-full h-3 shadow-lg" style="width: 38%"></div>
+                                </div>
+                                <div class="mt-2 text-xs opacity-90">
+                                    <i class="fas fa-info-circle mr-1"></i>Starts in 2 weeks
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clause 9 -->
+                        <div class="clause-lane bg-gradient-to-br from-pink-400 to-pink-600 text-white">
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <div class="text-xs font-bold opacity-80 mb-1">CLAUSE 9</div>
+                                    <h4 class="text-lg font-black">Evaluation</h4>
+                                </div>
+                                <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                                    <span class="text-2xl font-black">9</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-xl border-2 border-pink-300">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-pink-100 text-pink-700">B.9.1</span>
+                                            <span class="tag bg-red-100 text-red-700">⚡ Critical</span>
+                                        </div>
+                                        <span class="tag bg-blue-100 text-blue-700 border border-blue-300">
+                                            <i class="fas fa-cog text-xs mr-1"></i>In Setup
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Performance Monitoring</h5>
+                                    <p class="text-xs text-gray-600 mb-3">Monitor: model drift, fairness metrics, data quality, prediction accuracy, response times</p>
+                                    <div class="bg-pink-50 p-3 rounded-lg border border-pink-200 mb-3">
+                                        <div class="text-xs font-bold text-pink-900 mb-2">KPIs to track:</div>
+                                        <div class="grid grid-cols-2 gap-2 text-xs text-pink-800">
+                                            <div>• Demographic parity</div>
+                                            <div>• Equal opportunity</div>
+                                            <div>• Calibration score</div>
+                                            <div>• Data drift index</div>
+                                            <div>• Prediction stability</div>
+                                            <div>• AUC-ROC score</div>
+                                        </div>
+                                    </div>
+                                    <button class="w-full bg-pink-50 text-pink-700 py-2 px-3 rounded-lg text-xs font-bold hover:bg-pink-100">
+                                        <i class="fas fa-chart-line mr-1"></i>Configure monitoring dashboard
+                                    </button>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-pink-100 text-pink-700">B.9.2</span>
+                                        </div>
+                                        <span class="tag bg-gray-100 text-gray-700 border border-gray-300">
+                                            <i class="fas fa-calendar-times text-xs mr-1"></i>Pending
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Internal Audit</h5>
+                                    <p class="text-xs text-gray-600 mb-2">Scheduled AIMS audit to review control effectiveness and compliance</p>
+                                    <div class="text-xs text-gray-500">
+                                        <i class="fas fa-calendar mr-1"></i>Q2 2025 • Not yet scheduled
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5 pt-4 border-t border-white/30">
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="font-bold">Progress</span>
+                                    <span class="font-black">25%</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-3">
+                                    <div class="bg-white rounded-full h-3 shadow-lg" style="width: 25%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clause 10 -->
+                        <div class="clause-lane bg-gradient-to-br from-rose-400 to-rose-600 text-white">
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <div class="text-xs font-bold opacity-80 mb-1">CLAUSE 10</div>
+                                    <h4 class="text-lg font-black">Improvement</h4>
+                                </div>
+                                <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                                    <span class="text-2xl font-black">10</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-rose-100 text-rose-700">B.10.1</span>
+                                        </div>
+                                        <span class="tag bg-gray-100 text-gray-700 border border-gray-300">
+                                            <i class="fas fa-pause text-xs mr-1"></i>Not Started
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Nonconformity & Corrective Action</h5>
+                                    <p class="text-xs text-gray-600 mb-2">Process for handling AI failures, bias incidents, compliance violations</p>
+                                    <button class="w-full bg-rose-50 text-rose-700 py-2 px-3 rounded-lg text-xs font-bold hover:bg-rose-100">
+                                        <i class="fas fa-plus mr-1"></i>Create incident response procedure
+                                    </button>
+                                </div>
+                                
+                                <div class="guidance-card bg-white text-gray-900 rounded-xl p-4 shadow-lg">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-grip-vertical text-gray-300"></i>
+                                            <span class="tag bg-rose-100 text-rose-700">B.10.2</span>
+                                        </div>
+                                        <span class="tag bg-gray-100 text-gray-700 border border-gray-300">
+                                            <i class="fas fa-pause text-xs mr-1"></i>Not Started
+                                        </span>
+                                    </div>
+                                    <h5 class="text-sm font-bold text-gray-900 mb-2">Continual Improvement</h5>
+                                    <p class="text-xs text-gray-600 mb-2">Feedback loops for model retraining, policy updates, process refinements</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5 pt-4 border-t border-white/30">
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="font-bold">Progress</span>
+                                    <span class="font-black">15%</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-3">
+                                    <div class="bg-white rounded-full h-3 shadow-lg" style="width: 15%"></div>
+                                </div>
+                                <div class="mt-2 text-xs opacity-90">
+                                    <i class="fas fa-info-circle mr-1"></i>Starts Week 14
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gap Analysis & Charts -->
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <!-- Gap Analyzer -->
+                <div class="glass-morphism rounded-2xl p-6 shadow-xl">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-black text-gray-900 mb-1">Guidance Gap Analyzer</h3>
+                            <p class="text-sm text-gray-600">Critical gaps requiring immediate attention</p>
+                        </div>
+                        <div class="alert-banner px-4 py-2 flex items-center space-x-2">
+                            <i class="fas fa-exclamation-triangle text-xl"></i>
+                            <span class="font-black text-lg">6 Gaps</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="border-l-4 border-red-500 bg-red-50 p-4 rounded-r-xl hover:shadow-lg transition">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2 mb-1">
+                                        <span class="tag bg-red-600 text-white">B.10.4</span>
+                                        <h5 class="text-sm font-bold text-gray-900">AI Incident Response</h5>
+                                    </div>
+                                    <p class="text-xs text-gray-700 leading-relaxed mb-2">No documented procedure for AI system failures or discriminatory outcomes</p>
+                                    <div class="flex items-center space-x-2 text-xs text-gray-600">
+                                        <i class="fas fa-layer-group"></i>
+                                        <span>Impacts: Clause 8, 9, 10</span>
+                                    </div>
+                                </div>
+                                <span class="tag bg-red-600 text-white whitespace-nowrap ml-2">Critical</span>
+                            </div>
+                            <button class="w-full bg-red-600 text-white py-2 px-3 rounded-lg text-xs font-bold hover:bg-red-700 transition mt-2">
+                                <i class="fas fa-arrow-right mr-1"></i>Create from template
+                            </button>
+                        </div>
+                        
+                        <div class="border-l-4 border-red-500 bg-red-50 p-4 rounded-r-xl hover:shadow-lg transition">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2 mb-1">
+                                        <span class="tag bg-red-600 text-white">B.7.8</span>
+                                        <h5 class="text-sm font-bold text-gray-900">Training Data Retention</h5>
+                                    </div>
+                                    <p class="text-xs text-gray-700 leading-relaxed mb-2">No policy for retaining training datasets for model reproducibility audits</p>
+                                </div>
+                                <span class="tag bg-red-600 text-white whitespace-nowrap ml-2">Critical</span>
+                            </div>
+                            <button class="w-full bg-red-600 text-white py-2 px-3 rounded-lg text-xs font-bold hover:bg-red-700 transition mt-2">
+                                <i class="fas fa-file-medical mr-1"></i>Define policy
+                            </button>
+                        </div>
+                        
+                        <div class="border-l-4 border-yellow-500 bg-yellow-50 p-4 rounded-r-xl hover:shadow-lg transition">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2 mb-1">
+                                        <span class="tag bg-yellow-600 text-white">B.8.7</span>
+                                        <h5 class="text-sm font-bold text-gray-900">Model Change Management</h5>
+                                    </div>
+                                    <p class="text-xs text-gray-700 leading-relaxed mb-2">Incomplete procedures for version control and rollback</p>
+                                </div>
+                                <span class="tag bg-yellow-600 text-white whitespace-nowrap ml-2">High</span>
+                            </div>
+                            <button class="w-full bg-yellow-600 text-white py-2 px-3 rounded-lg text-xs font-bold hover:bg-yellow-700 transition mt-2">
+                                <i class="fas fa-wrench mr-1"></i>Complete procedures
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts -->
+                <div class="glass-morphism rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-xl font-black text-gray-900 mb-4">Implementation Analytics</h3>
+                    <canvas id="multiChart" class="mb-4"></canvas>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-xl border-2 border-green-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <i class="fas fa-check-double text-green-600 text-2xl"></i>
+                                <span class="text-3xl font-black text-green-700">45</span>
+                            </div>
+                            <div class="text-xs text-green-600 font-bold">Controls Implemented</div>
+                            <div class="text-xs text-green-500">+8 this month</div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl border-2 border-blue-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <i class="fas fa-hourglass-half text-blue-600 text-2xl"></i>
+                                <span class="text-3xl font-black text-blue-700">12</span>
+                            </div>
+                            <div class="text-xs text-blue-600 font-bold">In Progress</div>
+                            <div class="text-xs text-blue-500">3 due this week</div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl border-2 border-purple-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <i class="fas fa-star text-purple-600 text-2xl"></i>
+                                <span class="text-3xl font-black text-purple-700">92%</span>
+                            </div>
+                            <div class="text-xs text-purple-600 font-bold">Quality Score</div>
+                            <div class="text-xs text-purple-500">Excellent rating</div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-orange-50 to-red-50 p-4 rounded-xl border-2 border-orange-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <i class="fas fa-calendar-check text-orange-600 text-2xl"></i>
+                                <span class="text-3xl font-black text-orange-700">8w</span>
+                            </div>
+                            <div class="text-xs text-orange-600 font-bold">Time Remaining</div>
+                            <div class="text-xs text-orange-500">On schedule</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-3 gap-6">
+                <div class="glass-morphism rounded-2xl p-6 group hover:shadow-2xl transition cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full filter blur-3xl opacity-20 group-hover:opacity-40 transition"></div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition floating">
+                            <i class="fas fa-download text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-black text-gray-900 mb-2">Templates & Tools</h3>
+                        <p class="text-sm text-gray-600 mb-4 leading-relaxed">Download pre-configured templates for model cards, risk assessments, and audit checklists</p>
+                        <button class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-bold text-sm hover:shadow-lg transition">
+                            Browse Library <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="glass-morphism rounded-2xl p-6 group hover:shadow-2xl transition cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full filter blur-3xl opacity-20 group-hover:opacity-40 transition"></div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition floating">
+                            <i class="fas fa-robot text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-black text-gray-900 mb-2">AI Assistant</h3>
+                        <p class="text-sm text-gray-600 mb-4 leading-relaxed">Get instant answers about Annex B guidance specific to your credit scoring implementation</p>
+                        <button class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-xl font-bold text-sm hover:shadow-lg transition">
+                            Ask Questions <i class="fas fa-comment-dots ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="glass-morphism rounded-2xl p-6 group hover:shadow-2xl transition cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full filter blur-3xl opacity-20 group-hover:opacity-40 transition"></div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition floating">
+                            <i class="fas fa-users text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-black text-gray-900 mb-2">Team Collaboration</h3>
+                        <p class="text-sm text-gray-600 mb-4 leading-relaxed">Invite stakeholders and collaborate on your ISO 42001 implementation journey</p>
+                        <button class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 px-4 rounded-xl font-bold text-sm hover:shadow-lg transition">
+                            Manage Team <i class="fas fa-user-plus ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bottom Action Bar -->
+    <div class="fixed bottom-0 left-0 right-0 glass-morphism border-t-2 border-white/50 p-5 shadow-2xl z-50">
+        <div class="max-w-screen-2xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-8">
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg"></div>
+                    <span class="text-sm text-gray-700 font-semibold">Auto-saved 30 seconds ago</span>
+                </div>
+                <div class="flex items-center space-x-2 text-gray-600">
+                    <i class="fas fa-clock"></i>
+                    <span class="text-sm font-semibold">Est. completion: <strong class="text-gray-900">April 15, 2025</strong></span>
+                </div>
+                <div class="flex items-center space-x-2 text-gray-600">
+                    <i class="fas fa-user-friends"></i>
+                    <span class="text-sm font-semibold"><strong class="text-gray-900">4 team members</strong> online</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <button class="px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 font-bold text-sm transition shadow-sm">
+                    <i class="fas fa-save mr-2"></i>Save Manually
+                </button>
+                <button class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-2xl font-bold text-sm transition">
+                    <i class="fas fa-file-pdf mr-2"></i>Export Playbook PDF
+                </button>
+                <button class="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:shadow-2xl font-bold text-sm transition">
+                    <i class="fas fa-share-alt mr-2"></i>Share Progress
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Multi-category Chart
+        const multiCtx = document.getElementById('multiChart').getContext('2d');
+        new Chart(multiCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Clause 4', 'Clause 5', 'Clause 6', 'Clause 7', 'Clause 8', 'Clause 9', 'Clause 10'],
+                datasets: [{
+                    label: 'Applied',
+                    data: [3, 3, 2, 3, 2, 1, 0],
+                    backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                    borderRadius: 8,
+                }, {
+                    label: 'In Progress',
+                    data: [0, 0, 1, 2, 3, 2, 1],
+                    backgroundColor: 'rgba(234, 179, 8, 0.8)',
+                    borderRadius: 8,
+                }, {
+                    label: 'Gaps',
+                    data: [0, 0, 0, 1, 2, 2, 1],
+                    backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                    borderRadius: 8,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            font: {
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 15,
+                            font: {
+                                weight: 'bold',
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        cornerRadius: 8
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

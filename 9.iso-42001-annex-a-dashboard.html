@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annex A: Your Live AI Controls Library (Normative) - ISO 42001 | MediGenix AIMS</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #0066cc;
+            --primary-dark: #004080;
+            --success-green: #28a745;
+            --warning-yellow: #ffc107;
+            --danger-red: #dc3545;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #495057;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .dashboard-wrapper {
+            max-width: 1920px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-weight: 900;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+            border: 3px solid white;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* Stats Banner */
+        .stats-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .stats-text {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .stats-main {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .stats-details {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-icon {
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-container-small {
+            position: relative;
+            height: 150px;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            gap: 0;
+            min-height: calc(100vh - 250px);
+        }
+
+        .controls-section {
+            padding: 30px 40px;
+            overflow-y: auto;
+            max-height: calc(100vh - 250px);
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 20px;
+            background: var(--light-gray);
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: var(--dark-gray);
+            font-size: 14px;
+        }
+
+        select, input[type="search"] {
+            padding: 8px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 180px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:hover, input[type="search"]:hover {
+            border-color: var(--primary-blue);
+        }
+
+        select:focus, input[type="search"]:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        input[type="search"] {
+            min-width: 300px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success-green);
+            color: white;
+        }
+
+        /* Controls Table */
+        .controls-table {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        tbody tr:hover {
+            background: var(--light-gray);
+            transform: scale(1.01);
+        }
+
+        tbody tr.selected {
+            background: rgba(0, 102, 204, 0.08);
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        td {
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        .control-id {
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-family: 'Courier New', monospace;
+        }
+
+        .control-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .control-category {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-clause {
+            background: #e3f2fd;
+            color: #1976d2;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .badge-clause:hover {
+            background: #1976d2;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-green { background: var(--success-green); }
+        .status-yellow { background: var(--warning-yellow); }
+        .status-red { background: var(--danger-red); }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--medium-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-green), #20c997);
+            transition: width 0.5s ease;
+        }
+
+        /* Right Panel */
+        .right-panel {
+            background: var(--light-gray);
+            border-left: 3px solid var(--border-color);
+            padding: 30px;
+            overflow-y: auto;
+            max-height: calc(100vh - 250px);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .section-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .linked-clauses {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .clause-badge {
+            padding: 8px 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clause-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .template-item {
+            padding: 12px;
+            background: var(--light-gray);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--primary-blue);
+            transition: all 0.3s ease;
+        }
+
+        .template-item:hover {
+            background: var(--medium-gray);
+            transform: translateX(5px);
+        }
+
+        .template-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .template-type {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .heatmap-cell.green { background: var(--success-green); }
+        .heatmap-cell.yellow { background: var(--warning-yellow); color: #333; }
+        .heatmap-cell.red { background: var(--danger-red); }
+
+        .system-name {
+            font-size: 9px;
+            margin-top: 3px;
+        }
+
+        .gap-analysis {
+            margin-top: 15px;
+        }
+
+        .gap-item {
+            padding: 12px;
+            background: #fff3cd;
+            border-left: 4px solid var(--warning-yellow);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .gap-item.critical {
+            background: #f8d7da;
+            border-left-color: var(--danger-red);
+        }
+
+        .evidence-vault {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .evidence-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--light-gray);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .evidence-item:hover {
+            background: var(--medium-gray);
+        }
+
+        .evidence-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .evidence-info {
+            flex: 1;
+        }
+
+        .evidence-name {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .evidence-date {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* Storytelling Section */
+        .storytelling {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px 40px;
+            margin: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .story-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .story-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .story-content {
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        /* Department Heatmap */
+        .dept-heatmap {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .dept-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+        }
+
+        .dept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .dept-card {
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .dept-name {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .dept-percentage {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        /* Action Buttons */
+        .action-panel {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 200;
+        }
+
+        .fab {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.6);
+        }
+
+        .fab-export {
+            background: var(--success-green);
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .right-panel {
+                border-left: none;
+                border-top: 3px solid var(--border-color);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Drag and Drop Canvas */
+        .kanban-section {
+            margin: 30px 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .kanban-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+        }
+
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .kanban-column {
+            background: var(--light-gray);
+            padding: 20px;
+            border-radius: 12px;
+            min-height: 300px;
+        }
+
+        .kanban-column-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary-blue);
+        }
+
+        .kanban-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+
+        .kanban-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        .risk-high { background: #ffe5e5; color: var(--danger-red); }
+        .risk-medium { background: #fff8e1; color: #f57c00; }
+        .risk-low { background: #e8f5e9; color: var(--success-green); }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="company-info">
+                    <div class="logo">
+                        <div class="logo-icon">🤖</div>
+                        <div>
+                            <div>MediGenix AIMS Platform</div>
+                            <div style="font-size: 12px; opacity: 0.8;">ISO 42001 Compliance Management</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div>
+                        <div style="text-align: right; font-weight: 600;">Emma Richardson</div>
+                        <div style="text-align: right; font-size: 12px; opacity: 0.8;">AI Governance Lead</div>
+                    </div>
+                    <div class="user-avatar">ER</div>
+                </div>
+            </div>
+            <div>
+                <h1 class="page-title">📋 Annex A: Your Live AI Controls Library (Normative)</h1>
+                <p class="page-subtitle">Comprehensive AI Management System Controls | Last Updated: November 17, 2025</p>
+            </div>
+        </header>
+
+        <!-- Stats Banner -->
+        <div class="stats-banner">
+            <div class="stats-text">
+                <div class="stats-main">✅ 43/43 Normative Controls Loaded – 68% Implemented Company-Wide</div>
+                <div class="stats-details">
+                    <div class="stat-item">
+                        <div class="stat-icon">✓</div>
+                        <div>
+                            <div style="font-size: 18px; font-weight: 700;">29</div>
+                            <div style="font-size: 12px;">Fully Implemented</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">⚠</div>
+                        <div>
+                            <div style="font-size: 18px; font-weight: 700;">11</div>
+                            <div style="font-size: 12px;">In Progress</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">✗</div>
+                        <div>
+                            <div style="font-size: 18px; font-weight: 700;">3</div>
+                            <div style="font-size: 12px;">Not Started</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">📊</div>
+                        <div>
+                            <div style="font-size: 18px; font-weight: 700;">7</div>
+                            <div style="font-size: 12px;">AI Systems</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-container-small">
+                <canvas id="donutChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Storytelling Section -->
+        <div class="storytelling fade-in">
+            <div class="story-title">
+                <div class="story-icon">💡</div>
+                <div>Emma's Journey: Real-World AI Governance in Action</div>
+            </div>
+            <div class="story-content">
+                <p><strong>Emma Richardson</strong>, the AI Governance Lead at <strong>MediGenix</strong> (a cutting-edge medical device company building AI-assisted surgical robots), opens this dashboard each morning to orchestrate her organization's AI compliance strategy. With 7 AI systems in production—including the flagship <strong>SGROBOT-7</strong> surgical assistant—Emma needs a command center that brings together ISO 42001's 43 normative controls with real implementation data.</p>
+                <br>
+                <p>Today, she's focusing on <strong>Control A.8.4 "Transparency and Explainability"</strong>. Three of her systems still show red status because they lack proper LIME/SHAP explainability reports. With a single click, she can drill down into implementation gaps, access ready-to-use policy templates, assign tasks to her team, and track progress across all departments. The heatmap shows her R&D team is struggling (red zone) while Legal is excelling (green zone). This visibility empowers her to act strategically, allocate resources effectively, and demonstrate compliance readiness to both internal stakeholders and external auditors.</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <span class="filter-label">🎯 Control Objective:</span>
+                        <select id="objectiveFilter">
+                            <option value="all">All Objectives (A.4–A.13)</option>
+                            <option value="A.4">A.4 - Resources for AI Systems</option>
+                            <option value="A.5">A.5 - AI System Impact Assessment</option>
+                            <option value="A.6">A.6 - AI System Life Cycle</option>
+                            <option value="A.7">A.7 - Data Quality & Governance</option>
+                            <option value="A.8">A.8 - Information for Interested Parties</option>
+                            <option value="A.9">A.9 - Use of AI Systems</option>
+                            <option value="A.10">A.10 - Third-Party Relationships</option>
+                            <option value="A.11">A.11 - Continuous Monitoring</option>
+                            <option value="A.12">A.12 - Security & Safety</option>
+                            <option value="A.13">A.13 - Incident Management</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">🚦 Status:</span>
+                        <select id="statusFilter">
+                            <option value="all">All Statuses</option>
+                            <option value="implemented">✅ Implemented</option>
+                            <option value="progress">⚠️ In Progress</option>
+                            <option value="notstarted">❌ Not Started</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">🔍 Search:</span>
+                        <input type="search" id="searchInput" placeholder="Search controls by keyword...">
+                    </div>
+                    <button class="btn btn-success" onclick="exportSoA()">
+                        📄 Export Statement of Applicability
+                    </button>
+                </div>
+
+                <!-- Controls Table -->
+                <div class="controls-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Control ID</th>
+                                <th>Title & Category</th>
+                                <th>Risk Mitigated (Annex C)</th>
+                                <th>Linked Clauses</th>
+                                <th>Implementation Status</th>
+                                <th>Evidence</th>
+                            </tr>
+                        </thead>
+                        <tbody id="controlsTableBody">
+                            <!-- Controls will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="right-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">📊 Control Details</h2>
+                    <button class="btn btn-primary" onclick="applyToSystem()">
+                        ⚡ Apply to AI System
+                    </button>
+                </div>
+
+                <div id="controlDetailsPanel">
+                    <div class="section-card">
+                        <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <div style="font-size: 48px; margin-bottom: 15px;">👈</div>
+                            <h3>Select a Control</h3>
+                            <p>Click on any control from the table to view detailed information, implementation guidance, templates, and system-specific status.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Heatmap -->
+        <div class="dept-heatmap">
+            <h2 class="dept-title">🏢 Implementation Status by Department</h2>
+            <div class="dept-grid">
+                <div class="dept-card" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);">
+                    <div class="dept-name">🔬 R&D</div>
+                    <div class="dept-percentage">42%</div>
+                    <div style="font-size: 12px; margin-top: 5px;">18/43 Controls</div>
+                </div>
+                <div class="dept-card" style="background: linear-gradient(135deg, #28a745 0%, #218838 100%);">
+                    <div class="dept-name">⚖️ Legal</div>
+                    <div class="dept-percentage">95%</div>
+                    <div style="font-size: 12px; margin-top: 5px;">41/43 Controls</div>
+                </div>
+                <div class="dept-card" style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);">
+                    <div class="dept-name">💼 Operations</div>
+                    <div class="dept-percentage">71%</div>
+                    <div style="font-size: 12px; margin-top: 5px;">31/43 Controls</div>
+                </div>
+                <div class="dept-card" style="background: linear-gradient(135deg, #28a745 0%, #218838 100%);">
+                    <div class="dept-name">🔒 Security</div>
+                    <div class="dept-percentage">88%</div>
+                    <div style="font-size: 12px; margin-top: 5px;">38/43 Controls</div>
+                </div>
+                <div class="dept-card" style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);">
+                    <div class="dept-name">📊 Data Science</div>
+                    <div class="dept-percentage">65%</div>
+                    <div style="font-size: 12px; margin-top: 5px;">28/43 Controls</div>
+                </div>
+                <div class="dept-card" style="background: linear-gradient(135deg, #28a745 0%, #218838 100%);">
+                    <div class="dept-name">🎯 Quality Assurance</div>
+                    <div class="dept-percentage">84%</div>
+                    <div style="font-size: 12px; margin-top: 5px;">36/43 Controls</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drag & Drop Kanban -->
+        <div class="kanban-section">
+            <h2 class="kanban-title">🎨 Control → AI System Mapping (Drag & Drop)</h2>
+            <div class="kanban-board">
+                <div class="kanban-column">
+                    <div class="kanban-column-title">🤖 SGROBOT-7 Machine</div>
+                    <div class="kanban-card">
+                        <strong>A.8.4</strong> - Transparency & Explainability
+                        <span class="risk-badge risk-high">HIGH RISK</span>
+                    </div>
+                    <div class="kanban-card">
+                        <strong>A.7.2</strong> - Data Quality Validation
+                        <span class="risk-badge risk-medium">MEDIUM RISK</span>
+                    </div>
+                    <div class="kanban-card">
+                        <strong>A.12.5</strong> - Safety Monitoring
+                        <span class="risk-badge risk-high">HIGH RISK</span>
+                    </div>
+                </div>
+                <div class="kanban-column">
+                    <div class="kanban-column-title">🔬 PathologyAI Diagnostics</div>
+                    <div class="kanban-card">
+                        <strong>A.9.3</strong> - Bias Detection & Mitigation
+                        <span class="risk-badge risk-medium">MEDIUM RISK</span>
+                    </div>
+                    <div class="kanban-card">
+                        <strong>A.7.5</strong> - Data Provenance Tracking
+                        <span class="risk-badge risk-low">LOW RISK</span>
+                    </div>
+                </div>
+                <div class="kanban-column">
+                    <div class="kanban-column-title">💊 DrugInteraction Analyzer</div>
+                    <div class="kanban-card">
+                        <strong>A.10.2</strong> - Third-Party Model Validation
+                        <span class="risk-badge risk-medium">MEDIUM RISK</span>
+                    </div>
+                </div>
+                <div class="kanban-column">
+                    <div class="kanban-column-title">📋 Available Controls</div>
+                    <div class="kanban-card">
+                        <strong>A.11.4</strong> - Performance Monitoring
+                        <span class="risk-badge risk-low">LOW RISK</span>
+                    </div>
+                    <div class="kanban-card">
+                        <strong>A.13.2</strong> - Incident Response Plan
+                        <span class="risk-badge risk-medium">MEDIUM RISK</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-panel">
+            <button class="fab fab-export tooltip" onclick="exportSoA()">
+                📥
+                <span class="tooltiptext">Export Statement of Applicability</span>
+            </button>
+            <button class="fab tooltip" onclick="refreshData()">
+                🔄
+                <span class="tooltiptext">Refresh Data</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ISO 42001 Annex A Controls Data
+        const annexAControls = [
+            // A.4 - Resources for AI Systems
+            { id: 'A.4.1', title: 'AI System Resource Documentation', category: 'Resources for AI Systems', risk: 'Resource Insufficiency', clauses: ['4.4', '7.1', '8.1'], status: 'implemented', evidence: 3, dept: 'Operations' },
+            { id: 'A.4.2', title: 'Data Resource Management', category: 'Resources for AI Systems', risk: 'Data Quality Issues', clauses: ['7.1', '8.1'], status: 'implemented', evidence: 5, dept: 'Data Science' },
+            { id: 'A.4.3', title: 'Computing Infrastructure', category: 'Resources for AI Systems', risk: 'System Performance', clauses: ['7.1'], status: 'implemented', evidence: 2, dept: 'Operations' },
+            { id: 'A.4.4', title: 'Human Resource Competency', category: 'Resources for AI Systems', risk: 'Skills Gap', clauses: ['7.2'], status: 'progress', evidence: 1, dept: 'R&D' },
+            
+            // A.5 - AI System Impact Assessment
+            { id: 'A.5.1', title: 'Impact Assessment Methodology', category: 'AI System Impact Assessment', risk: 'Societal Harm', clauses: ['4.2', '6.1.4', '8.4'], status: 'implemented', evidence: 4, dept: 'Legal' },
+            { id: 'A.5.2', title: 'Stakeholder Impact Analysis', category: 'AI System Impact Assessment', risk: 'Stakeholder Harm', clauses: ['4.2', '8.4'], status: 'implemented', evidence: 3, dept: 'Legal' },
+            { id: 'A.5.3', title: 'Environmental Impact Assessment', category: 'AI System Impact Assessment', risk: 'Environmental Damage', clauses: ['8.4'], status: 'progress', evidence: 1, dept: 'Operations' },
+            { id: 'A.5.4', title: 'Ethical Impact Review', category: 'AI System Impact Assessment', risk: 'Ethical Violations', clauses: ['5.2', '8.4'], status: 'implemented', evidence: 4, dept: 'Legal' },
+            
+            // A.6 - AI System Life Cycle
+            { id: 'A.6.1', title: 'Life Cycle Stage Definition', category: 'AI System Life Cycle', risk: 'Process Gaps', clauses: ['4.4', '8.1'], status: 'implemented', evidence: 3, dept: 'R&D' },
+            { id: 'A.6.2', title: 'Design & Development Controls', category: 'AI System Life Cycle', risk: 'Development Flaws', clauses: ['8.1'], status: 'progress', evidence: 2, dept: 'R&D' },
+            { id: 'A.6.3', title: 'Verification & Validation', category: 'AI System Life Cycle', risk: 'System Failures', clauses: ['8.1'], status: 'notstarted', evidence: 0, dept: 'Quality Assurance' },
+            { id: 'A.6.4', title: 'Deployment Procedures', category: 'AI System Life Cycle', risk: 'Deployment Issues', clauses: ['8.1'], status: 'implemented', evidence: 3, dept: 'Operations' },
+            { id: 'A.6.5', title: 'Monitoring & Maintenance', category: 'AI System Life Cycle', risk: 'Degradation', clauses: ['8.1', '9.1'], status: 'implemented', evidence: 4, dept: 'Operations' },
+            
+            // A.7 - Data Quality & Governance
+            { id: 'A.7.1', title: 'Data Quality Requirements', category: 'Data Quality & Governance', risk: 'Poor Data Quality', clauses: ['7.5', '8.1'], status: 'implemented', evidence: 5, dept: 'Data Science' },
+            { id: 'A.7.2', title: 'Data Provenance Tracking', category: 'Data Quality & Governance', risk: 'Data Lineage Loss', clauses: ['7.5', '8.1'], status: 'implemented', evidence: 4, dept: 'Data Science' },
+            { id: 'A.7.3', title: 'Data Privacy & Protection', category: 'Data Quality & Governance', risk: 'Privacy Violations', clauses: ['7.5', '8.1'], status: 'implemented', evidence: 6, dept: 'Security' },
+            { id: 'A.7.4', title: 'Data Bias Identification', category: 'Data Quality & Governance', risk: 'Algorithmic Bias', clauses: ['8.2', '8.4'], status: 'progress', evidence: 2, dept: 'Data Science' },
+            { id: 'A.7.5', title: 'Data Retention & Disposal', category: 'Data Quality & Governance', risk: 'Compliance Violations', clauses: ['7.5'], status: 'implemented', evidence: 3, dept: 'Legal' },
+            
+            // A.8 - Information for Interested Parties
+            { id: 'A.8.1', title: 'User Information Disclosure', category: 'Information for Interested Parties', risk: 'User Misunderstanding', clauses: ['4.2', '7.4'], status: 'implemented', evidence: 4, dept: 'Legal' },
+            { id: 'A.8.2', title: 'Technical Documentation', category: 'Information for Interested Parties', risk: 'Documentation Gaps', clauses: ['7.5'], status: 'implemented', evidence: 3, dept: 'R&D' },
+            { id: 'A.8.3', title: 'System Limitations Disclosure', category: 'Information for Interested Parties', risk: 'Misuse', clauses: ['7.4', '8.4'], status: 'implemented', evidence: 4, dept: 'Legal' },
+            { id: 'A.8.4', title: 'Transparency & Explainability', category: 'Information for Interested Parties', risk: 'Black Box Systems', clauses: ['4.2', '5.2', '6.1.4', '8.4', '9.1'], status: 'progress', evidence: 1, dept: 'Data Science' },
+            { id: 'A.8.5', title: 'Stakeholder Communication', category: 'Information for Interested Parties', risk: 'Communication Failure', clauses: ['4.2', '7.4'], status: 'implemented', evidence: 3, dept: 'Legal' },
+            
+            // A.9 - Use of AI Systems
+            { id: 'A.9.1', title: 'Intended Use Definition', category: 'Use of AI Systems', risk: 'Misapplication', clauses: ['4.1', '8.1'], status: 'implemented', evidence: 4, dept: 'R&D' },
+            { id: 'A.9.2', title: 'User Training & Competency', category: 'Use of AI Systems', risk: 'User Error', clauses: ['7.2'], status: 'implemented', evidence: 3, dept: 'Operations' },
+            { id: 'A.9.3', title: 'Human Oversight Requirements', category: 'Use of AI Systems', risk: 'Autonomous Harm', clauses: ['8.1', '8.4'], status: 'implemented', evidence: 5, dept: 'Operations' },
+            { id: 'A.9.4', title: 'Usage Monitoring & Logging', category: 'Use of AI Systems', risk: 'Misuse Detection Failure', clauses: ['9.1'], status: 'implemented', evidence: 4, dept: 'Security' },
+            { id: 'A.9.5', title: 'Feedback Mechanisms', category: 'Use of AI Systems', risk: 'Issue Escalation Failure', clauses: ['9.1', '10.2'], status: 'progress', evidence: 2, dept: 'Operations' },
+            
+            // A.10 - Third-Party Relationships
+            { id: 'A.10.1', title: 'Third-Party Due Diligence', category: 'Third-Party Relationships', risk: 'Vendor Risk', clauses: ['4.2', '8.1'], status: 'implemented', evidence: 4, dept: 'Legal' },
+            { id: 'A.10.2', title: 'AI Component Procurement', category: 'Third-Party Relationships', risk: 'Supply Chain Risk', clauses: ['8.1'], status: 'implemented', evidence: 3, dept: 'Operations' },
+            { id: 'A.10.3', title: 'Contractual Obligations', category: 'Third-Party Relationships', risk: 'Liability Issues', clauses: ['4.2'], status: 'implemented', evidence: 5, dept: 'Legal' },
+            { id: 'A.10.4', title: 'Third-Party Model Validation', category: 'Third-Party Relationships', risk: 'External Model Failures', clauses: ['8.1'], status: 'progress', evidence: 1, dept: 'R&D' },
+            
+            // A.11 - Continuous Monitoring
+            { id: 'A.11.1', title: 'Performance Monitoring', category: 'Continuous Monitoring', risk: 'Performance Degradation', clauses: ['9.1'], status: 'implemented', evidence: 5, dept: 'Operations' },
+            { id: 'A.11.2', title: 'Bias & Fairness Monitoring', category: 'Continuous Monitoring', risk: 'Discrimination', clauses: ['9.1'], status: 'progress', evidence: 2, dept: 'Data Science' },
+            { id: 'A.11.3', title: 'Accuracy Tracking', category: 'Continuous Monitoring', risk: 'Accuracy Drift', clauses: ['9.1'], status: 'implemented', evidence: 4, dept: 'Quality Assurance' },
+            { id: 'A.11.4', title: 'Security Monitoring', category: 'Continuous Monitoring', risk: 'Security Breaches', clauses: ['9.1'], status: 'implemented', evidence: 6, dept: 'Security' },
+            
+            // A.12 - Security & Safety
+            { id: 'A.12.1', title: 'AI System Security Controls', category: 'Security & Safety', risk: 'Cyber Attacks', clauses: ['8.1'], status: 'implemented', evidence: 5, dept: 'Security' },
+            { id: 'A.12.2', title: 'Data Security Measures', category: 'Security & Safety', risk: 'Data Breaches', clauses: ['7.5', '8.1'], status: 'implemented', evidence: 6, dept: 'Security' },
+            { id: 'A.12.3', title: 'Model Robustness Testing', category: 'Security & Safety', risk: 'Adversarial Attacks', clauses: ['8.1'], status: 'progress', evidence: 2, dept: 'Security' },
+            { id: 'A.12.4', title: 'Safety-Critical System Controls', category: 'Security & Safety', risk: 'Physical Harm', clauses: ['8.1', '8.4'], status: 'implemented', evidence: 5, dept: 'R&D' },
+            { id: 'A.12.5', title: 'Fail-Safe Mechanisms', category: 'Security & Safety', risk: 'Catastrophic Failure', clauses: ['8.1'], status: 'notstarted', evidence: 0, dept: 'R&D' },
+            
+            // A.13 - Incident Management
+            { id: 'A.13.1', title: 'Incident Response Plan', category: 'Incident Management', risk: 'Response Delays', clauses: ['10.2'], status: 'implemented', evidence: 4, dept: 'Operations' },
+            { id: 'A.13.2', title: 'Incident Detection & Reporting', category: 'Incident Management', risk: 'Undetected Incidents', clauses: ['10.2'], status: 'implemented', evidence: 3, dept: 'Security' },
+            { id: 'A.13.3', title: 'Root Cause Analysis', category: 'Incident Management', risk: 'Recurring Incidents', clauses: ['10.2'], status: 'implemented', evidence: 4, dept: 'Quality Assurance' },
+            { id: 'A.13.4', title: 'Corrective Action Management', category: 'Incident Management', risk: 'Unresolved Issues', clauses: ['10.2'], status: 'notstarted', evidence: 0, dept: 'Operations' }
+        ];
+
+        // AI Systems Data
+        const aiSystems = [
+            { id: 'SGROBOT-7', name: 'SGROBOT-7 Machine', status: 'red', controls: 15 },
+            { id: 'PATHOLOGY-AI', name: 'PathologyAI Diagnostics', status: 'yellow', controls: 12 },
+            { id: 'DRUG-INTERACT', name: 'DrugInteraction Analyzer', status: 'green', controls: 18 },
+            { id: 'RADIOLOGY-ASSIST', name: 'RadiologyAssist', status: 'yellow', controls: 14 },
+            { id: 'PATIENT-TRIAGE', name: 'Patient Triage AI', status: 'green', controls: 16 },
+            { id: 'CLINICAL-NOTES', name: 'Clinical Notes Parser', status: 'green', controls: 17 },
+            { id: 'TREATMENT-REC', name: 'Treatment Recommender', status: 'red', controls: 11 }
+        ];
+
+        // Initialize Dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            renderControlsTable();
+            
+            // Create chart with error handling
+            setTimeout(() => {
+                try {
+                    if (typeof Chart !== 'undefined') {
+                        createDonutChart();
+                    } else {
+                        console.warn('Chart.js not loaded, using fallback display');
+                        createFallbackChart();
+                    }
+                } catch (e) {
+                    console.error('Chart creation error:', e);
+                    createFallbackChart();
+                }
+            }, 100);
+        });
+
+        // Fallback chart display (CSS-based)
+        function createFallbackChart() {
+            const container = document.querySelector('.chart-container-small');
+            if (container) {
+                container.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; gap: 10px;">
+                        <div style="font-size: 48px; font-weight: 700;">68%</div>
+                        <div style="font-size: 14px; text-align: center;">
+                            <div>29 Implemented</div>
+                            <div>11 In Progress</div>
+                            <div>3 Not Started</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Render Controls Table
+        function renderControlsTable() {
+            const tbody = document.getElementById('controlsTableBody');
+            tbody.innerHTML = '';
+            
+            annexAControls.forEach((control, index) => {
+                const row = document.createElement('tr');
+                row.onclick = function() { selectControl(control, this); };
+                row.className = index === 0 ? 'selected' : '';
+                
+                const statusIcon = control.status === 'implemented' ? '✅' : 
+                                  control.status === 'progress' ? '⚠️' : '❌';
+                const statusText = control.status === 'implemented' ? 'Implemented' : 
+                                  control.status === 'progress' ? 'In Progress' : 'Not Started';
+                const statusDot = control.status === 'implemented' ? 'status-green' : 
+                                 control.status === 'progress' ? 'status-yellow' : 'status-red';
+                
+                const percentage = control.status === 'implemented' ? 100 : 
+                                  control.status === 'progress' ? 65 : 0;
+                
+                row.innerHTML = `
+                    <td><span class="control-id">${control.id}</span></td>
+                    <td>
+                        <div class="control-title">${control.title}</div>
+                        <div class="control-category">📁 ${control.category}</div>
+                    </td>
+                    <td>⚠️ ${control.risk}</td>
+                    <td>
+                        ${control.clauses.map(c => `<span class="badge badge-clause">§ ${c}</span>`).join('')}
+                    </td>
+                    <td>
+                        <div class="status-indicator">
+                            <span class="status-dot ${statusDot}"></span>
+                            <span>${statusIcon} ${statusText}</span>
+                        </div>
+                        <div class="progress-bar" style="margin-top: 8px;">
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </td>
+                    <td>📎 ${control.evidence} docs</td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Auto-select first control with a slight delay
+            setTimeout(() => {
+                const firstRow = document.querySelector('#controlsTableBody tr');
+                if (firstRow && annexAControls.length > 0) {
+                    selectControl(annexAControls[0], firstRow);
+                }
+            }, 50);
+        }
+
+        // Select Control
+        function selectControl(control, rowElement) {
+            // Update selected row
+            document.querySelectorAll('#controlsTableBody tr').forEach(row => {
+                row.classList.remove('selected');
+            });
+            
+            // If rowElement is provided, select it; otherwise try to find it from event
+            if (rowElement) {
+                rowElement.classList.add('selected');
+            } else if (typeof event !== 'undefined' && event.currentTarget) {
+                event.currentTarget.classList.add('selected');
+            }
+            
+            // Render detail panel
+            const panel = document.getElementById('controlDetailsPanel');
+            const statusColor = control.status === 'implemented' ? 'var(--success-green)' : 
+                               control.status === 'progress' ? 'var(--warning-yellow)' : 'var(--danger-red)';
+            
+            panel.innerHTML = `
+                <div class="section-card fade-in">
+                    <div class="section-title">
+                        <div class="section-icon">🎯</div>
+                        <div>
+                            <div>${control.id} - ${control.title}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary); font-weight: 400;">Category: ${control.category}</div>
+                        </div>
+                    </div>
+                    <div style="padding: 15px; background: ${statusColor}22; border-radius: 8px; border-left: 4px solid ${statusColor}; margin-top: 15px;">
+                        <strong>Status:</strong> ${control.status === 'implemented' ? '✅ Fully Implemented' : 
+                                                    control.status === 'progress' ? '⚠️ In Progress (65% complete)' : 
+                                                    '❌ Not Started'}<br>
+                        <strong>Primary Risk:</strong> ${control.risk}<br>
+                        <strong>Owner:</strong> ${control.dept} Department
+                    </div>
+                </div>
+
+                <div class="section-card fade-in">
+                    <div class="section-title">
+                        <div class="section-icon">🔗</div>
+                        <div>Linked ISO 42001 Clauses</div>
+                    </div>
+                    <div class="linked-clauses">
+                        ${control.clauses.map(c => `<span class="clause-badge">Clause ${c}</span>`).join('')}
+                    </div>
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-top: 10px;">
+                        Click any clause badge to view full requirement text and implementation guidance.
+                    </div>
+                </div>
+
+                <div class="section-card fade-in">
+                    <div class="section-title">
+                        <div class="section-icon">📝</div>
+                        <div>Ready-to-Use Templates & Tools</div>
+                    </div>
+                    <div class="template-item">
+                        <div>
+                            <div class="template-name">📄 ${control.title} Policy Template</div>
+                            <div class="template-type">Word Document • Last updated: Nov 2025</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">Download</button>
+                    </div>
+                    <div class="template-item">
+                        <div>
+                            <div class="template-name">📊 Risk Assessment Matrix</div>
+                            <div class="template-type">Excel Spreadsheet • Pre-populated</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">Download</button>
+                    </div>
+                    ${control.id === 'A.8.4' ? `
+                    <div class="template-item">
+                        <div>
+                            <div class="template-name">🔍 XAI Method Selector Tool</div>
+                            <div class="template-type">Interactive Guide • LIME/SHAP/etc.</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">Launch</button>
+                    </div>
+                    ` : ''}
+                    <div class="template-item">
+                        <div>
+                            <div class="template-name">✅ Implementation Checklist</div>
+                            <div class="template-type">PDF Document • Step-by-step guide</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">Download</button>
+                    </div>
+                </div>
+
+                <div class="section-card fade-in">
+                    <div class="section-title">
+                        <div class="section-icon">🤖</div>
+                        <div>AI System Implementation Matrix</div>
+                    </div>
+                    <div class="heatmap">
+                        ${aiSystems.map(sys => `
+                            <div class="heatmap-cell ${sys.status}" title="${sys.name}: ${sys.controls} controls implemented">
+                                <div>${sys.status === 'red' ? '❌' : sys.status === 'yellow' ? '⚠️' : '✅'}</div>
+                                <div class="system-name">${sys.id}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${control.id === 'A.8.4' ? `
+                    <div class="gap-analysis">
+                        <div class="gap-item critical">
+                            <strong>🚨 Critical Gap:</strong> SGROBOT-7, TREATMENT-REC, and RADIOLOGY-ASSIST lack LIME/SHAP explainability reports
+                        </div>
+                        <div class="gap-item">
+                            <strong>⚠️ Attention Needed:</strong> PathologyAI needs documentation update for transparency requirements
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+
+                <div class="section-card fade-in">
+                    <div class="section-title">
+                        <div class="section-icon">📁</div>
+                        <div>Evidence Vault (${control.evidence} documents)</div>
+                    </div>
+                    <div class="evidence-vault">
+                        ${Array(control.evidence).fill(0).map((_, i) => `
+                            <div class="evidence-item">
+                                <div class="evidence-icon">📄</div>
+                                <div class="evidence-info">
+                                    <div class="evidence-name">${control.title} - Evidence ${i + 1}</div>
+                                    <div class="evidence-date">Uploaded: ${new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toLocaleDateString()}</div>
+                                </div>
+                                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">View</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="section-card fade-in">
+                    <div class="section-title">
+                        <div class="section-icon">📖</div>
+                        <div>Annex B Implementation Guidance</div>
+                    </div>
+                    <div style="padding: 15px; background: var(--light-gray); border-radius: 8px; font-size: 13px; line-height: 1.8;">
+                        <strong>Purpose:</strong> This control addresses ${control.risk.toLowerCase()} by establishing clear requirements for ${control.title.toLowerCase()}.<br><br>
+                        <strong>Implementation Steps:</strong>
+                        <ol style="margin-left: 20px; margin-top: 10px;">
+                            <li>Review organizational context and AI system characteristics</li>
+                            <li>Document ${control.title.toLowerCase()} procedures and responsibilities</li>
+                            <li>Implement monitoring mechanisms to track compliance</li>
+                            <li>Train relevant personnel on requirements</li>
+                            <li>Conduct regular audits and update as needed</li>
+                        </ol>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Create Donut Chart
+        function createDonutChart() {
+            try {
+                const canvas = document.getElementById('donutChart');
+                if (!canvas) {
+                    console.error('Canvas element not found');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                if (!ctx) {
+                    console.error('Could not get canvas context');
+                    return;
+                }
+                
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Implemented', 'In Progress', 'Not Started'],
+                        datasets: [{
+                            data: [29, 11, 3],
+                            backgroundColor: ['#28a745', '#ffc107', '#dc3545'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + ' controls';
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '70%'
+                    }
+                });
+            } catch (error) {
+                console.error('Error creating chart:', error);
+                createFallbackChart();
+            }
+        }
+
+        // Export SoA
+        function exportSoA() {
+            alert('📄 Generating Statement of Applicability...\n\n✅ All 43 controls documented\n✅ Justifications included for exclusions\n✅ Evidence references mapped\n✅ Ready for ISO 42001 certification audit\n\nDownload will begin shortly!');
+        }
+
+        // Apply to System
+        function applyToSystem() {
+            alert('⚡ Apply Control to AI System\n\nSelect target AI system:\n• SGROBOT-7 Machine\n• PathologyAI Diagnostics\n• DrugInteraction Analyzer\n• RadiologyAssist\n• Patient Triage AI\n• Clinical Notes Parser\n• Treatment Recommender\n\nThis will:\n✅ Create implementation tasks in Clause 8 (Operation)\n✅ Assign to responsible team members\n✅ Set up monitoring in Clause 10 (Improvement)\n✅ Update compliance dashboard');
+        }
+
+        // Refresh Data
+        function refreshData() {
+            alert('🔄 Refreshing dashboard data...\n\n✅ Controls status updated\n✅ Evidence vault synchronized\n✅ Department metrics refreshed\n✅ All systems operational');
+            location.reload();
+        }
+
+        // Filter functionality
+        document.getElementById('objectiveFilter')?.addEventListener('change', filterControls);
+        document.getElementById('statusFilter')?.addEventListener('change', filterControls);
+        document.getElementById('searchInput')?.addEventListener('input', filterControls);
+
+        function filterControls() {
+            const objective = document.getElementById('objectiveFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            const rows = document.querySelectorAll('#controlsTableBody tr');
+            rows.forEach((row, index) => {
+                const control = annexAControls[index];
+                const matchesObjective = objective === 'all' || control.id.startsWith(objective);
+                const matchesStatus = status === 'all' || control.status === status;
+                const matchesSearch = search === '' || 
+                    control.title.toLowerCase().includes(search) || 
+                    control.category.toLowerCase().includes(search) ||
+                    control.risk.toLowerCase().includes(search);
+
+                row.style.display = matchesObjective && matchesStatus && matchesSearch ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

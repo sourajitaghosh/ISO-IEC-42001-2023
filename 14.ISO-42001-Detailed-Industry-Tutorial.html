@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO/IEC 42001 - Comprehensive Industry Guide with Use Cases</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+        
+        .intro {
+            padding: 50px;
+            background: #f8f9fa;
+        }
+        
+        .content {
+            padding: 50px;
+        }
+        
+        .industry-selector {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .industry-card {
+            flex: 1;
+            min-width: 300px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .industry-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .industry-card h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        
+        .industry-card.healthcare {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        
+        .industry-card.banking {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+        
+        .section {
+            margin-bottom: 60px;
+            scroll-margin-top: 20px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid #764ba2;
+        }
+        
+        .clause-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 30px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-left: 8px solid #667eea;
+        }
+        
+        .clause-title {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .clause-number {
+            background: #667eea;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            font-size: 1.4em;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .use-case-section {
+            margin: 30px 0;
+        }
+        
+        .use-case {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border-left: 6px solid #e74c3c;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .use-case.healthcare {
+            border-left-color: #e74c3c;
+        }
+        
+        .use-case.banking {
+            border-left-color: #3498db;
+        }
+        
+        .use-case h4 {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .industry-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .industry-badge.healthcare {
+            background: #e74c3c;
+        }
+        
+        .industry-badge.banking {
+            background: #3498db;
+        }
+        
+        .scenario-box {
+            background: #fff9e6;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #f39c12;
+        }
+        
+        .scenario-box h5 {
+            color: #f39c12;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+        
+        .implementation-example {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .implementation-example h5 {
+            color: #2e7d32;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+        
+        .gotcha-box {
+            background: #ffebee;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .gotcha-box h5 {
+            color: #c0392b;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .gotcha-box h5:before {
+            content: "⚠️";
+            font-size: 1.5em;
+        }
+        
+        .best-practice {
+            background: #e3f2fd;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #2196f3;
+        }
+        
+        .best-practice h5 {
+            color: #1565c0;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .best-practice h5:before {
+            content: "✅";
+            font-size: 1.5em;
+        }
+        
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .requirement-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+        }
+        
+        .requirement-card h5 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .real-world-example {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        
+        .real-world-example h5 {
+            color: #d63031;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1em;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .comparison-table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .annex-card {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 30px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-left: 8px solid #ff6b6b;
+        }
+        
+        .control-detail {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .control-detail h5 {
+            color: #d63031;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .lifecycle-stage {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #9b59b6;
+        }
+        
+        .lifecycle-stage h6 {
+            color: #9b59b6;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .nav-section {
+            background: #667eea;
+            padding: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .nav-link {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid white;
+        }
+        
+        .nav-link:hover {
+            background: #764ba2;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .key-point {
+            padding: 12px 20px;
+            margin: 8px 0;
+            border-left: 4px solid #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 5px;
+        }
+        
+        .warning-banner {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+        
+        .warning-banner h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .highlight-box {
+            background: #fffbea;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #764ba2;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 1.8em;
+            z-index: 1000;
+        }
+        
+        .scroll-top:hover {
+            background: #764ba2;
+            transform: translateY(-8px);
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 25px;
+            }
+            
+            header h1 {
+                font-size: 2em;
+            }
+            
+            .industry-card {
+                min-width: 100%;
+            }
+            
+            .comparison-table {
+                font-size: 0.9em;
+            }
+            
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ISO/IEC 42001:2023</h1>
+            <p>Comprehensive Industry Implementation Guide</p>
+            <p style="font-size: 1em; margin-top: 15px;">Real-World Use Cases, Practical Examples & Compliance Pitfalls</p>
+        </header>
+        
+        <div class="nav-section">
+            <div class="nav-grid">
+                <a href="#clause4" class="nav-link">Clause 4</a>
+                <a href="#clause5" class="nav-link">Clause 5</a>
+                <a href="#clause6" class="nav-link">Clause 6</a>
+                <a href="#clause7" class="nav-link">Clause 7</a>
+                <a href="#clause8" class="nav-link">Clause 8</a>
+                <a href="#clause9" class="nav-link">Clause 9</a>
+                <a href="#clause10" class="nav-link">Clause 10</a>
+                <a href="#annexes" class="nav-link">Annexes</a>
+            </div>
+        </div>
+        
+        <div class="intro">
+            <h2 style="color: #667eea; margin-bottom: 30px;">🎯 Industry Focus: Healthcare Medical Devices & Banking</h2>
+            
+            <div class="industry-selector">
+                <div class="industry-card healthcare">
+                    <h3>🏥 Healthcare Medical Devices</h3>
+                    <p><strong>Company Example:</strong> MedTech Solutions Inc.</p>
+                    <p>Develops AI-powered diagnostic imaging software (FDA Class II Medical Device) that assists radiologists in detecting early-stage cancers from X-rays and MRIs.</p>
+                    <ul style="margin-top: 15px; list-style: none;">
+                        <li>✓ FDA 21 CFR Part 820 compliance required</li>
+                        <li>✓ ISO 13485 certified</li>
+                        <li>✓ HIPAA compliant</li>
+                        <li>✓ EU MDR requirements</li>
+                        <li>✓ High safety-critical AI system</li>
+                    </ul>
+                </div>
+                
+                <div class="industry-card banking">
+                    <h3>🏦 Banking & Financial Services</h3>
+                    <p><strong>Company Example:</strong> GlobalBank Financial Corp.</p>
+                    <p>Uses AI for fraud detection, credit risk assessment, algorithmic trading, and customer service chatbots serving 50 million customers globally.</p>
+                    <ul style="margin-top: 15px; list-style: none;">
+                        <li>✓ SOC 2 Type II certified</li>
+                        <li>✓ PCI DSS compliant</li>
+                        <li>✓ GDPR & CCPA requirements</li>
+                        <li>✓ Financial regulatory oversight</li>
+                        <li>✓ High-stakes decision-making</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="warning-banner">
+                <h4>📌 Why These Industries Need ISO 42001</h4>
+                <p><strong>Healthcare:</strong> AI decisions directly impact patient health outcomes. Misdiagnosis or algorithmic bias could lead to delayed treatment, wrong medications, or worse. Regulatory scrutiny is intense.</p>
+                <p style="margin-top: 10px;"><strong>Banking:</strong> AI systems make decisions affecting people's financial lives (loans, credit scores, fraud flags). Discrimination, bias, or security failures can result in regulatory fines, lawsuits, and reputational damage.</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            
+            <!-- CLAUSE 4 -->
+            <section class="section" id="clause4">
+                <div class="clause-card">
+                    <div class="clause-title">
+                        <span class="clause-number">4</span>
+                        <span>Context of the Organization</span>
+                    </div>
+                    
+                    <h3 style="color: #764ba2; margin-bottom: 20px;">Understanding Your AI Environment</h3>
+                    <p style="font-size: 1.1em; margin-bottom: 25px;">Before you can manage AI responsibly, you must understand the world your AI operates in. This clause requires you to map your internal/external environment, identify who cares about your AI, define what you're managing, and establish your AIMS.</p>
+                    
+                    <div class="use-case-section">
+                        <h4 style="color: #667eea; margin-bottom: 20px;">📋 Requirement 4.1: Understanding Internal & External Issues</h4>
+                        
+                        <div class="use-case healthcare">
+                            <h4>
+                                <span class="industry-badge healthcare">HEALTHCARE</span>
+                                MedTech Solutions - Diagnostic Imaging AI
+                            </h4>
+                            
+                            <div class="scenario-box">
+                                <h5>🔍 Scenario: Context Analysis</h5>
+                                <p><strong>External Issues Identified:</strong></p>
+                                <ul>
+                                    <li><strong>Regulatory:</strong> FDA increased scrutiny on AI medical devices after several false-positive incidents in the industry</li>
+                                    <li><strong>Technology:</strong> New transformer-based models emerging that could make current algorithms obsolete</li>
+                                    <li><strong>Market:</strong> Competing products showing better sensitivity for certain cancer types</li>
+                                    <li><strong>Ethical:</strong> Growing concern about algorithmic bias in healthcare (studies showing AI performs worse on underrepresented populations)</li>
+                                    <li><strong>Legal:</strong> Recent class-action lawsuit against competitor for misdiagnosis</li>
+                                </ul>
+                                
+                                <p style="margin-top: 15px;"><strong>Internal Issues Identified:</strong></p>
+                                <ul>
+                                    <li><strong>Data:</strong> Training data predominantly from urban hospitals, limited rural/diverse population representation</li>
+                                    <li><strong>Skills Gap:</strong> Development team strong in ML but weak in medical domain knowledge</li>
+                                    <li><strong>Infrastructure:</strong> Model retraining pipeline manual and slow</li>
+                                    <li><strong>Culture:</strong> Pressure to ship features quickly vs. thorough validation</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="implementation-example">
+                                <h5>✅ How MedTech Implements This</h5>
+                                <p><strong>Context Documentation Created:</strong></p>
+                                <ol>
+                                    <li><strong>External Context Register:</strong> Living document tracking FDA guidance updates, competitive landscape, published research on AI bias in medical imaging</li>
+                                    <li><strong>Regulatory Monitoring:</strong> Automated alerts for FDA guidance changes, EU MDR updates</li>
+                                    <li><strong>Technology Radar:</strong> Quarterly assessment of emerging AI techniques relevant to radiology</li>
+                                    <li><strong>SWOT Analysis:</strong> Annual review of how external factors affect AI system roadmap</li>
+                                </ol>
+                                
+                                <p style="margin-top: 15px;"><strong>Actions Taken:</strong></p>
+                                <ul>
+                                    <li>Hired medical advisory board (radiologists, oncologists) to review AI outputs</li>
+                                    <li>Initiated data collection partnerships with rural hospitals to address bias</li>
+                                    <li>Implemented continuous monitoring for model drift</li>
+                                    <li>Created "AI Ethics Committee" to review high-stakes features</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="gotcha-box">
+                                <h5>Compliance Pitfall #1: Superficial Context Analysis</h5>
+                                <p><strong>What Goes Wrong:</strong> Many organizations create a generic context document during initial certification that never gets updated. They miss critical external changes.</p>
+                                
+                                <p style="margin-top: 10px;"><strong>Real Failure Example:</strong> A medical AI company didn't update their context analysis when new research emerged showing their algorithm had 15% lower sensitivity for detecting cancers in Black patients. They continued deployment, leading to:</p>
+                                <ul>
+                                    <li>❌ Delayed cancer diagnoses in underrepresented populations</li>
+                                    <li>❌ FDA warning letter and temporary sales suspension</li>
+                                    <li>❌ $50M lawsuit settlement</li>
+                                    <li>❌ Loss of hospital contracts</li>
+                                </ul>
+                                
+                                <p style="margin-top: 10px;"><strong>Why It Happened:</strong> They documented "bias risk" once during certification but never revisited it when scientific literature revealed the actual bias in production.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="use-case banking">
+                            <h4>
+                                <span class="industry-badge banking">BANKING</span>
+                                GlobalBank - Credit Risk & Fraud Detection AI
+                            </h4>
+                            
+                            <div class="scenario-box">
+                                <h5>🔍 Scenario: Context Analysis</h5>
+                                <p><strong>External Issues Identified:</strong></p>
+                                <ul>
+                                    <li><strong>Regulatory:</strong> New EU AI Act classifies credit scoring as "high-risk AI" - stringent requirements incoming</li>
+                                    <li><strong>Economic:</strong> Rising interest rates affecting default rates - models trained on low-rate environment</li>
+                                    <li><strong>Social:</strong> Public scrutiny on algorithmic lending discrimination (ProPublica investigations)</li>
+                                    <li><strong>Competitive:</strong> Fintech startups using alternative data (social, behavioral) for credit decisions</li>
+                                    <li><strong>Technology:</strong> Quantum computing threats to encryption; adversarial ML attacks increasing</li>
+                                </ul>
+                                
+                                <p style="margin-top: 15px;"><strong>Internal Issues Identified:</strong></p>
+                                <ul>
+                                    <li><strong>Legacy Systems:</strong> 15-year-old credit models integrated with modern ML pipelines - technical debt</li>
+                                    <li><strong>Data Silos:</strong> Customer data across 47 different systems, incomplete integration</li>
+                                    <li><strong>Explainability Gap:</strong> Complex ensemble models difficult to explain to loan officers and regulators</li>
+                                    <li><strong>Incident Response:</strong> No clear process when AI flags suspicious transaction incorrectly (false positives causing customer lockouts)</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="implementation-example">
+                                <h5>✅ How GlobalBank Implements This</h5>
+                                <p><strong>Context Documentation Created:</strong></p>
+                                <ol>
+                                    <li><strong>Regulatory Horizon Scanning:</strong> Legal team monitors EU AI Act, CFPB guidance, state-level AI regulations (Colorado, California)</li>
+                                    <li><strong>Economic Indicators Dashboard:</strong> Tracks macro conditions affecting model performance (unemployment, interest rates, default rates)</li>
+                                    <li><strong>Competitive Intelligence:</strong> Analyzes fintech AI capabilities, regulatory actions against competitors</li>
+                                    <li><strong>Technical Threat Monitoring:</strong> Security team tracks adversarial ML research, attack vectors</li>
+                                </ol>
+                                
+                                <p style="margin-top: 15px;"><strong>Actions Taken:</strong></p>
+                                <ul>
+                                    <li>Created "Model Risk Committee" with representatives from risk, compliance, data science, legal</li>
+                                    <li>Implemented quarterly "macro stress tests" to see how models perform under different economic scenarios</li>
+                                    <li>Developed explainability framework for all customer-facing AI decisions</li>
+                                    <li>Established adversarial testing program (red team attacking fraud models)</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="gotcha-box">
+                                <h5>Compliance Pitfall #2: Static Context in Dynamic Environment</h5>
+                                <p><strong>What Goes Wrong:</strong> Banking AI operates in highly dynamic environments. Economic shifts, regulatory changes, and adversarial attacks evolve rapidly. A static context analysis becomes obsolete fast.</p>
+                                
+                                <p style="margin-top: 10px;"><strong>Real Failure Example:</strong> A bank's fraud detection AI was documented as "operating in stable regulatory environment." Then:</p>
+                                <ul>
+                                    <li>❌ New state law required detailed explanations for all declined transactions</li>
+                                    <li>❌ Their black-box neural network couldn't provide explanations</li>
+                                    <li>❌ Had to manually review 500K+ flagged transactions (operational nightmare)</li>
+                                    <li>❌ Regulatory fine for non-compliance</li>
+                                    <li>❌ 6-month emergency project to retrofit explainability</li>
+                                </ul>
+                                
+                                <p style="margin-top: 10px;"><strong>Why It Happened:</strong> Context analysis wasn't updated when legislation was proposed (6 months before enactment). No process for monitoring regulatory changes.</p>
+                            </div>
+                        </div>
+                        
+                        <h4 style="color: #667eea; margin-top: 40px; margin-bottom: 20px;">📋 Requirement 4.2: Understanding Interested Parties</h4>
+                        
+                        <div class="comparison-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Interested Party</th>
+                                        <th>Healthcare Example</th>
+                                        <th>Banking Example</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Primary Users</strong></td>
+                                        <td>Radiologists, physicians, medical imaging technicians</td>
+                                        <td>Loan officers, fraud analysts, customers, financial advisors</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Affected Individuals</strong></td>
+                                        <td>Patients (diagnosis accuracy affects their health outcomes)</td>
+                                        <td>Loan applicants, account holders (credit decisions affect their lives)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Regulators</strong></td>
+                                        <td>FDA, EU MDR notified bodies, state health departments</td>
+                                        <td>CFPB, OCC, FDIC, SEC, EU financial regulators</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Professional Bodies</strong></td>
+                                        <td>American College of Radiology, radiologist societies</td>
+                                        <td>American Bankers Association, risk management associations</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Insurance/Payers</strong></td>
+                                        <td>Health insurance companies (reimbursement decisions)</td>
+                                        <td>D&O insurance (liability for AI decisions)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Suppliers</strong></td>
+                                        <td>Cloud providers (AWS, Azure), medical imaging equipment manufacturers</td>
+                                        <td>Credit bureaus, data vendors, AI model providers</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Advocacy Groups</strong></td>
+                                        <td>Patient advocacy groups, cancer societies, diversity in medicine organizations</td>
+                                        <td>Consumer protection groups, civil rights organizations (fair lending focus)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="best-practice">
+                            <h5>Best Practice: Stakeholder Needs & Expectations Matrix</h5>
+                            <p><strong>MedTech Example:</strong></p>
+                            <table class="comparison-table" style="margin-top: 15px;">
+                                <tr>
+                                    <th>Stakeholder</th>
+                                    <th>Their Needs</th>
+                                    <th>How We Address</th>
+                                </tr>
+                                <tr>
+                                    <td>Radiologists</td>
+                                    <td>Fast, accurate results; doesn't slow down workflow; explainable outputs</td>
+                                    <td>< 5 second inference; heatmaps showing detection areas; confidence scores</td>
+                                </tr>
+                                <tr>
+                                    <td>Patients</td>
+                                    <td>Accurate diagnosis; no discrimination; privacy protection</td>
+                                    <td>95%+ sensitivity across demographics; HIPAA compliance; bias testing</td>
+                                </tr>
+                                <tr>
+                                    <td>FDA</td>
+                                    <td>Evidence of safety/effectiveness; change management; post-market surveillance</td>
+                                    <td>Clinical validation studies; locked algorithms; adverse event reporting</td>
+                                </tr>
+                                <tr>
+                                    <td>Hospital IT</td>
+                                    <td>Easy integration; doesn't break PACS workflow; security</td>
+                                    <td>HL7/DICOM standards; penetration testing; SOC 2 certification</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="gotcha-box">
+                            <h5>Compliance Pitfall #3: Ignoring "Hidden" Stakeholders</h5>
+                            <p><strong>What Goes Wrong:</strong> Organizations focus on obvious stakeholders (customers, regulators) but miss critical ones who can derail your AI system.</p>
+                            
+                            <p style="margin-top: 10px;"><strong>Healthcare Example:</strong></p>
+                            <p>MedTech forgot to include <strong>medical billing/coding staff</strong> as stakeholders. Their AI generated diagnosis codes automatically. Result:</p>
+                            <ul>
+                                <li>❌ Billing staff found codes didn't match their workflow</li>
+                                <li>❌ Insurance claim rejections increased 30%</li>
+                                <li>❌ Hospitals threatened to drop the product</li>
+                                <li>❌ Emergency 3-month redesign to accommodate billing requirements</li>
+                            </ul>
+                            
+                            <p style="margin-top: 10px;"><strong>Banking Example:</strong></p>
+                            <p>GlobalBank didn't consider <strong>customer service representatives</strong> as key stakeholders for their fraud AI. Result:</p>
+                            <ul>
+                                <li>❌ Reps couldn't explain to customers why cards were blocked</li>
+                                <li>❌ AI decisions were "black box" to front-line staff</li>
+                                <li>❌ Customer satisfaction plummeted; social media backlash</li>
+                                <li>❌ Call center complaints increased 150%</li>
+                            </ul>
+                        </div>
+                        
+                        <h4 style="color: #667eea; margin-top: 40px; margin-bottom: 20px;">📋 Requirement 4.3: Determining Scope of AIMS</h4>
+                        
+                        <div class="real-world-example">
+                            <h5>🏥 MedTech Solutions - Scope Definition</h5>
+                            <p><strong>What's IN Scope:</strong></p>
+                            <ul>
+                                <li>✓ AI-powered diagnostic imaging software (lung cancer, breast cancer detection modules)</li>
+                                <li>✓ Cloud-based inference platform (AWS deployment)</li>
+                                <li>✓ Model training and validation pipeline</li>
+                                <li>✓ Post-market surveillance and monitoring system</li>
+                                <li>✓ Model update and deployment processes</li>
+                                <li>✓ Data acquisition and labeling processes</li>
+                            </ul>
+                            
+                            <p style="margin-top: 15px;"><strong>What's OUT of Scope (with justification):</strong></p>
+                            <ul>
+                                <li>⊗ <strong>PACS Integration Layer:</strong> Provided by third-party vendor (Sectra), covered by their ISMS</li>
+                                <li>⊗ <strong>Hospital's Internal IT:</strong> Customer responsibility, out of our control</li>
+                                <li>⊗ <strong>Marketing Website AI Chatbot:</strong> Low-risk, not a medical device, separate system</li>
+                                <li>⊗ <strong>Internal HR Recruitment AI:</strong> Different system, different risk profile</li>
+                            </ul>
+                            
+                            <p style="margin-top: 15px;"><strong>Boundaries Defined:</strong></p>
+                            <ul>
+                                <li><strong>Physical:</strong> Development facilities in Boston, data centers in AWS us-east-1 and eu-west-1</li>
+                                <li><strong>Organizational:</strong> Product Engineering, Data Science, Clinical Affairs, Quality Assurance, Post-Market Surveillance teams</li>
+                                <li><strong>Technical:</strong> All AI models v2.0 and later; legacy v1.x models excluded (being phased out)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="real-world-example">
+                            <h5>🏦 GlobalBank - Scope Definition</h5>
+                            <p><strong>What's IN Scope:</strong></p>
+                            <ul>
+                                <li>✓ Credit risk assessment AI (personal loans, mortgages, credit cards)</li>
+                                <li>✓ Fraud detection and prevention system</li>
+                                <li>✓ Anti-money laundering (AML) transaction monitoring AI</li>
+                                <li>✓ Customer service chatbot (handles account queries)</li>
+                                <li>✓ Model risk management framework</li>
+                                <li>✓ Data pipelines feeding AI systems</li>
+                            </ul>
+                            
+                            <p style="margin-top: 15px;"><strong>What's OUT of Scope (with justification):</strong></p>
+                            <ul>
+                                <li>⊗ <strong>Algorithmic Trading AI:</strong> Regulated separately under MiFID II, separate risk framework</li>
+                                <li>⊗ <strong>HR Resume Screening:</strong> Internal tool, not customer-facing, lower risk</li>
+                                <li>⊗ <strong>Marketing Recommendation Engine:</strong> Low-stakes, existing controls sufficient</li>
+                                <li>⊗ <strong>Third-Party Credit Bureau Models:</strong> Not developed by us, vendor managed</li>
+                            </ul>
+                            
+                            <p style="margin-top: 15px;"><strong>Critical Scope Decision:</strong></p>
+                            <p>Initially wanted to exclude chatbot ("it's just customer service"). After risk analysis, included it because:</p>
+                            <ul>
+                                <li>Makes account decisions (password resets, transaction disputes)</li>
+                                <li>Accesses customer PII</li>
+                                <li>Could be socially engineered (security risk)</li>
+                                <li>Reputational damage if it gives wrong financial advice</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="gotcha-box">
+                            <h5>Compliance Pitfall #4: Scope Creep & Scope Gaps</h5>
+                            <p><strong>Scope Creep Problem:</strong> Defining scope too broadly makes AIMS unmanageable and certification expensive.</p>
+                            
+                            <p style="margin-top: 10px;"><strong>Bad Example:</strong> A bank initially scoped "all AI across the organization" including:</p>
+                            <ul>
+                                <li>❌ Low-risk internal tools (email sorting, calendar scheduling)</li>
+                                <li>❌ Experimental ML models in sandbox environments</li>
+                                <li>❌ Third-party vendor systems beyond their control</li>
+                            </ul>
+                            <p>Result: Overwhelming documentation burden, audit took 9 months, $2M in consulting fees, team burnout.</p>
+                            
+                            <p style="margin-top: 15px;"><strong>Scope Gap Problem:</strong> Defining scope too narrowly leaves critical AI systems unmanaged.</p>
+                            
+                            <p style="margin-top: 10px;"><strong>Bad Example:</strong> Healthcare company excluded "decision support tools" from scope, only included "diagnostic tools." Then:</p>
+                            <ul>
+                                <li>❌ Decision support AI recommended wrong medication dosage</li>
+                                <li>❌ Patient harmed</li>
+                                <li>❌ Investigation revealed no risk assessment, no validation, no monitoring</li>
+                                <li>❌ "But it's not in our AIMS scope" didn't protect them legally</li>
+                            </ul>
+                            
+                            <p style="margin-top: 10px;"><strong>✅ Right Approach:</strong> Risk-based scoping. High-risk AI = must be in scope. Low-risk, non-customer-facing = can reasonably exclude with justification.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- CLAUSE 5 -->
+            <section class="section" id="clause5">
+                <div class="clause-card">
+                    <div class="clause-title">
+                        <span class="clause-number">5</span>
+                        <span>Leadership</span>
+                    </div>
+                    
+                    <h3 style="color: #764ba2; margin-bottom: 20px;">Top Management Commitment & AI Policy</h3>
+                    <p style="font-size: 1.1em; margin-bottom: 25px;">ISO 42001 certification will fail without genuine leadership commitment. This isn't a "delegate to IT" initiative - executives must own it, fund it, and champion it.</p>
+                    
+                    <div class="use-case-section">
+                        <h4 style="color: #667eea; margin-bottom: 20px;">📋 Requirement 5.1: Leadership & Commitment</h4>
+                        
+                        <div class="use-case healthcare">
+                            <h4>
+                                <span class="industry-badge healthcare">HEALTHCARE</span>
+                                What Leadership Commitment Actually Looks Like
+                            </h4>
+                            
+                            <div class="implementation-example">
+                                <h5>✅ MedTech CEO's Visible Actions</h5>
+                                <ol>
+                                    <li><strong>Personal Accountability:</strong> CEO chairs monthly "AI Governance Board" (not delegated to CTO)</li>
+                                    <li><strong>Resource Allocation:</strong> Approved $3M budget increase for AI safety testing and bias mitigation</li>
+                                    <li><strong>Strategic Integration:</strong> Made "Trustworthy AI" one of company's three strategic pillars</li>
+                                    <li><strong>Communication:</strong> Quarterly all-hands presentations on AI ethics and patient safety</li>
+                                    <li><strong>Incentives:</strong> Executive bonuses tied to AI safety metrics (not just revenue)</li>
+                                    <li><strong>Tough Decisions:</strong> Delayed product launch by 4 months when bias testing revealed issues</li>
+                                    <li><strong>Policy Approval:</strong> Personally reviewed and signed AI Policy document</li>
+                                    <li><strong>Culture:</strong> Encouraged team to "stop the line" if they see AI safety concerns (no retaliation)</li>
+                                </ol>
+                                
+                                <p style="margin-top: 15px;"><strong>Tangible Evidence Auditors Look For:</strong></p>
+                                <ul>
+                                    <li>✓ Board meeting minutes showing AI governance discussions</li>
+                                    <li>✓ Budget approvals for AIMS resources</li>
+                                    <li>✓ Executive job descriptions including AI governance responsibilities</li>
+                                    <li>✓ Strategic plan documents mentioning AI objectives</li>
+                                    <li>✓ Management review meeting minutes (Clause 9.3)</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="gotcha-box">
+                                <h5>Compliance Pitfall #5: "Checkbox Leadership"</h5>
+                                <p><strong>What It Looks Like:</strong></p>
+                                <ul>
+                                    <li>❌ CEO signs AI policy but never read it (just asked assistant to sign)</li>
+                                    <li>❌ "AI Governance Board" meets once, never again</li>
+                                    <li>❌ When AI safety team requests resources, told "not in budget"</li>
+                                    <li>❌ Product deadlines override safety concerns every time</li>
+                                    <li>❌ Leadership says "ISO 42001 is a compliance thing, talk to our QA manager"</li>
+                                </ul>
+                                
+                                <p style="margin-top: 10px;"><strong>Real Failure:</strong> A medical AI company passed Stage 1 audit but failed Stage 2 when auditors interviewed executives:</p>
+                                <ul>
+                                    <li>❌ VP of Engineering couldn't explain the AI Policy</li>
+                                    <li>❌ CFO unaware of AIMS resource requirements</li>
+                                    <li>❌ CEO thought "ISO 42001 was like ISO 9001, just documentation"</li>
+                                    <li>❌ No evidence of management reviews in past 12 months</li>
+                                    <li>❌ When asked about AI risk treatment, executives deferred to data science team</li>
+                                </ul>
+                                
+                                <p style="margin-top: 10px;"><strong>Auditor's Conclusion:</strong> "Leadership commitment is superficial. AIMS is not integrated into business strategy. Certification denied."</p>
+                            </div>
+                        </div>
+                        
+                        <div class="use-case banking">
+                            <h4>
+                                <span class="industry-badge banking">BANKING</span>
+                                GlobalBank's Leadership Structure
+                            </h4>
+                            
+                            <div class="implementation-example">
+                                <h5>✅ How GlobalBank Demonstrates Leadership</h5>
+                                
+                                <p><strong>Governance Structure Created:</strong></p>
+                                <ul>
+                                    <li><strong>Level 1 - Board:</strong> Board of Directors receives quarterly AI risk reports</li>
+                                    <li><strong>Level 2 - Executive:</strong> "AI & Ethics Committee" chaired by Chief Risk Officer (C-suite level)
+                                        <ul style="margin-top: 8px;">
+                                            <li>Members: CTO, Chief Data Officer, General Counsel, Chief Compliance Officer</li>
+                                            <li>Meets monthly</li>
+                                            <li>Authority to halt AI deployments</li>
+                                            <li>Budget authority for AI safety initiatives</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Level 3 - Operational:</strong> "Model Risk Management" team (reports to CRO)
+                                        <ul style="margin-top: 8px;">
+                                            <li>Day-to-day AIMS operation</li>
+                                            <li>Conducts risk assessments, impact assessments</li>
+                                            <li>Escalates issues to AI & Ethics Committee</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                
+                                <p style="margin-top: 15px;"><strong>Leadership Actions That Demonstrate Commitment:</strong></p>
+                                <ol>
+                                    <li><strong>Whistleblower Protection:</strong> Anonymous channel for reporting AI concerns directly to board</li>
+                                    <li><strong>Compensation Alignment:</strong> 15% of data science bonus pool tied to "responsible AI metrics" (not just model accuracy)</li>
+                                    <li><strong>Resource Investment:</strong> Hired 20 new staff for model validation and monitoring</li>
+                                    <li><strong>Strategic Decision:</strong> Exited a profitable market (predatory lending) due to AI fairness concerns</li>
+                                    <li><strong>Transparency:</strong> Published annual "AI Responsibility Report" (external accountability)</li>
+                                </ol>
+                            </div>
+                            
+                            <div class="gotcha-box">
+                                <h5>Compliance Pitfall #6: Responsibility Without Authority</h5>
+                                <p><strong>What Goes Wrong:</strong> Organizations assign "AI governance" to someone without giving them real power or resources.</p>
+                                
+                                <p style="margin-top: 10px;"><strong>Bad Example:</strong> A bank appointed a "VP of AI Ethics" to show commitment. But:</p>
+                                <ul>
+                                    <li>❌ No budget for testing tools or bias assessments</li>
+                                    <li>❌ No authority to stop deployments - only "advisory"</li>
+                                    <li>❌ Reported to CTO who prioritized speed-to-market</li>
+                                    <li>❌ Recommendations were ignored when inconvenient</li>
+                                    <li>❌ Position eliminated after 18 months ("cost cutting")</li>
+                                </ul>
+                                
+                                <p style="margin-top: 10px;"><strong>Result:</strong></p>
+                                <ul>
+                                    <li>❌ Credit algorithm found to discriminate by race (proxy variables)</li>
+                                    <li>❌ DOJ investigation and $100M settlement</li>
+                                    <li>❌ Consent decree requiring independent monitor</li>
+                                    <li>❌ ISO 42001 certification suspended</li>
+                                </ul>
+                                
+                                <p style="margin-top: 10px;"><strong>✅ Right Approach:</strong> AI governance must have authority, budget, and executive sponsorship. ISO 42001 Clause 5.3 requires "responsibilities and authorities" to be assigned AND communicated AND resourced.</p>
+                            </div>
+                        </div>
+                        
+                        <h4 style="color: #667eea; margin-top: 40px; margin-bottom: 20px;">📋 Requirement 5.2: AI Policy</h4>
+                        
+                        <div class="real-world-example">
+                            <h5>🏥 MedTech AI Policy - Key Excerpts</h5>
+                            
+                            <p><strong>1. Purpose & Scope:</strong></p>
+                            <p style="margin-left: 20px; font-style: italic;">"This policy governs the development, deployment, and monitoring of AI-powered medical diagnostic software. It applies to all personnel involved in AI system lifecycle activities, from data collection to post-market surveillance."</p>
+                            
+                            <p style="margin-top: 15px;"><strong>2. Core Principles:</strong></p>
+                            <ul>
+                                <li><strong>Patient Safety First:</strong> No AI deployment without clinical validation demonstrating safety and efficacy equivalent or superior to standard of care</li>
+                                <li><strong>Fairness:</strong> AI performance must be validated across demographic subgroups (age, sex, race, ethnicity) before release</li>
+                                <li><strong>Transparency:</strong> Healthcare providers must be informed they are using AI-assisted tools; explainable outputs required</li>
+                                <li><strong>Human Oversight:</strong> AI is a diagnostic aid, not replacement for physician judgment; final decision authority remains with clinician</li>
+                                <li><strong>Continuous Monitoring:</strong> Post-market surveillance for model drift, adverse events, and real-world performance</li>
+                            </ul>
+                            
+                            <p style="margin-top: 15px;"><strong>3. Specific Commitments:</strong></p>
+                            <ul>
+                                <li>"We will conduct bias testing on all AI models using the FDA's framework for fairness in medical AI"</li>
+                                <li>"We will maintain AI Impact Assessments (AIIA) for all diagnostic features classified as 'high impact'"</li>
+                                <li>"We commit to continuous improvement through PDCA methodology"</li>
+                                <li>"We will comply with FDA 21 CFR Part 820, ISO 13485, and ISO 42001 requirements"</li>
+                            </ul>
+                            
+                            <p style="margin-top: 15px;"><strong>4. Prohibited Uses:</strong></p>
+                            <ul>
+                                <li>❌ No autonomous diagnosis without physician review</li>
+                                <li>❌ No use of AI on patient populations not represented in training data without additional validation</li>
+                                <li>❌ No off-label use of AI models without FDA clearance</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="real-world-example">
+                            <h5>🏦 GlobalBank AI Policy - Key Excerpts</h5>
+                            
+                            <p><strong>1. Purpose & Scope:</strong></p>
+                            <p style="margin-left: 20px; font-style: italic;">"This policy establishes requirements for responsible development and use of AI systems that make or support decisions affecting customers' financial wellbeing, access to credit, and account security."</p>
+                            
+                            <p style="margin-top: 15px;"><strong>2. Core Principles:</strong></p>
+                            <ul>
+                                <li><strong>Fairness & Non-Discrimination:</strong> AI must not discriminate based on protected characteristics; proxy discrimination prohibited</li>
+                                <li><strong>Explainability:</strong> Adverse action explanations required; customers have right to understand AI decisions</li>
+                                <li><strong>Security:</strong> AI systems must resist adversarial attacks; robust authentication for model updates</li>
+                                <li><strong>Accountability:</strong> Clear ownership for every AI system; escalation paths for issues</li>
+                                <li><strong>Privacy:</strong> Minimize data collection; purpose limitation; data retention limits</li>
+                            </ul>
+                            
+                            <p style="margin-top: 15px;"><strong>3. Specific Requirements:</strong></p>
+                            <ul>
+                                <li>"All credit decisioning AI must undergo fair lending testing annually"</li>
+                                <li>"Fraud detection AI must achieve < 0.1% false positive rate (customer lockout threshold)"</li>
+                                <li>"Model documentation must be maintained for 7 years (regulatory requirement)"</li>
+                                <li>"Customers can request human review of AI-driven adverse decisions"</li>
+                            </ul>
+                            
+                            <p style="margin-top: 15px;"><strong>4. Risk Tiers:</strong></p>
+                            <ul>
+                                <li><strong>Tier 1 (High Risk):</strong> Credit decisioning, fraud detection, AML monitoring - Requires executive approval, AIIA, quarterly review</li>
+                                <li><strong>Tier 2 (Medium Risk):</strong> Customer service chatbots, marketing personalization - Requires manager approval, annual review</li>
+                                <li><strong>Tier 3 (Low Risk):</strong> Internal tools, operational optimization - Standard approval process</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="gotcha-box">
+                            <h5>Compliance Pitfall #7: Generic "Copy-Paste" Policies</h5>
+                            <p><strong>What Goes Wrong:</strong> Organizations download a template AI policy from the internet, change the company name, and call it done.</p>
+                            
+                            <p style="margin-top: 10px;"><strong>Why It Fails:</strong></p>
+                            <ul>
+                                <li>❌ Policy doesn't reflect actual AI systems in use</li>
+                                <li>❌ Commitments that aren't followed in practice</li>
+                                <li>❌ No mention of industry-specific risks (medical device regulations, financial regulations)</li>
+                                <li>❌ Employees can't apply vague principles to real situations</li>
+                                <li>❌ Auditors quickly spot disconnect between policy and practice</li>
+                            </ul>
+                            
+                            <p style="margin-top: 10px;"><strong>Red Flags Auditors Look For:</strong></p>
+                            <ul>
+                                <li>🚩 Policy mentions AI use cases that don't exist in the organization</li>
+                                <li>🚩 No mention of actual regulatory requirements company must meet</li>
+                                <li>🚩 Policy dated 3 years ago, never updated</li>
+                                <li>🚩 When asked, employees haven't read it or don't know where to find it</li>
+                                <li>🚩 Policy says "We do X" but evidence shows they don't</li>
+                            </ul>
+                            
+                            <p style="margin-top: 10px;"><strong>✅ Right Approach:</strong> Policy must be:</p>
+                            <ul>
+                                <li>✓ Specific to your AI systems and risks</li>
+                                <li>✓ Aligned with your actual practices (say what you do, do what you say)</li>
+                                <li>✓ Reviewed annually and updated as AI capabilities evolve</li>
+                                <li>✓ Communicated and understood by all relevant personnel</li>
+                                <li>✓ Integrated into onboarding and training programs</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- CLAUSE 6 - DETAILED -->
+            <section class="section" id="clause6">
+                <div class="clause-card">
+                    <div class="clause-title">
+                        <span class="clause-number">6</span>
+                        <span>Planning (Risk Assessment & Impact Assessment)</span>
+                    </div>
+                    
+                    <h3 style="color: #764ba2; margin-bottom: 20px;">The "Plan" Phase: Where Most Organizations Struggle</h3>
+                    <p style="font-size: 1.1em; margin-bottom: 25px;">Clause 6 is where the rubber meets the road. You must conduct AI risk assessments, AI impact assessments, define risk treatment controls, and set measurable objectives. This is intensive, time-consuming, and absolutely critical.</p>
+                    
+                    <div class="warning-banner">
+                        <h4>⚠️ Critical: Clause 6.1.3 - The "Annex A Comparison" Requirement</h4>
+                        <p style="margin-top: 10px;">After identifying your risk treatment controls, you MUST compare them against ALL controls in Annex A to verify nothing necessary has been omitted. This creates your Statement of Applicability (SoA).</p>
+                        <p style="margin-top: 10px;"><strong>Auditors will check:</strong> Did you review every Annex A control? Did you justify why excluded controls aren't needed? This is where many organizations fail certification.</p>
+                    </div>
+                    
+                    <div class="use-case-section">
+                        <h4 style="color: #667eea; margin-bottom: 20px;">📋 Requirement 6.1.2: AI Risk Assessment</h4>
+                        
+                        <div class="use-case healthcare">
+                            <h4>
+                                <span class="industry-badge healthcare">HEALTHCARE</span>
+                                MedTech Lung Cancer Detection AI - Risk Assessment Example
+                            </h4>
+                            
+                            <div class="scenario-box">
+                                <h5>🔍 Risk Assessment Process</h5>
+                                
+                                <p><strong>Step 1: Identify Risk Sources</strong> (Using Annex C for inspiration)</p>
+                                <table class="comparison-table" style="margin-top: 15px;">
+                                    <tr>
+                                        <th>Risk Category</th>
+                                        <th>Specific Risks Identified</th>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Data Quality Risks</strong></td>
+                                        <td>
+                                            • Training data from 5 major urban hospitals (not representative of rural populations)<br>
+                                            • Older imaging equipment produces lower quality scans not in training set<br>
+                                            • Smoking history data incomplete (affects cancer type predictions)<br>
+                                            • Data labeling errors: 3% of "confirmed cancer" labels later found to be false positives
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Model Performance Risks</strong></td>
+                                        <td>
+                                            • Sensitivity drops from 92% to 78% for patients under 40 (rare in training data)<br>
+                                            • Higher false positive rate for patients with chronic lung conditions<br>
+                                            • Model struggles with ground-glass opacities (subtle early-stage cancers)<br>
+                                            • Overfitting to specific CT scanner models
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Safety Risks</strong></td>
+                                        <td>
+                                            • False negative (missed cancer) → delayed treatment, disease progression<br>
+                                            • False positive → unnecessary biopsy, patient anxiety, healthcare costs<br>
+                                            • Over-reliance: radiologist might not scrutinize scans AI marked "normal"<br>
+                                            • Automation bias: radiologist trusts AI over their own judgment
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Bias/Fairness Risks</strong></td>
+                                        <td>
+                                            • Performance disparity: 15% lower sensitivity for Black patients (different cancer presentation patterns)<br>
+                                            • Gender bias in model (trained on 70% male patients)<br>
+                                            • Socioeconomic proxy: patients from underfunded hospitals have different imaging quality
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Deployment Risks</strong></td>
+                                        <td>
+                                            • Integration with old PACS systems (data format inconsistencies)<br>
+                                            • Internet outage → cloud AI unavailable → workflow disruption<br>
+                                            • Model version confusion (hospital using v1.2, support expects v2.0)<br>
+                                            • Radiologist training gap (not all users understand confidence scores)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Security Risks</strong></td>
+                                        <td>
+                                            • Adversarial attack: malicious noise in image could fool model<br>
+                                            • Model theft: competitors reverse-engineering via API<br>
+                                            • Data breach: patient imaging data exfiltrated<br>
+                                            • Supply chain: compromised model weights during deployment
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                <p style="margin-top: 20px;"><strong>Step 2: Analyze Likelihood & Impact</strong></p>
+                                <p>MedTech uses a risk matrix (5x5):</p>
+                                <table class="comparison-table" style="margin-top: 15px;">
+                                    <tr>
+                                        <th>Risk ID</th>
+                                        <th>Risk Description</th>
+                                        <th>Likelihood</th>
+                                        <th>Impact</th>
+                                        <th>Risk Level</th>
+                                    </tr>
+                                    <tr style="background: #ffcccc;">
+                                        <td>R-001</td>
+                                        <td>False negative in Black patient population</td>
+                                        <td>High (4)</td>
+                                        <td>Critical (5)</td>
+                                        <td><strong>Critical</strong></td>
+                                    </tr>
+                                    <tr style="background: #ffcccc;">
+                                        <td>R-002</td>
+                                        <td>Automation bias - radiologist misses cancer AI didn't detect</td>
+                                        <td>Medium (3)</td>
+                                        <td>Critical (5)</td>
+                                        <td><strong>High</strong></td>
+                                    </tr>
+                                    <tr style="background: #ffffcc;">
+                                        <td>R-003</td>
+                                        <td>False positive causing unnecessary biopsy</td>
+                                        <td>High (4)</td>
+                                        <td>Moderate (3)</td>
+                                        <td><strong>High</strong></td>
+                                    </tr>
+                                    <tr style="background: #ccffcc;">
+                                        <td>R-004</td>
+                                        <td>Integration failure with PACS</td>
+                                        <td>Low (2)</td>
+                                        <td>Moderate (3)</td>
+                                        <td><strong>Medium</strong></td>
+                                    </tr>
+                                    <tr style="background: #ccffcc;">
+                                        <td>R-005</td>
+                                        <td>Adversarial attack via pixel manipulation</td>
+                                        <td>Very Low (1)</td>
+                                        <td>High (4)</td>
+                                        <td><strong>Low</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <div class="implementation-example">
+                                <h5>✅ Step 3: Risk Treatment (Clause 6.1.3)</h5>
+                                
+                                <p><strong>For R-001 (Critical Risk - Demographic Bias):</strong></p>
+                                <ul>
+                                    <li><strong>Treatment Option Selected:</strong> Reduce/Mitigate</li>
+                                    <li><strong>Controls Implemented:</strong>
+                                        <ul style="margin-top: 8px;">
+                                            <li>✓ <strong>Annex A Control A.7.x (Data Quality):</strong> Augment training dataset with 5,000 images from hospitals serving predominantly Black communities</li>
+                                            <li>✓ <strong>Annex A Control A.5.2 (Impact Assessment):</strong> Conduct subgroup analysis for every model version before release</li>
+                                            <li>✓ <strong>Annex A Control A.6.x (Lifecycle - Validation):</strong> Require 90%+ sensitivity across ALL demographic subgroups (not just overall)</li>
+                                            <li>✓ <strong>Custom Control:</strong> Partner with medical schools serving underrepresented communities for additional validation studies</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Residual Risk:</strong> Medium (after treatment)</li>
+                                    <li><strong>Acceptance:</strong> Requires VP of Clinical Affairs approval</li>
+                                </ul>
+                                
+                                <p style="margin-top: 20px;"><strong>For R-002 (High Risk - Automation Bias):</strong></p>
+                                <ul>
+                                    <li><strong>Treatment Option Selected:</strong> Reduce/Mitigate</li>
+                                    <li><strong>Controls Implemented:</strong>
+                                        <ul style="margin-top: 8px;">
+                                            <li>✓ <strong>Annex A Control A.6.x (Human Oversight):</strong> Display clear disclaimer "AI is a diagnostic aid, not a diagnostic device"</li>
+                                            <li>✓ <strong>Annex A Control A.4.3 (Training):</strong> Mandatory training for radiologists on AI limitations and automation bias</li>
+                                            <li>✓ <strong>Annex A Control A.6.x (Interface Design):</strong> Confidence scores displayed prominently; low-confidence cases highlighted</li>
+                                            <li>✓ <strong>Custom Control:</strong> Random audits where expert radiologists review cases AI marked "normal"</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Residual Risk:</strong> Low</li>
+                                </ul>
+                                
+                                <p style="margin-top: 20px;"><strong>Statement of Applicability (SoA) Example:</strong></p>
+                                <table class="comparison-table" style="margin-top: 15px;">
+                                    <tr>
+                                        <th>Annex A Control</th>
+                                        <th>Applicable?</th>
+                                        <th>Justification / Implementation</th>
+                                    </tr>
+                                    <tr>
+                                        <td>A.7.3 - Data Quality Assurance</td>
+                                        <td>✅ Yes</td>
+                                        <td>Implemented automated data quality checks, manual review of 5% sample, quarterly audits</td>
+                                    </tr>
+                                    <tr>
+                                        <td>A.5.2 - AI Impact Assessment</td>
+                                        <td>✅ Yes</td>
+                                        <td>AIIA conducted for each major release, includes subgroup analysis, reviewed by ethics committee</td>
+                                    </tr>
+                                    <tr>
+                                        <td>A.6.7 - Model Explainability</td>
+                                        <td>✅ Yes</td>
+                                        <td>Implemented Grad-CAM heatmaps showing regions AI analyzed, confidence scores for each finding</td>
+                                    </tr>
+                                    <tr>
+                                        <td>A.8.9 - Adversarial Robustness</td>
+                                        <td>⊗ No</td>
+                                        <td><strong>Justification:</strong> Medical imaging devices are in controlled hospital environments with authenticated access. Risk of adversarial attack is negligible (scored as "Very Low"). Focus resources on more likely risks (bias, false negatives). Residual risk accepted by CISO.</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <div class="gotcha-box">
+                                <h5>Compliance Pitfall #8: Inadequate Risk Assessment</h5>
+                                
+                                <p><strong>Superficial Risk Assessment Example:</strong></p>
+                                <p>A medical AI company's risk register had only 5 risks:</p>
+                                <ul>
+                                    <li>❌ "Model might not work properly"</li>
+                                    <li>❌ "Data quality issues"</li>
+                                    <li>❌ "Cybersecurity threat"</li>
+                                    <li>❌ "Regulatory non-compliance"</li>
+                                    <li>❌ "User error"</li>
+                                </ul>
+                                
+                                <p style="margin-top: 10px;"><strong>Why This Failed Audit:</strong></p>
+                                <ul>
+                                    <li>❌ Too vague - "might not work properly" isn't a risk, it's a category</li>
+                                    <li>❌ No specific scenarios - what could actually go wrong?</li>
+                                    <li>❌ No likelihood/impact analysis</li>
+                                    <li>❌ No consideration of bias, fairness, or demographic subgroups</li>
+                                    <li>❌ Risks not linked to specific AI system capabilities</li>
+                                </ul>
+                                
+                                <p style="margin-top: 10px;"><strong>What Auditor Said:</strong> "Your risk assessment is a checkbox exercise. It doesn't demonstrate understanding of AI-specific risks. You haven't considered how your specific model could fail in specific clinical scenarios."</p>
+                                
+                                <p style="margin-top: 15px;"><strong>✅ Good Risk Assessment Characteristics:</strong></p>
+                                <ul>
+                                    <li>✓ <strong>Specific:</strong> "False negative rate >10% for ground-glass opacity nodules < 5mm"</li>
+                                    <li>✓ <strong>Measurable:</strong> Likelihood and impact scores with justification</li>
+                                    <li>✓ <strong>Scenario-Based:</strong> "If a 38-year-old Black female patient..."</li>
+                                    <li>✓ <strong>AI-Specific:</strong> Considers data, model, deployment, and societal contexts</li>
+                                    <li>✓ <strong>Evidence-Based:</strong> References validation studies, incident reports, literature</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <h4 style="color: #667eea; margin-top: 40px; margin-bottom: 20px;">📋 Requirement 6.1.4: AI Impact Assessment (AIIA)</h4>
+                        
+                        <div class="use-case banking">
+                            <h4>
+                                <span class="industry-badge banking">BANKING</span>
+                                GlobalBank Credit Risk AI - Impact Assessment Example
+                            </h4>
+                            
+                            <div class="scenario-box">
+                                <h5>🔍 When AIIA is Required</h5>
+                                <p>ISO 42001 requires AIIA for high-impact AI systems. GlobalBank's criteria for triggering AIIA:</p>
+                                <ul>
+                                    <li>✓ Makes or significantly influences decisions affecting customer financial access (loans, credit)</li>
+                                    <li>✓ Processes large volumes of personal/sensitive data</li>
+                                    <li>✓ Could result in discrimination or bias</li>
+                                    <li>✓ Has broad societal or economic impact</li>
+                                    <li>✓ Operates with limited human oversight</li>
+                                </ul>
+                                
+                                <p style="margin-top: 15px;"><strong>Credit Risk AI = HIGH IMPACT → AIIA Required</strong></p>
+                            </div>
+                            
+                            <div class="implementation-example">
+                                <h5>✅ GlobalBank AIIA Document Structure</h5>
+                                
+                                <p><strong>Section 1: AI System Description</strong></p>
+                                <ul>
+                                    <li>System Name: Credit Risk Assessment Engine v3.5</li>
+                                    <li>Purpose: Predict probability of loan default; recommend approval/denial/review</li>
+                                    <li>Scope: Personal loans $5K-$50K; unsecured credit</li>
+                                    <li>Decision Type: Semi-automated (AI recommends, loan officer decides for borderline cases)</li>
+                                    <li>Volume: ~50,000 applications/month</li>
+                                    <li>Model Type: Gradient boosted trees + neural network ensemble</li>
+                                </ul>
+                                
+                                <p style="margin-top: 20px;"><strong>Section 2: Stakeholder Impact Analysis</strong></p>
+                                
+                                <div style="margin-left: 20px;">
+                                    <p><strong>Impact on Loan Applicants:</strong></p>
+                                    <table class="comparison-table" style="margin-top: 10px;">
+                                        <tr>
+                                            <th>Impact Type</th>
+                                            <th>Description</th>
+                                            <th>Severity</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Financial Access</td>
+                                            <td>Denial means no funds for car, home improvement, debt consolidation. Could affect employment (can't buy car for commute), housing (can't pay deposit), health (can't pay medical bills)</td>
+                                            <td>High</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Credit Score Impact</td>
+                                            <td>Hard inquiry affects credit score; multiple denials harm creditworthiness</td>
+                                            <td>Medium</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Discrimination Risk</td>
+                                            <td>If model uses proxy variables (ZIP code, name, employment type) correlated with protected classes, could result in illegal disparate impact</td>
+                                            <td>Critical</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Lack of Transparency</td>
+                                            <td>Applicants don't understand why denied; feel system is "black box"</td>
+                                            <td>Medium</td>
+                                        </tr>
+                                        <tr>
+                                            <td>False Negatives (Creditworthy Denied)</td>
+                                            <td>Lost opportunity for customer; lost revenue for bank</td>
+                                            <td>Medium</td>
+                                        </tr>
+                                        <tr>
+                                            <td>False Positives (Risky Approved)</td>
+                                            <td>Customer takes on debt they can't repay → default, collections, credit damage</td>
+                                            <td>High</td>
+                                        </tr>
+                                    </table>
+                                    
+                                    <p style="margin-top: 20px;"><strong>Impact on Protected Groups (Fairness Analysis):</strong></p>
+                                    <ul>
+                                        <li><strong>Finding #1:</strong> Approval rate for Hispanic applicants: 62% vs. 74% for White applicants (statistically significant)</li>
+                                        <li><strong>Root Cause Analysis:</strong> Model heavily weights "length of credit history" which correlates with age and immigration status</li>
+                                        <li><strong>Impact:</strong> Potential disparate impact violation (ECOA, Fair Housing Act)</li>
+                                        <li><strong>Mitigation:</strong> Reweight features; implement "alternative credit scoring" for thin-file applicants</li>
+                                    </ul>
+                                    
+                                    <p style="margin-top: 20px;"><strong>Impact on Society:</strong></p>
+                                    <ul>
+                                        <li><strong>Financial Inclusion:</strong> AI could exacerbate financial exclusion if biased against underserved communities</li>
+                                        <li><strong>Economic Mobility:</strong> Access to credit enables small business creation, education, homeownership</li>
+                                        <li><strong>Trust in Institutions:</strong> Discriminatory AI erodes public trust in banking system</li>
+                                    </ul>
+                                </div>
+                                
+                                <p style="margin-top: 20px;"><strong>Section 3: Mitigation Measures</strong></p>
+                                <ol>
+                                    <li><strong>Fairness Testing:</strong> Quarterly disparate impact testing across protected classes (race, gender, age, national origin)</li>
+                                    <li><strong>Explainability:</strong> Provide top 5 factors in denial; adverse action notices as required by FCRA</li>
+                                    <li><strong>Human Review:</strong> All borderline cases (score 0.45-0.55) reviewed by loan officer</li>
+                                    <li><strong>Appeal Process:</strong> Applicants can request reconsideration with additional documentation</li>
+                                    <li><strong>Monitoring:</strong> Real-time dashboard tracking approval rates by demographic (triggers alert if >5% deviation from baseline)</li>
+                                    <li><strong>Model Governance:</strong> Annual recalibration; independent validation by Model Risk Management team</li>
+                                </ol>
+                                
+                                <p style="margin-top: 20px;"><strong>Section 4: Residual Impact Assessment</strong></p>
+                                <p>After mitigations: Residual discrimination risk = LOW (but ongoing monitoring required)</p>
+                                
+                                <p style="margin-top: 20px;"><strong>Section 5: Approval & Review</strong></p>
+                                <ul>
+                                    <li>AIIA Conducted By: Model Risk Management Team</li>
+                                    <li>Reviewed By: AI & Ethics Committee, Chief Risk Officer, General Counsel</li>
+                                    <li>Approved By: CRO (signature required before production deployment)</li>
+                                    <li>Review Frequency: Annually or when material changes occur</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="gotcha-box">
+                                <h5>Compliance Pitfall #9: "Check the Box" Impact Assessments</h5>
+                                
+                                <p><strong>Bad AIIA Example:</strong> A bank submitted this AIIA during audit:</p>
+                                <ul>
+                                    <li>❌ "Impact on customers: Medium"</li>
+                                    <li>❌ "Mitigation: We follow best practices"</li>
+                                    <li>❌ "Risk: Low"</li>
+                                    <li>❌ Total document: 1 page</li>
+                                </ul>
+                                
+                                <p style="margin-top: 10px;"><strong>Auditor Findings:</strong></p>
+                                <ul>
+                                    <li>❌ No analysis of specific stakeholder groups</li>
+                                    <li>❌ No evidence of fairness testing</li>
+                                    <li>❌ No quantification of impacts</li>
+                                    <li>❌ No identification of affected protected classes</li>
+                                    <li>❌ "Best practices" not defined or evidenced</li>
+                                    <li>❌ No approval signatures or review dates</li>
+                                </ul>
+                                
+                                <p style="margin-top: 10px;"><strong>Audit Result:</strong> Major non-conformity. Certification denied.</p>
+                                
+                                <p style="margin-top: 15px;"><strong>✅ Good AIIA Characteristics:</strong></p>
+                                <ul>
+                                    <li>✓ Detailed stakeholder analysis (who is affected, how, how much)</li>
+                                    <li>✓ Quantitative where possible (approval rates by demographic)</li>
+                                    <li>✓ References specific evidence (validation studies, fairness metrics, incident data)</li>
+                                    <li>✓ Identifies vulnerable/protected groups explicitly</li>
+                                    <li>✓ Lists concrete mitigations with responsible owners</li>
+                                    <li>✓ Includes residual risk assessment after mitigations</li>
+                                    <li>✓ Has clear approval chain and review schedule</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Continue with remaining clauses in the next response due to length... -->
+            
+        </div>
+        
+        <footer>
+            <p style="font-size: 1.1em; margin-bottom: 15px;">🎓 This is Part 1 of the Comprehensive ISO 42001 Tutorial</p>
+            <p>Detailed coverage of Clause 4, 5, and 6 with real-world healthcare and banking examples.</p>
+            <p style="margin-top: 20px; font-size: 0.9em;">For the complete tutorial including Clauses 7-10 and all Annexes with detailed use cases, see the full document.</p>
+        </footer>
+    </div>
+    
+    <a href="#" class="scroll-top">↑</a>
+    
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+        const scrollTopBtn = document.querySelector('.scroll-top');
+        window.addEventListener('scroll', () => {
+            scrollTopBtn.style.display = window.pageYOffset > 300 ? 'flex' : 'none';
+        });
+    </script>
+</body>
+</html>

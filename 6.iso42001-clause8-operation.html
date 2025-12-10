@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO 42001 - Clause 8: Operation Control Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .header .user-context {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.95em;
+        }
+
+        /* Main Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Gauges */
+        .gauges-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .gauge {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            border-radius: 10px;
+        }
+
+        .gauge-circle {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 10px;
+            position: relative;
+            border-radius: 50%;
+            background: conic-gradient(#4CAF50 0deg, #4CAF50 var(--gauge-deg), #e0e0e0 var(--gauge-deg), #e0e0e0 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gauge-inner {
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .gauge-label {
+            font-weight: 600;
+            font-size: 0.95em;
+            color: #555;
+        }
+
+        /* Flowchart */
+        .flowchart {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .lifecycle-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 20px;
+            overflow-x: auto;
+        }
+
+        .flow-step {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            margin: 0 10px;
+            position: relative;
+            min-width: 150px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .flow-step:last-child::after {
+            content: '';
+        }
+
+        .flow-step-title {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .flow-step-metric {
+            font-size: 0.85em;
+            opacity: 0.9;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Assessment Form */
+        .assessment-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .scale-slider {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, #4CAF50, #FFC107, #F44336);
+            border-radius: 5px;
+            position: relative;
+            margin: 10px 0;
+        }
+
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #FFC107;
+            color: #2c3e50;
+        }
+
+        /* Risk Matrix */
+        .risk-matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .risk-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .risk-cell:hover {
+            transform: scale(1.05);
+        }
+
+        .risk-low {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .risk-medium {
+            background: #FFC107;
+            color: #2c3e50;
+        }
+
+        .risk-high {
+            background: #FF9800;
+            color: white;
+        }
+
+        .risk-critical {
+            background: #F44336;
+            color: white;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+
+        .timeline-date {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        /* Annex References */
+        .annex-reference {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .annex-reference:hover {
+            transform: translateX(5px);
+        }
+
+        .annex-reference-title {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .annex-reference-desc {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #FFC107;
+            color: #2c3e50;
+        }
+
+        .badge-danger {
+            background: #F44336;
+            color: white;
+        }
+
+        .badge-info {
+            background: #2196F3;
+            color: white;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .data-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Process Mapper */
+        .process-mapper {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px dashed #667eea;
+            min-height: 300px;
+            position: relative;
+        }
+
+        .process-node {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: move;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .process-node-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        /* Documentation Section */
+        .documentation {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .doc-section {
+            margin-bottom: 25px;
+        }
+
+        .doc-section h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+
+        .doc-quote {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            font-style: italic;
+            color: #555;
+            margin: 15px 0;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 5px;
+        }
+
+        /* Metrics Dashboard */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .lifecycle-flow {
+                flex-direction: column;
+            }
+            
+            .flow-step::after {
+                content: '↓';
+                right: 50%;
+                top: auto;
+                bottom: -30px;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            background: #e0e0e0;
+            height: 25px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <span>📊</span> Clause 8: Operation
+            </h1>
+            <div class="subtitle">Plan and control operations • Perform AI risk and impact assessments</div>
+            <div class="user-context">
+                <strong>👤 Current User:</strong> Anna Martinez - Operations Manager, RetailAI Co. <br>
+                <strong>📍 Current System:</strong> AI Inventory Prediction System v2.3 <br>
+                <strong>📅 Last Assessment:</strong> November 15, 2025 | <strong>Next Review:</strong> December 15, 2025
+            </div>
+        </div>
+
+        <!-- Operational Readiness Dashboard -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">85%</div>
+                <div class="metric-label">Operational Readiness</div>
+            </div>
+            <div class="metric-card" style="background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);">
+                <div class="metric-value">99.2%</div>
+                <div class="metric-label">System Uptime</div>
+            </div>
+            <div class="metric-card" style="background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);">
+                <div class="metric-value">12</div>
+                <div class="metric-label">Active Risk Treatments</div>
+            </div>
+            <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="metric-value">8.4/10</div>
+                <div class="metric-label">Environmental Score</div>
+            </div>
+        </div>
+
+        <!-- AI System Lifecycle Flowchart -->
+        <div class="flowchart">
+            <div class="card-header">🔄 AI System Lifecycle Management</div>
+            <div class="lifecycle-flow">
+                <div class="flow-step">
+                    <div class="flow-step-title">Design</div>
+                    <div>Requirements Analysis</div>
+                    <div class="flow-step-metric">Status: Complete ✓</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-title">Develop</div>
+                    <div>Model Training</div>
+                    <div class="flow-step-metric">Accuracy: 94.3%</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-title">Validate</div>
+                    <div>Testing & QA</div>
+                    <div class="flow-step-metric">Pass Rate: 98%</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-title">Deploy</div>
+                    <div>Production Release</div>
+                    <div class="flow-step-metric">Uptime: 99.2%</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-title">Monitor</div>
+                    <div>Performance Tracking</div>
+                    <div class="flow-step-metric">Real-time Active</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-title">Retire</div>
+                    <div>Decommission Plan</div>
+                    <div class="flow-step-metric">Scheduled: 2027</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid Layout -->
+        <div class="main-grid">
+            <!-- Left Panel: Risk Controls -->
+            <div>
+                <div class="card">
+                    <div class="card-header">🎯 Risk Control Gauges</div>
+                    <div class="gauges-container">
+                        <div class="gauge">
+                            <div class="gauge-circle" style="--gauge-deg: 270deg;">
+                                <div class="gauge-inner">75%</div>
+                            </div>
+                            <div class="gauge-label">Treatment Effectiveness</div>
+                        </div>
+                        <div class="gauge">
+                            <div class="gauge-circle" style="--gauge-deg: 306deg; background: conic-gradient(#4CAF50 0deg, #4CAF50 var(--gauge-deg), #e0e0e0 var(--gauge-deg), #e0e0e0 360deg);">
+                                <div class="gauge-inner">85%</div>
+                            </div>
+                            <div class="gauge-label">Operational Control</div>
+                        </div>
+                        <div class="gauge">
+                            <div class="gauge-circle" style="--gauge-deg: 324deg; background: conic-gradient(#FFC107 0deg, #FFC107 var(--gauge-deg), #e0e0e0 var(--gauge-deg), #e0e0e0 360deg);">
+                                <div class="gauge-inner">90%</div>
+                            </div>
+                            <div class="gauge-label">Compliance Rate</div>
+                        </div>
+                        <div class="gauge">
+                            <div class="gauge-circle" style="--gauge-deg: 288deg; background: conic-gradient(#2196F3 0deg, #2196F3 var(--gauge-deg), #e0e0e0 var(--gauge-deg), #e0e0e0 360deg);">
+                                <div class="gauge-inner">80%</div>
+                            </div>
+                            <div class="gauge-label">Impact Mitigation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">📚 Annex Cross-References</div>
+                    <div class="annex-reference">
+                        <div class="annex-reference-title">Annex A - Control Objectives</div>
+                        <div class="annex-reference-desc">
+                            • A.6: AI System Life Cycle<br>
+                            • A.7: Data for AI Systems<br>
+                            • A.8: Information Security
+                        </div>
+                    </div>
+                    <div class="annex-reference" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <div class="annex-reference-title">Annex B - Operational Guidance</div>
+                        <div class="annex-reference-desc">
+                            Process control procedures<br>
+                            Monitoring requirements
+                        </div>
+                    </div>
+                    <div class="annex-reference" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                        <div class="annex-reference-title">Annex C - Risk Sources</div>
+                        <div class="annex-reference-desc">
+                            Operational fairness issues<br>
+                            System performance risks
+                        </div>
+                    </div>
+                    <div class="annex-reference" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <div class="annex-reference-title">Annex D - Sector Examples</div>
+                        <div class="annex-reference-desc">
+                            Retail: Customer personalization<br>
+                            without bias considerations
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Panel: Main Operations -->
+            <div>
+                <div class="card">
+                    <div class="card-header">🎮 Operation Control Center</div>
+                    
+                    <div class="tabs">
+                        <button class="tab active">Risk Assessment</button>
+                        <button class="tab">Impact Analysis</button>
+                        <button class="tab">Treatment Plan</button>
+                        <button class="tab">Monitoring</button>
+                    </div>
+
+                    <!-- Active Risk Assessment Scenario -->
+                    <div style="background: #fff3cd; padding: 20px; border-radius: 10px; border-left: 5px solid #FFC107; margin-bottom: 20px;">
+                        <h3 style="color: #856404; margin-bottom: 10px;">🔍 Active Scenario: Supply Chain AI Disruption</h3>
+                        <p><strong>Risk ID:</strong> RISK-2025-087 | <strong>Priority:</strong> <span class="badge badge-warning">Medium</span></p>
+                        <p><strong>Treatment:</strong> Implementation of redundant prediction models with fallback mechanisms</p>
+                        <p><strong>Owner:</strong> Anna Martinez | <strong>Review Date:</strong> December 1, 2025</p>
+                    </div>
+
+                    <!-- Assessment Form -->
+                    <div class="assessment-form">
+                        <h3 style="margin-bottom: 20px; color: #667eea;">📋 Risk Assessment Form (ISO 42001 - 8.2)</h3>
+                        
+                        <div class="form-group">
+                            <label>Risk Category</label>
+                            <select>
+                                <option>Supply Chain Disruption</option>
+                                <option>Model Bias & Fairness</option>
+                                <option>Data Quality Issues</option>
+                                <option>Security Vulnerabilities</option>
+                                <option>Performance Degradation</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Risk Description</label>
+                            <textarea rows="3">Primary AI model failure during peak demand period could result in inventory stockouts. Backup model shows 8% accuracy degradation but maintains operational continuity.</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Likelihood Assessment (1-5 Scale)</label>
+                            <div class="scale-slider"></div>
+                            <div class="scale-labels">
+                                <span>1 - Rare</span>
+                                <span>2 - Unlikely</span>
+                                <span>3 - Possible</span>
+                                <span>4 - Likely</span>
+                                <span>5 - Almost Certain</span>
+                            </div>
+                            <input type="range" min="1" max="5" value="3" style="width: 100%; margin-top: 10px;">
+                            <p style="text-align: center; font-weight: 600; color: #667eea; margin-top: 10px;">Current Rating: 3 - Possible</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Impact Severity (1-5 Scale)</label>
+                            <div class="scale-slider"></div>
+                            <div class="scale-labels">
+                                <span>1 - Negligible</span>
+                                <span>2 - Minor</span>
+                                <span>3 - Moderate</span>
+                                <span>4 - Major</span>
+                                <span>5 - Catastrophic</span>
+                            </div>
+                            <input type="range" min="1" max="5" value="4" style="width: 100%; margin-top: 10px;">
+                            <p style="text-align: center; font-weight: 600; color: #667eea; margin-top: 10px;">Current Rating: 4 - Major</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Bias Impact Assessment (ISO 42001 - 8.4)</label>
+                            <select>
+                                <option>Score 1/5 - Negligible</option>
+                                <option selected>Score 2/5 - Low</option>
+                                <option>Score 3/5 - Moderate</option>
+                                <option>Score 4/5 - High</option>
+                                <option>Score 5/5 - Critical</option>
+                            </select>
+                            <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                                <strong>Assessment:</strong> Model shows minimal demographic bias in predictions. Regular fairness audits conducted monthly.
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Environmental Impact (ISO 42001 - 8.4)</label>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 84%;">8.4/10 - Energy Efficient</div>
+                            </div>
+                            <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                                <strong>Details:</strong> AI model optimized for low power consumption. Uses renewable energy sources for 92% of compute operations. Carbon offset program active.
+                            </p>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="btn btn-primary">💾 Save Assessment</button>
+                            <button class="btn btn-success">▶️ Run Simulation</button>
+                            <button class="btn btn-secondary">📊 Generate Report</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Matrix -->
+                    <div style="margin-top: 30px;">
+                        <h3 style="margin-bottom: 15px; color: #667eea;">🎯 Risk Matrix (ISO 42001 - 8.2)</h3>
+                        <div style="display: flex; gap: 20px; margin-bottom: 10px;">
+                            <div style="flex: 1;">
+                                <strong>Impact →</strong>
+                            </div>
+                        </div>
+                        <div class="risk-matrix">
+                            <div class="risk-cell risk-low">1×1<br>Low</div>
+                            <div class="risk-cell risk-low">1×2<br>Low</div>
+                            <div class="risk-cell risk-medium">1×3<br>Medium</div>
+                            <div class="risk-cell risk-medium">1×4<br>Medium</div>
+                            <div class="risk-cell risk-high">1×5<br>High</div>
+                            
+                            <div class="risk-cell risk-low">2×1<br>Low</div>
+                            <div class="risk-cell risk-medium">2×2<br>Medium</div>
+                            <div class="risk-cell risk-medium">2×3<br>Medium</div>
+                            <div class="risk-cell risk-high">2×4<br>High</div>
+                            <div class="risk-cell risk-high">2×5<br>High</div>
+                            
+                            <div class="risk-cell risk-medium">3×1<br>Medium</div>
+                            <div class="risk-cell risk-medium">3×2<br>Medium</div>
+                            <div class="risk-cell risk-high">3×3<br>High</div>
+                            <div class="risk-cell risk-high">3×4<br>High</div>
+                            <div class="risk-cell risk-critical">3×5<br>Critical</div>
+                            
+                            <div class="risk-cell risk-medium">4×1<br>Medium</div>
+                            <div class="risk-cell risk-high">4×2<br>High</div>
+                            <div class="risk-cell risk-high">4×3<br>High</div>
+                            <div class="risk-cell risk-critical">4×4<br>Critical</div>
+                            <div class="risk-cell risk-critical">4×5<br>Critical</div>
+                            
+                            <div class="risk-cell risk-high">5×1<br>High</div>
+                            <div class="risk-cell risk-high">5×2<br>High</div>
+                            <div class="risk-cell risk-critical">5×3<br>Critical</div>
+                            <div class="risk-cell risk-critical">5×4<br>Critical</div>
+                            <div class="risk-cell risk-critical">5×5<br>Critical</div>
+                        </div>
+                        <p style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #FFC107;">
+                            <strong>Current Risk Position:</strong> 3×4 = High Risk<br>
+                            <strong>Action Required:</strong> Implement risk treatment plan within 30 days
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Process Mapper & Timeline -->
+            <div>
+                <div class="card">
+                    <div class="card-header">🗺️ Process Mapper</div>
+                    <p style="margin-bottom: 15px; color: #666;">Drag and drop to design operational workflows</p>
+                    <div class="process-mapper">
+                        <div class="process-node">
+                            <div class="process-node-title">Step 1: Assess Risk</div>
+                            <div style="font-size: 0.85em; color: #666;">
+                                Identify AI system vulnerabilities<br>
+                                <span class="badge badge-success">Complete</span>
+                            </div>
+                        </div>
+                        <div class="process-node">
+                            <div class="process-node-title">Step 2: Analyze Impact</div>
+                            <div style="font-size: 0.85em; color: #666;">
+                                Evaluate business & societal effects<br>
+                                <span class="badge badge-info">In Progress</span>
+                            </div>
+                        </div>
+                        <div class="process-node">
+                            <div class="process-node-title">Step 3: Apply Controls</div>
+                            <div style="font-size: 0.85em; color: #666;">
+                                Implement Annex A controls<br>
+                                <span class="badge badge-warning">Pending</span>
+                            </div>
+                        </div>
+                        <div class="process-node">
+                            <div class="process-node-title">Step 4: Monitor & Review</div>
+                            <div style="font-size: 0.85em; color: #666;">
+                                Continuous performance tracking<br>
+                                <span class="badge badge-warning">Scheduled</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-primary">➕ Add Process Step</button>
+                        <button class="btn btn-secondary">🔗 Link to Clause 6</button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">📅 Assessment Timeline</div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">November 15, 2025</div>
+                            <div class="timeline-title">Monthly Impact Review</div>
+                            <div>Environmental score updated to 8.4/10. Energy efficiency improvements implemented.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">November 1, 2025</div>
+                            <div class="timeline-title">Quarterly Risk Assessment</div>
+                            <div>Supply chain risk identified. Treatment plan initiated with redundant model deployment.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">October 15, 2025</div>
+                            <div class="timeline-title">Bias Audit Completed</div>
+                            <div>Fairness testing passed. Bias impact score: 2/5 (Low). No corrective action required.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">September 30, 2025</div>
+                            <div class="timeline-title">System Performance Review</div>
+                            <div>Uptime maintained at 99.2%. Model accuracy: 94.3%. All KPIs within target range.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">⚡ Quick Actions</div>
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">🔄 Apply Annex A Control</button>
+                    <button class="btn btn-success" style="width: 100%; margin-bottom: 10px;">📊 View Compliance Dashboard</button>
+                    <button class="btn btn-warning" style="width: 100%; margin-bottom: 10px;">🔍 Audit Trail Report</button>
+                    <button class="btn btn-secondary" style="width: 100%;">📤 Export Assessment Data</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentation Section -->
+        <div class="documentation">
+            <div class="card-header">📖 Clause 8: Operation - Documentation Reference</div>
+            
+            <div class="doc-section">
+                <h3>8.1 Operational Planning and Control</h3>
+                <p>The organization shall plan, implement, and control the processes needed to meet requirements and to implement the actions determined in risk assessment and treatment. This includes establishing criteria for processes, implementing control of processes, and maintaining documented information.</p>
+                <div class="doc-quote">
+                    "The organization shall establish, implement and maintain a process for criteria to evaluate and control AI systems and AI system processes throughout their lifecycle." — ISO 42001:2023, Clause 8.1
+                </div>
+                <p><strong>Implementation at RetailAI Co:</strong> Comprehensive operational procedures established for inventory prediction AI system. Lifecycle management includes design validation, deployment checklists, monitoring protocols, and retirement planning.</p>
+            </div>
+
+            <div class="doc-section">
+                <h3>8.2 AI Risk Assessment</h3>
+                <p>The organization shall establish, implement, and maintain processes to identify and assess risks arising from AI systems. Risk assessments shall be performed at defined intervals and when significant changes occur.</p>
+                <div class="doc-quote">
+                    "Risk assessment shall identify risks to interested parties and consider the context of the AI system including its intended purpose, data characteristics, and deployment environment." — ISO 42001:2023, Clause 8.2
+                </div>
+                <p><strong>Current Risk Assessment:</strong> Supply chain disruption risk (RISK-2025-087) evaluated as High priority (3×4 matrix position). Likelihood rated 3/5 (Possible), Impact rated 4/5 (Major). Comprehensive treatment plan includes redundant model architecture and enhanced monitoring.</p>
+            </div>
+
+            <div class="doc-section">
+                <h3>8.3 Risk Treatment</h3>
+                <p>The organization shall implement risk treatment plans to address identified risks. Treatment options include risk avoidance, risk reduction, risk sharing, or risk retention. Each treatment shall be documented with assigned responsibilities and timelines.</p>
+                <div class="doc-quote">
+                    "The organization shall select risk treatment options considering the effectiveness of controls, feasibility of implementation, and residual risk acceptance criteria." — ISO 42001:2023, Clause 8.3
+                </div>
+                <p><strong>Active Treatment:</strong> Redundant prediction models deployed with automatic failover capability. Treatment effectiveness currently 75%, targeting 90% within 45 days. Backup model maintains 86% accuracy during primary system failures.</p>
+            </div>
+
+            <div class="doc-section">
+                <h3>8.4 Impact Assessment</h3>
+                <p>The organization shall assess the potential impacts of AI systems on individuals, society, and the environment. Impact assessments shall consider fairness, transparency, accountability, safety, and sustainability throughout the AI lifecycle.</p>
+                <div class="doc-quote">
+                    "Impact assessment shall evaluate potential benefits and harms across multiple dimensions including ethical, social, environmental, and economic factors." — ISO 42001:2023, Clause 8.4
+                </div>
+                <p><strong>Current Impact Metrics:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Environmental Score:</strong> 8.4/10 - Energy-efficient AI architecture using renewable energy (92% coverage)</li>
+                    <li><strong>Bias Impact:</strong> Score 2/5 (Low) - Minimal demographic bias detected in monthly fairness audits</li>
+                    <li><strong>Social Impact:</strong> Positive - Reduces food waste by 23% through accurate demand forecasting</li>
+                    <li><strong>Economic Impact:</strong> $2.3M annual cost savings through optimized inventory management</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Active Risk Treatments Table -->
+        <div class="card" style="margin-bottom: 30px;">
+            <div class="card-header">📋 Active Risk Treatment Plans</div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Risk ID</th>
+                        <th>Description</th>
+                        <th>Priority</th>
+                        <th>Treatment Strategy</th>
+                        <th>Effectiveness</th>
+                        <th>Owner</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>RISK-2025-087</td>
+                        <td>Supply Chain AI Disruption</td>
+                        <td><span class="badge badge-warning">High</span></td>
+                        <td>Redundant Models</td>
+                        <td>75%</td>
+                        <td>Anna Martinez</td>
+                        <td><span class="badge badge-info">In Progress</span></td>
+                    </tr>
+                    <tr>
+                        <td>RISK-2025-063</td>
+                        <td>Data Quality Degradation</td>
+                        <td><span class="badge badge-warning">Medium</span></td>
+                        <td>Enhanced Validation</td>
+                        <td>88%</td>
+                        <td>Data Team</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td>RISK-2025-051</td>
+                        <td>Model Drift Detection</td>
+                        <td><span class="badge badge-success">Low</span></td>
+                        <td>Continuous Monitoring</td>
+                        <td>92%</td>
+                        <td>ML Ops Team</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td>RISK-2025-042</td>
+                        <td>Algorithmic Bias - Demographics</td>
+                        <td><span class="badge badge-success">Low</span></td>
+                        <td>Regular Fairness Audits</td>
+                        <td>95%</td>
+                        <td>Ethics Committee</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td>RISK-2025-038</td>
+                        <td>Security Vulnerabilities</td>
+                        <td><span class="badge badge-warning">Medium</span></td>
+                        <td>Penetration Testing</td>
+                        <td>82%</td>
+                        <td>Security Team</td>
+                        <td><span class="badge badge-info">In Progress</span></td>
+                    </tr>
+                    <tr>
+                        <td>RISK-2025-029</td>
+                        <td>Performance Scalability</td>
+                        <td><span class="badge badge-warning">Medium</span></td>
+                        <td>Infrastructure Scaling</td>
+                        <td>79%</td>
+                        <td>Infrastructure Team</td>
+                        <td><span class="badge badge-info">In Progress</span></td>
+                    </tr>
+                    <tr>
+                        <td>RISK-2025-015</td>
+                        <td>Energy Consumption Increase</td>
+                        <td><span class="badge badge-success">Low</span></td>
+                        <td>Green Computing Initiative</td>
+                        <td>91%</td>
+                        <td>Sustainability Team</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Simulation Results -->
+        <div class="card" style="margin-bottom: 30px;">
+            <div class="card-header">🎮 Simulation Results - Last Run: November 17, 2025 09:34 AM</div>
+            <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border-left: 5px solid #4CAF50; margin-bottom: 20px;">
+                <h3 style="color: #2e7d32; margin-bottom: 10px;">✅ Simulation: Supply Chain Disruption Scenario</h3>
+                <p><strong>Test Parameters:</strong> Primary model failure during Black Friday peak demand (10,000 transactions/hour)</p>
+                <p><strong>Result:</strong> Automatic failover to redundant model completed in 2.3 seconds</p>
+                <p><strong>Performance Impact:</strong> 8% accuracy degradation acceptable within operational thresholds</p>
+                <p><strong>Business Impact:</strong> Prevented estimated $47,000 in stockout losses</p>
+                <p><strong>Recommendation:</strong> Treatment plan effective. Continue monthly simulation testing.</p>
+            </div>
+
+            <h4 style="margin-bottom: 15px;">📊 Key Performance Indicators</h4>
+            <div class="metrics-grid">
+                <div style="background: white; border: 2px solid #4CAF50; border-radius: 10px; padding: 20px; text-align: center;">
+                    <div style="font-size: 2em; color: #4CAF50; font-weight: bold;">2.3s</div>
+                    <div style="color: #666;">Failover Time</div>
+                </div>
+                <div style="background: white; border: 2px solid #2196F3; border-radius: 10px; padding: 20px; text-align: center;">
+                    <div style="font-size: 2em; color: #2196F3; font-weight: bold;">86%</div>
+                    <div style="color: #666;">Backup Model Accuracy</div>
+                </div>
+                <div style="background: white; border: 2px solid #FFC107; border-radius: 10px; padding: 20px; text-align: center;">
+                    <div style="font-size: 2em; color: #FFC107; font-weight: bold;">0</div>
+                    <div style="color: #666;">Service Interruptions</div>
+                </div>
+                <div style="background: white; border: 2px solid #9C27B0; border-radius: 10px; padding: 20px; text-align: center;">
+                    <div style="font-size: 2em; color: #9C27B0; font-weight: bold;">$47K</div>
+                    <div style="color: #666;">Loss Prevention</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Annex A Controls Application -->
+        <div class="card" style="margin-bottom: 30px;">
+            <div class="card-header">🛡️ Applied Annex A Controls</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                <div style="border: 2px solid #667eea; border-radius: 10px; padding: 20px;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">A.6 - AI System Life Cycle</h4>
+                    <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">Manage AI systems throughout design, development, deployment, operation, and retirement phases.</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                        <strong>Applied Controls:</strong>
+                        <ul style="margin-left: 20px; margin-top: 5px; font-size: 0.85em;">
+                            <li>Lifecycle stage documentation active</li>
+                            <li>Retirement plan scheduled for 2027</li>
+                            <li>Regular lifecycle reviews quarterly</li>
+                        </ul>
+                    </div>
+                    <span class="badge badge-success">Implemented</span>
+                </div>
+
+                <div style="border: 2px solid #667eea; border-radius: 10px; padding: 20px;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">A.7 - Data for AI Systems</h4>
+                    <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">Ensure data quality, integrity, and appropriate governance for AI training and operation.</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                        <strong>Applied Controls:</strong>
+                        <ul style="margin-left: 20px; margin-top: 5px; font-size: 0.85em;">
+                            <li>Data validation pipeline operational</li>
+                            <li>Quality score: 94.7%</li>
+                            <li>GDPR compliance verified</li>
+                        </ul>
+                    </div>
+                    <span class="badge badge-success">Implemented</span>
+                </div>
+
+                <div style="border: 2px solid #FFC107; border-radius: 10px; padding: 20px;">
+                    <h4 style="color: #F57C00; margin-bottom: 10px;">A.8 - Information Security</h4>
+                    <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">Protect AI systems, models, and data from unauthorized access and security threats.</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                        <strong>Applied Controls:</strong>
+                        <ul style="margin-left: 20px; margin-top: 5px; font-size: 0.85em;">
+                            <li>Encryption at rest and in transit</li>
+                            <li>Access control lists updated</li>
+                            <li>Penetration testing in progress</li>
+                        </ul>
+                    </div>
+                    <span class="badge badge-warning">In Progress</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
+            <h3 style="margin-bottom: 20px; color: #667eea;">🚀 Next Steps</h3>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-primary">📝 Complete Risk Assessment</button>
+                <button class="btn btn-success">✅ Approve Treatment Plan</button>
+                <button class="btn btn-warning">📊 Schedule Next Review</button>
+                <button class="btn btn-secondary">🔗 Link to Clause 9 (Performance)</button>
+                <button class="btn" style="background: #9C27B0; color: white;">📚 View Full Documentation</button>
+            </div>
+            <p style="margin-top: 25px; color: #666; font-size: 0.9em;">
+                <strong>ISO 42001:2023 Compliance Status:</strong> <span class="badge badge-success">85% Operational Readiness</span><br>
+                Last Updated: November 17, 2025 | Next Audit: December 15, 2025
+            </p>
+        </div>
+
+        <!-- Copyright Footer -->
+        <div style="text-align: center; padding: 30px; color: #666; font-size: 0.85em;">
+            <p>RetailAI Co. - ISO 42001 AI Management System Implementation Platform</p>
+            <p>Clause 8: Operation Control Dashboard • Powered by Comprehensive AI Governance Framework</p>
+            <p style="margin-top: 10px; font-size: 0.8em;">This is a demonstration interface showing ISO 42001 compliance implementation<br>
+            All data shown is sample data for illustrative purposes</p>
+        </div>
+    </div>
+</body>
+</html>

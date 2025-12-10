@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO 42001 - Clause 10: Improvement Engine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .clause-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .certification-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        .certification-badge.locked {
+            background: #94a3b8;
+        }
+
+        .gear-icon {
+            width: 24px;
+            height: 24px;
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            color: #1e293b;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .user-context {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin-top: 15px;
+        }
+
+        .user-context strong {
+            color: #667eea;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        /* PDCA Cycle Visualization */
+        .pdca-cycle {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto;
+        }
+
+        .cycle-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 100%;
+        }
+
+        .cycle-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cycle-segment:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .plan { 
+            top: 0; 
+            left: 0; 
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border-radius: 15px 0 0 0;
+        }
+        
+        .do { 
+            top: 0; 
+            right: 0; 
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 0 15px 0 0;
+        }
+        
+        .check { 
+            bottom: 0; 
+            right: 0; 
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-radius: 0 0 15px 0;
+        }
+        
+        .act { 
+            bottom: 0; 
+            left: 0; 
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 0 0 0 15px;
+        }
+
+        .cycle-label {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .cycle-percentage {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .cycle-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .cycle-center-label {
+            font-size: 0.9em;
+            color: #64748b;
+        }
+
+        .cycle-center-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Progress Wheel */
+        .progress-wheel {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s;
+            stroke: #667eea;
+            stroke-width: 10;
+            fill: none;
+        }
+
+        .progress-ring-bg {
+            stroke: #e2e8f0;
+            stroke-width: 10;
+            fill: none;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .progress-label {
+            color: #64748b;
+            font-size: 0.9em;
+        }
+
+        /* Charts */
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 200px;
+            margin-top: 20px;
+        }
+
+        .bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .bar {
+            width: 60px;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .bar:hover {
+            transform: scaleY(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .bar-label {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* Action Items */
+        .action-list {
+            list-style: none;
+        }
+
+        .action-item {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .action-item:hover {
+            background: #f1f5f9;
+            transform: translateX(5px);
+        }
+
+        .action-item.completed {
+            border-left-color: #10b981;
+            opacity: 0.7;
+        }
+
+        .action-item.pending {
+            border-left-color: #f59e0b;
+        }
+
+        .action-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .action-title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 1.1em;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-inprogress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .action-details {
+            color: #64748b;
+            font-size: 0.95em;
+            margin-top: 5px;
+        }
+
+        .action-meta {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #64748b;
+        }
+
+        /* Decision Tree */
+        .decision-tree {
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .tree-node {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 3px solid #667eea;
+            position: relative;
+        }
+
+        .tree-node::before {
+            content: '';
+            position: absolute;
+            left: -23px;
+            top: 50%;
+            width: 20px;
+            height: 2px;
+            background: #cbd5e1;
+        }
+
+        .tree-node-child {
+            margin-left: 30px;
+            border-left-color: #10b981;
+        }
+
+        .tree-node-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .tree-node-content {
+            color: #64748b;
+            font-size: 0.95em;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card.green {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .stat-card.orange {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .stat-card.blue {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        /* Annex References */
+        .annex-references {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .annex-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .annex-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .annex-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .annex-content {
+            color: #64748b;
+            font-size: 0.95em;
+        }
+
+        /* Documentation Section */
+        .documentation {
+            background: #fffbeb;
+            border: 2px solid #fbbf24;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .documentation h3 {
+            color: #92400e;
+            margin-bottom: 15px;
+        }
+
+        .documentation-content {
+            color: #78350f;
+            line-height: 1.8;
+        }
+
+        .documentation-content strong {
+            color: #92400e;
+        }
+
+        .quote {
+            border-left: 4px solid #fbbf24;
+            padding-left: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: #92400e;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e2e8f0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 30px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 20px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #667eea;
+        }
+
+        .timeline-marker.completed {
+            background: #10b981;
+            box-shadow: 0 0 0 3px #10b981;
+        }
+
+        .timeline-content {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .timeline-date {
+            font-size: 0.85em;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 2s infinite;
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .data-table th {
+            background: #f1f5f9;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #1e293b;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #475569;
+        }
+
+        .data-table tr:hover {
+            background: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <div class="clause-badge">ISO 42001:2023</div>
+                <div class="certification-badge" id="certBadge">
+                    <svg class="gear-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1 0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66z"/>
+                    </svg>
+                    <span>85% Complete - In Progress</span>
+                </div>
+            </div>
+            <h1>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 6v6l4 2"/>
+                </svg>
+                Clause 10: Improvement Engine
+            </h1>
+            <div class="subtitle">Drive continual improvement and handle nonconformities through systematic feedback loops</div>
+            
+            <div class="user-context">
+                <strong>👤 Active User:</strong> Rachel Chen, Quality Lead @ MediaAI Studios | 
+                <strong>📅 Session:</strong> November 17, 2025, 14:23 KST | 
+                <strong>🎯 Current Task:</strong> Reviewing AI content bias corrective actions
+            </div>
+        </div>
+
+        <!-- Main Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card green">
+                <div class="stat-value">6</div>
+                <div class="stat-label">Actions Completed</div>
+            </div>
+            <div class="stat-card orange">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Actions Pending</div>
+            </div>
+            <div class="stat-card blue">
+                <div class="stat-value">-20%</div>
+                <div class="stat-label">Nonconformity Reduction</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">85%</div>
+                <div class="stat-label">Overall Progress</div>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Left Column -->
+            <div>
+                <!-- PDCA Cycle Visualization -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">🔄 PDCA Improvement Cycle</h2>
+                        <span class="tooltip" data-tooltip="Plan-Do-Check-Act continuous improvement model">ℹ️</span>
+                    </div>
+                    
+                    <div class="pdca-cycle">
+                        <div class="cycle-container">
+                            <div class="cycle-segment plan">
+                                <div class="cycle-label">PLAN</div>
+                                <div class="cycle-percentage">90%</div>
+                            </div>
+                            <div class="cycle-segment do">
+                                <div class="cycle-label">DO</div>
+                                <div class="cycle-percentage">85%</div>
+                            </div>
+                            <div class="cycle-segment check">
+                                <div class="cycle-label">CHECK</div>
+                                <div class="cycle-percentage">80%</div>
+                            </div>
+                            <div class="cycle-segment act">
+                                <div class="cycle-label">ACT</div>
+                                <div class="cycle-percentage">85%</div>
+                            </div>
+                            <div class="cycle-center">
+                                <div class="cycle-center-label">Overall</div>
+                                <div class="cycle-center-value">85%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid" style="margin-top: 30px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #3b82f6;">18</div>
+                            <div style="color: #64748b;">Initiatives Planned</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #10b981;">14</div>
+                            <div style="color: #64748b;">Actions Implemented</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #f59e0b;">12</div>
+                            <div style="color: #64748b;">Reviews Completed</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #8b5cf6;">10</div>
+                            <div style="color: #64748b;">Adjustments Made</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nonconformity Trends Chart -->
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <h2 class="card-title">📊 Nonconformity Trends</h2>
+                        <span style="color: #10b981; font-weight: 600;">↓ 20% YoY Improvement</span>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="bar-chart">
+                            <div class="bar-group">
+                                <div class="bar" style="height: 180px;">
+                                    <div class="bar-value">15</div>
+                                </div>
+                                <div class="bar-label">Q1 2024</div>
+                            </div>
+                            <div class="bar-group">
+                                <div class="bar" style="height: 160px;">
+                                    <div class="bar-value">13</div>
+                                </div>
+                                <div class="bar-label">Q2 2024</div>
+                            </div>
+                            <div class="bar-group">
+                                <div class="bar" style="height: 120px;">
+                                    <div class="bar-value">10</div>
+                                </div>
+                                <div class="bar-label">Q3 2024</div>
+                            </div>
+                            <div class="bar-group">
+                                <div class="bar" style="height: 100px;">
+                                    <div class="bar-value">8</div>
+                                </div>
+                                <div class="bar-label">Q4 2024</div>
+                            </div>
+                            <div class="bar-group">
+                                <div class="bar" style="height: 60px; background: linear-gradient(to top, #10b981, #059669);">
+                                    <div class="bar-value">5</div>
+                                </div>
+                                <div class="bar-label">Q1 2025</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 15px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #10b981;">
+                        <strong style="color: #065f46;">Key Insight:</strong>
+                        <span style="color: #047857;"> Nonconformities decreased from 10 in 2024 to 5 in Q1 2025, demonstrating effective corrective actions and system improvements.</span>
+                    </div>
+                </div>
+
+                <!-- Active Corrective Actions -->
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <h2 class="card-title">⚡ Active Corrective Actions</h2>
+                        <button class="btn btn-primary">+ Log New Action</button>
+                    </div>
+
+                    <ul class="action-list">
+                        <li class="action-item pending">
+                            <div class="action-header">
+                                <div class="action-title">🎯 AI Content Bias - Model Retraining</div>
+                                <span class="status-badge status-inprogress">In Progress</span>
+                            </div>
+                            <div class="action-details">
+                                <strong>Issue:</strong> AI-generated content showing demographic bias in character representation<br>
+                                <strong>Root Cause:</strong> Training dataset lacks diversity across age, ethnicity, and cultural backgrounds<br>
+                                <strong>Corrective Action:</strong> Retrain model with enhanced diverse dataset (500K+ balanced samples)
+                            </div>
+                            <div class="action-meta">
+                                <div class="meta-item">💰 <strong>Cost:</strong> $5,000</div>
+                                <div class="meta-item">📅 <strong>Timeline:</strong> 1 month</div>
+                                <div class="meta-item">👤 <strong>Owner:</strong> Rachel Chen</div>
+                                <div class="meta-item">🎯 <strong>Target Date:</strong> Dec 17, 2025</div>
+                            </div>
+                        </li>
+
+                        <li class="action-item completed">
+                            <div class="action-header">
+                                <div class="action-title">✅ Update AI Governance Policy</div>
+                                <span class="status-badge status-completed">Completed</span>
+                            </div>
+                            <div class="action-details">
+                                <strong>Issue:</strong> Policy documentation outdated with new regulatory requirements<br>
+                                <strong>Action Taken:</strong> Comprehensive policy revision including EU AI Act compliance measures<br>
+                                <strong>Result:</strong> Policy v3.2 approved and distributed to all stakeholders
+                            </div>
+                            <div class="action-meta">
+                                <div class="meta-item">💰 <strong>Cost:</strong> $1,200</div>
+                                <div class="meta-item">✓ <strong>Completed:</strong> Nov 10, 2025</div>
+                                <div class="meta-item">👤 <strong>Owner:</strong> Rachel Chen</div>
+                            </div>
+                        </li>
+
+                        <li class="action-item pending">
+                            <div class="action-header">
+                                <div class="action-title">🔍 Enhance Transparency Reporting</div>
+                                <span class="status-badge status-pending">Pending</span>
+                            </div>
+                            <div class="action-details">
+                                <strong>Issue:</strong> Stakeholders requesting more detailed AI decision explanations<br>
+                                <strong>Planned Action:</strong> Implement explainable AI (XAI) dashboard with model interpretation tools<br>
+                                <strong>Expected Outcome:</strong> 95% stakeholder satisfaction on AI transparency
+                            </div>
+                            <div class="action-meta">
+                                <div class="meta-item">💰 <strong>Budget:</strong> $8,500</div>
+                                <div class="meta-item">📅 <strong>Planned:</strong> Q1 2026</div>
+                                <div class="meta-item">👤 <strong>Owner:</strong> David Park</div>
+                            </div>
+                        </li>
+
+                        <li class="action-item completed">
+                            <div class="action-header">
+                                <div class="action-title">✅ Third-Party Vendor Assessment</div>
+                                <span class="status-badge status-completed">Completed</span>
+                            </div>
+                            <div class="action-details">
+                                <strong>Issue:</strong> Cloud AI provider lacking ISO 42001 compliance documentation<br>
+                                <strong>Action Taken:</strong> Conducted comprehensive vendor audit and secured compliance certification<br>
+                                <strong>Result:</strong> Vendor now fully compliant; updated Annex A.10 third-party controls
+                            </div>
+                            <div class="action-meta">
+                                <div class="meta-item">💰 <strong>Cost:</strong> $3,500</div>
+                                <div class="meta-item">✓ <strong>Completed:</strong> Oct 28, 2025</div>
+                                <div class="meta-item">👤 <strong>Owner:</strong> Sarah Kim</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Improvement Decision Tree -->
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <h2 class="card-title">🌳 AI-Suggested Corrective Action Path</h2>
+                        <button class="btn btn-secondary">Regenerate Suggestions</button>
+                    </div>
+
+                    <div class="decision-tree">
+                        <div class="tree-node">
+                            <div class="tree-node-title">📋 Step 1: Identify Nonconformity</div>
+                            <div class="tree-node-content">AI content bias detected in 23% of generated media assets</div>
+                        </div>
+
+                        <div class="tree-node tree-node-child">
+                            <div class="tree-node-title">🔍 Step 2: Root Cause Analysis</div>
+                            <div class="tree-node-content">Training data analysis reveals 65% demographic imbalance; recommendation algorithm favors majority patterns</div>
+                        </div>
+
+                        <div class="tree-node tree-node-child">
+                            <div class="tree-node-title">💡 Step 3: Corrective Actions (AI-Recommended)</div>
+                            <div class="tree-node-content">
+                                <strong>Option A (Recommended):</strong> Full model retraining with balanced dataset - Cost: $5K, Duration: 1 month, Success Rate: 92%<br>
+                                <strong>Option B:</strong> Bias mitigation post-processing layer - Cost: $2K, Duration: 2 weeks, Success Rate: 78%<br>
+                                <strong>Option C:</strong> Hybrid approach with incremental retraining - Cost: $3.5K, Duration: 3 weeks, Success Rate: 85%
+                            </div>
+                        </div>
+
+                        <div class="tree-node tree-node-child">
+                            <div class="tree-node-title">🎯 Step 4: Implementation Plan</div>
+                            <div class="tree-node-content">Selected Option A; resources allocated; timeline approved; stakeholders notified</div>
+                        </div>
+
+                        <div class="tree-node tree-node-child">
+                            <div class="tree-node-title">✓ Step 5: Verification & Validation</div>
+                            <div class="tree-node-content">Post-implementation testing scheduled; success criteria: <95% bias in outputs, stakeholder approval</div>
+                        </div>
+
+                        <div class="tree-node tree-node-child">
+                            <div class="tree-node-title">📊 Step 6: Effectiveness Review</div>
+                            <div class="tree-node-content">30-day monitoring period; quarterly review meetings; update Annex C objectives</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <div class="btn-group">
+                            <button class="btn btn-primary">Approve Recommended Path</button>
+                            <button class="btn btn-secondary">Request Alternative Options</button>
+                            <button class="btn btn-secondary">Consult Annex B Guidance</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div>
+                <!-- Overall Progress -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">🎯 Overall Improvement Progress</h2>
+                    </div>
+
+                    <div class="progress-wheel">
+                        <svg class="progress-ring" width="200" height="200">
+                            <circle class="progress-ring-bg" cx="100" cy="100" r="80"/>
+                            <circle class="progress-ring-circle" cx="100" cy="100" r="80"
+                                    stroke-dasharray="502.65" stroke-dashoffset="75.4"/>
+                        </svg>
+                        <div class="progress-text">
+                            <div class="progress-value">85%</div>
+                            <div class="progress-label">Complete</div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; color: #64748b; margin-top: 20px;">
+                        <p><strong>15 points to 100%</strong></p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">🎖️ Certification badge unlocks at 100% completion</p>
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea15, #764ba215); border-radius: 10px; border: 2px dashed #667eea;">
+                        <strong>🎯 Next Milestone:</strong><br>
+                        Complete pending corrective actions (4 remaining)<br>
+                        <strong>ETA:</strong> December 2025
+                    </div>
+                </div>
+
+                <!-- ISO Documentation -->
+                <div class="documentation" style="margin-top: 25px;">
+                    <h3>📚 ISO 42001 Clause 10 - Key Requirements</h3>
+                    
+                    <div class="documentation-content">
+                        <p><strong>10.1 Continual Improvement</strong></p>
+                        <div class="quote">
+                            "The organization shall continually improve the suitability, adequacy and effectiveness of the AI management system."
+                        </div>
+                        
+                        <p style="margin-top: 15px;">Organizations must systematically enhance their AI management system by considering results from monitoring, evaluation, analysis, audits, and management reviews. This includes identifying opportunities for improvement and implementing necessary actions.</p>
+
+                        <p style="margin-top: 15px;"><strong>10.2 Nonconformity and Corrective Action</strong></p>
+                        <div class="quote">
+                            "When a nonconformity occurs, the organization shall: react to the nonconformity, evaluate the need for action, implement any action needed, review the effectiveness of corrective action, and update risks and opportunities if necessary."
+                        </div>
+
+                        <p style="margin-top: 15px;">Systematic approach to identifying, documenting, and resolving issues ensures continuous system maturity and compliance maintenance.</p>
+                    </div>
+                </div>
+
+                <!-- Annex Cross-References -->
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <h2 class="card-title">🔗 Annex Cross-References</h2>
+                    </div>
+
+                    <div class="annex-references">
+                        <div class="annex-item">
+                            <div class="annex-title">📎 Annex A.10 - Third-Party Relationships</div>
+                            <div class="annex-content">
+                                Controls for managing improvements in third-party AI services and vendor performance. Ensures external partners maintain alignment with improvement objectives.
+                            </div>
+                        </div>
+
+                        <div class="annex-item">
+                            <div class="annex-title">📋 Annex B - Implementation Guidance</div>
+                            <div class="annex-content">
+                                Detailed guidance on corrective action processes, including root cause analysis methodologies, effectiveness measurement, and documentation requirements.
+                            </div>
+                        </div>
+
+                        <div class="annex-item">
+                            <div class="annex-title">🎯 Annex C - Improvement Objectives</div>
+                            <div class="annex-content">
+                                Framework for setting continual improvement objectives and managing associated risks. Current focus: "Improve AI fairness" and "Enhance transparency by 30%".
+                            </div>
+                        </div>
+
+                        <div class="annex-item">
+                            <div class="annex-title">🏭 Annex D - Sector-Specific Guidance</div>
+                            <div class="annex-content">
+                                <strong>Creative Industries/Media:</strong> "Improve AI for content diversity" - Focus on reducing bias, enhancing cultural representation, and expanding creative output variety.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-primary" style="width: 100%;">Suggest Actions from Annexes</button>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Timeline -->
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <h2 class="card-title">⏱️ Recent Activity</h2>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker completed"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">Today, 14:15 KST</div>
+                                <div class="timeline-title">Rachel Chen logged corrective action</div>
+                                <div style="color: #64748b; font-size: 0.9em;">AI content bias issue documented with $5K budget approval</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker completed"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">Nov 10, 2025</div>
+                                <div class="timeline-title">Policy update completed</div>
+                                <div style="color: #64748b; font-size: 0.9em;">AI Governance Policy v3.2 approved and distributed</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker completed"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">Oct 28, 2025</div>
+                                <div class="timeline-title">Vendor audit completed</div>
+                                <div style="color: #64748b; font-size: 0.9em;">Third-party cloud provider achieved ISO 42001 compliance</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">Oct 15, 2025</div>
+                                <div class="timeline-title">Quarterly improvement review</div>
+                                <div style="color: #64748b; font-size: 0.9em;">Management review identified 3 new improvement opportunities</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <h2 class="card-title">⚡ Quick Actions</h2>
+                    </div>
+
+                    <div class="btn-group" style="flex-direction: column;">
+                        <button class="btn btn-primary">📝 Log New Nonconformity</button>
+                        <button class="btn btn-primary">✅ Update Action Status</button>
+                        <button class="btn btn-primary">📊 Generate Progress Report</button>
+                        <button class="btn btn-secondary">🔄 Track Changes</button>
+                        <button class="btn btn-secondary">📋 View Audit Trail</button>
+                        <button class="btn btn-secondary">💡 AI Improvement Suggestions</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Improvement Metrics Dashboard -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">📈 Improvement Metrics Dashboard</h2>
+                <button class="btn btn-secondary">Export Report</button>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>2024 Baseline</th>
+                        <th>Current (2025)</th>
+                        <th>Target</th>
+                        <th>Status</th>
+                        <th>Trend</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>AI Fairness Score</strong></td>
+                        <td>72%</td>
+                        <td>85%</td>
+                        <td>90%</td>
+                        <td><span class="status-badge status-inprogress">On Track</span></td>
+                        <td style="color: #10b981; font-weight: bold;">↑ +13%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Nonconformity Count (Quarterly)</strong></td>
+                        <td>10</td>
+                        <td>5</td>
+                        <td>3</td>
+                        <td><span class="status-badge status-completed">Ahead</span></td>
+                        <td style="color: #10b981; font-weight: bold;">↓ -50%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Corrective Action Closure Rate</strong></td>
+                        <td>68%</td>
+                        <td>78%</td>
+                        <td>85%</td>
+                        <td><span class="status-badge status-inprogress">On Track</span></td>
+                        <td style="color: #10b981; font-weight: bold;">↑ +10%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stakeholder Satisfaction</strong></td>
+                        <td>81%</td>
+                        <td>89%</td>
+                        <td>95%</td>
+                        <td><span class="status-badge status-inprogress">On Track</span></td>
+                        <td style="color: #10b981; font-weight: bold;">↑ +8%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Transparency Score</strong></td>
+                        <td>65%</td>
+                        <td>82%</td>
+                        <td>95%</td>
+                        <td><span class="status-badge status-inprogress">On Track</span></td>
+                        <td style="color: #10b981; font-weight: bold;">↑ +17%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Time to Resolution (Avg Days)</strong></td>
+                        <td>45</td>
+                        <td>28</td>
+                        <td>21</td>
+                        <td><span class="status-badge status-completed">Ahead</span></td>
+                        <td style="color: #10b981; font-weight: bold;">↓ -38%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Log New Corrective Action Form -->
+        <div class="card" style="margin-top: 25px;">
+            <div class="card-header">
+                <h2 class="card-title">📝 Log New Corrective Action</h2>
+            </div>
+
+            <form>
+                <div class="form-group">
+                    <label class="form-label">Nonconformity Title *</label>
+                    <input type="text" class="form-input" placeholder="e.g., AI model producing biased outputs">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Category *</label>
+                    <select class="form-select">
+                        <option>Select category...</option>
+                        <option>AI Fairness & Bias</option>
+                        <option>Data Quality</option>
+                        <option>Model Performance</option>
+                        <option>Transparency & Explainability</option>
+                        <option>Privacy & Security</option>
+                        <option>Third-Party Management</option>
+                        <option>Documentation & Records</option>
+                        <option>Training & Competence</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description & Root Cause Analysis *</label>
+                    <textarea class="form-textarea" placeholder="Describe the nonconformity, its impact, and identified root causes..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Proposed Corrective Action *</label>
+                    <textarea class="form-textarea" placeholder="Detail the planned corrective action, including steps and expected outcomes..."></textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Estimated Cost (USD)</label>
+                        <input type="number" class="form-input" placeholder="5000">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Timeline (Months)</label>
+                        <input type="number" class="form-input" placeholder="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Action Owner</label>
+                    <select class="form-select">
+                        <option>Rachel Chen (Quality Lead)</option>
+                        <option>David Park (AI Engineer)</option>
+                        <option>Sarah Kim (Compliance Manager)</option>
+                        <option>Michael Lee (Data Scientist)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Related Annexes</label>
+                    <select class="form-select" multiple style="height: 100px;">
+                        <option>Annex A.10 - Third-Party Relationships</option>
+                        <option>Annex B - Implementation Guidance</option>
+                        <option selected>Annex C - Improvement Objectives</option>
+                        <option selected>Annex D - Media Sector Guidance</option>
+                    </select>
+                </div>
+
+                <div class="btn-group" style="margin-top: 20px;">
+                    <button type="submit" class="btn btn-success">Submit Corrective Action</button>
+                    <button type="button" class="btn btn-primary">Get AI Suggestions</button>
+                    <button type="button" class="btn btn-secondary">Save as Draft</button>
+                    <button type="button" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Success Story Narrative -->
+        <div class="card" style="margin-top: 25px; background: linear-gradient(135deg, #10b98115, #059f8015); border: 2px solid #10b981;">
+            <div class="card-header">
+                <h2 class="card-title">🎉 Success Story: The Improvement Journey</h2>
+            </div>
+
+            <div style="padding: 20px; line-height: 1.8;">
+                <p><strong>📖 Narrative:</strong></p>
+                <p style="margin-top: 10px;">
+                    Rachel Chen, Quality Lead at <strong>MediaAI Studios</strong>, opens the Improvement Engine screen on a busy Monday afternoon. The interface greets her with spinning gear animations symbolizing the continuous feedback loop at the heart of ISO 42001's improvement philosophy.
+                </p>
+
+                <p style="margin-top: 15px;">
+                    She's reviewing the latest <strong>nonconformity: AI content bias</strong> detected in their media generation system. The issue affects 23% of outputs, showing demographic imbalance. The screen displays a comprehensive <strong>decision tree</strong> suggesting corrective actions:
+                </p>
+
+                <ul style="margin-left: 30px; margin-top: 10px;">
+                    <li><strong>Option A:</strong> Full model retraining - Cost: $5,000, Timeline: 1 month, Success rate: 92%</li>
+                    <li><strong>Option B:</strong> Post-processing bias mitigation - Cost: $2,000, Timeline: 2 weeks, Success rate: 78%</li>
+                    <li><strong>Option C:</strong> Hybrid incremental approach - Cost: $3,500, Timeline: 3 weeks, Success rate: 85%</li>
+                </ul>
+
+                <p style="margin-top: 15px;">
+                    Rachel selects <strong>Option A</strong>, the system's recommended path. She logs the action, assigns herself as owner, and sets the target completion for December 17, 2025. The system automatically cross-references <strong>Annex B</strong> for corrective process guidance and <strong>Annex C</strong> for continual improvement objectives ("Improve AI fairness").
+                </p>
+
+                <p style="margin-top: 15px;">
+                    The screen updates with sample data showing <strong>improvement progress: 6 actions completed, 4 pending</strong>. Visual elements spring to life:
+                </p>
+
+                <ul style="margin-left: 30px; margin-top: 10px;">
+                    <li>📊 <strong>PDCA Cycle diagram</strong> shows 85% overall completion with percentages for each phase</li>
+                    <li>📈 <strong>Bar graph</strong> displays nonconformity trends declining by 20%</li>
+                    <li>🎯 <strong>Progress wheel</strong> indicates 85% toward certification</li>
+                </ul>
+
+                <p style="margin-top: 15px;">
+                    From <strong>Annex D's media sector guidance</strong>, the system highlights: <em>"Improve AI for content diversity"</em> - reinforcing the strategic importance of this action.
+                </p>
+
+                <p style="margin-top: 15px; padding: 20px; background: white; border-radius: 10px; border-left: 4px solid #10b981;">
+                    <strong>🎖️ The Moment of Achievement:</strong><br>
+                    As Rachel clicks "Submit," the improvement loop closes. The gear animations turn <strong style="color: #10b981;">green</strong>, symbolizing progress. The screen shows: <strong>"85% Complete - 15 points to certification badge!"</strong>
+                    <br><br>
+                    The narrative culminates with a clear vision: when all actions reach 100%, the <strong>certification badge unlocks</strong> - a gamified reward recognizing MediaAI Studios' commitment to continual improvement in AI management.
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="margin-top: 40px; padding: 30px; background: white; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <p style="color: #64748b; margin-bottom: 15px;">
+                <strong>ISO 42001:2023 Compliance Management System</strong><br>
+                Clause 10: Improvement Engine - Driving Excellence Through Continuous Feedback Loops
+            </p>
+            <p style="color: #94a3b8; font-size: 0.9em;">
+                © 2025 MediaAI Studios | Last Updated: November 17, 2025, 14:23 KST<br>
+                System Version 3.2.1 | Next Audit: January 15, 2026
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Simulate dynamic interactions (for demonstration purposes)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update certification badge based on progress
+            const progress = 85;
+            const certBadge = document.getElementById('certBadge');
+            
+            if (progress >= 100) {
+                certBadge.classList.remove('locked');
+                certBadge.innerHTML = '<svg class="gear-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1 0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66z"/></svg><span>✅ Certified - 100% Complete!</span>';
+            }
+
+            // Add click handlers for interactive elements
+            document.querySelectorAll('.cycle-segment').forEach(segment => {
+                segment.addEventListener('click', function() {
+                    alert('Viewing detailed ' + this.querySelector('.cycle-label').textContent + ' phase metrics');
+                });
+            });
+
+            document.querySelectorAll('.annex-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    alert('Opening ' + this.querySelector('.annex-title').textContent);
+                });
+            });
+
+            // Simulate form submission
+            document.querySelector('form')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('✅ Corrective action logged successfully! AI will analyze and suggest implementation steps.');
+            });
+        });
+    </script>
+</body>
+</html>

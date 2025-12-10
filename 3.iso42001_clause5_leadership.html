@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO 42001 - Clause 5: Leadership Dashboard | FinAI Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .company-details h3 {
+            color: #667eea;
+            font-size: 20px;
+        }
+
+        .company-details p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .certification-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f0f7ff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid #667eea;
+        }
+
+        .badge-icon {
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .clause-title {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .clause-title h1 {
+            font-size: 36px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .clause-title p {
+            font-size: 18px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Policy Editor Section */
+        .policy-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-header h2 {
+            color: #667eea;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .clause-reference {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            background: #f0f7ff;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #667eea;
+            margin-left: 10px;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            width: 300px;
+            font-size: 12px;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .policy-editor {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 200px;
+            position: relative;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .editor-btn {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .editor-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .policy-content {
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .policy-content strong {
+            color: #667eea;
+        }
+
+        .signature-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f4f8 100%);
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .signature-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .signature {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 32px;
+            color: #667eea;
+        }
+
+        .signature-date {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Main Content Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Org Chart Section */
+        .org-chart-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .org-chart {
+            margin-top: 20px;
+        }
+
+        .org-level {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .org-node {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .org-node h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .org-node p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .org-node .responsibility {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        .org-node .salary {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 8px;
+            color: #ffeb3b;
+        }
+
+        .org-level-2, .org-level-3 {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .org-node-secondary {
+            background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+            min-width: 180px;
+        }
+
+        .org-node-tertiary {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            min-width: 160px;
+        }
+
+        /* Annex Panel */
+        .annex-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .annex-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .annex-tab {
+            flex: 1;
+            padding: 10px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .annex-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .annex-content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .annex-content h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .annex-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .annex-content li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .annex-content li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        /* Commitment Checklist */
+        .checklist-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .checklist-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .checklist-item {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .checklist-item.completed {
+            border-left-color: #4caf50;
+            background: #f1f8f4;
+        }
+
+        .checklist-item.partial {
+            border-left-color: #ff9800;
+            background: #fff8f0;
+        }
+
+        .checklist-item.incomplete {
+            border-left-color: #f44336;
+            background: #fff0f0;
+        }
+
+        .checklist-text {
+            flex: 1;
+        }
+
+        .checklist-text h4 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .checklist-text p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .checklist-score {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 80px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .score-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .score-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        /* Visualization Section */
+        .viz-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .viz-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        /* Heatmap */
+        .heatmap {
+            overflow-x: auto;
+        }
+
+        .heatmap-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 5px;
+        }
+
+        .heatmap-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            font-size: 13px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .heatmap-table td {
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .heatmap-table td:hover {
+            transform: scale(1.1);
+        }
+
+        .heatmap-table td.high {
+            background: #4caf50;
+            color: white;
+        }
+
+        .heatmap-table td.medium {
+            background: #ff9800;
+            color: white;
+        }
+
+        .heatmap-table td.low {
+            background: #f44336;
+            color: white;
+        }
+
+        .heatmap-table td.none {
+            background: #e0e0e0;
+            color: #999;
+        }
+
+        .heatmap-table .role-name {
+            background: #f0f0f0;
+            color: #333;
+            font-weight: bold;
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        /* Donut Chart */
+        .donut-chart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .donut-chart {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #667eea 0deg 216deg,
+                #fa709a 216deg 360deg
+            );
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .donut-hole {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .donut-hole .percentage {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .donut-hole .label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .chart-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+        }
+
+        .legend-text {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .legend-value {
+            margin-left: auto;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Timeline */
+        .timeline-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .timeline-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            border: 5px solid white;
+        }
+
+        .timeline-date {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .timeline-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .timeline-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Metrics Dashboard */
+        .metrics-dashboard {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .metric-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-change {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .metric-gauge {
+            margin-top: 15px;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f7ff;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+        }
+
+        /* Alert Box */
+        .alert {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: slideIn 0.5s ease;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-left: 5px solid #ff9800;
+            color: #856404;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border-left: 5px solid #4caf50;
+            color: #155724;
+        }
+
+        .alert-icon {
+            font-size: 24px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Documentation Box */
+        .documentation-box {
+            background: #f0f7ff;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .documentation-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .doc-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .doc-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .doc-clause {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .doc-text {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Quick Stats Bar */
+        .quick-stats {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .viz-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .checklist-items {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+            }
+
+            .timeline-content {
+                width: 100%;
+            }
+
+            .timeline:before {
+                left: 30px;
+            }
+
+            .timeline-icon {
+                left: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="header-top">
+                <div class="company-info">
+                    <div class="company-logo">F</div>
+                    <div class="company-details">
+                        <h3>FinAI Solutions</h3>
+                        <p>AI-Powered Fraud Detection | Est. 2021</p>
+                    </div>
+                </div>
+                <div class="certification-badge">
+                    <div class="badge-icon">✓</div>
+                    <div>
+                        <strong>ISO 42001:2023</strong><br>
+                        <small>Certification in Progress</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="clause-title">
+                <h1>🎯 Clause 5: Leadership</h1>
+                <p>Demonstrate commitment, establish AI policy, and assign roles/responsibilities</p>
+            </div>
+
+            <div class="quick-stats">
+                <div class="stat-box">
+                    <div class="stat-number">75%</div>
+                    <div class="stat-label">Overall Compliance</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">8/10</div>
+                    <div class="stat-label">Checklist Items</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Roles Assigned</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">Q2 2025</div>
+                    <div class="stat-label">Next Review</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentation Section -->
+        <div class="policy-section">
+            <div class="section-header">
+                <h2>📋 Clause Documentation <span class="tooltip" data-tooltip="ISO 42001:2023 requirements for top management leadership and commitment to AI Management System">ℹ️</span></h2>
+                <span class="clause-reference">ISO 42001:2023</span>
+            </div>
+
+            <div class="documentation-box">
+                <h3>Requirements Summary</h3>
+                <div class="doc-item">
+                    <div class="doc-clause">5.1 Leadership and Commitment</div>
+                    <div class="doc-text">"Top management shall demonstrate leadership and commitment with respect to the AI management system by: (a) taking accountability for the effectiveness of the AI management system; (b) ensuring that the AI policy and AI objectives are established and are compatible with the strategic direction and context of the organization; (c) ensuring the integration of the AI management system requirements into the organization's business processes; (d) ensuring that the resources needed for the AI management system are available; (e) communicating the importance of effective AI management and of conforming to the AI management system requirements..."</div>
+                </div>
+                <div class="doc-item">
+                    <div class="doc-clause">5.2 AI Policy</div>
+                    <div class="doc-text">"Top management shall establish, implement and maintain an AI policy that: (a) is appropriate to the purpose and context of the organization; (b) provides a framework for setting AI objectives; (c) includes a commitment to satisfy applicable requirements; (d) includes a commitment to continual improvement of the AI management system. The AI policy shall be available as documented information, communicated within the organization, and made available to relevant interested parties..."</div>
+                </div>
+                <div class="doc-item">
+                    <div class="doc-clause">5.3 Organizational Roles, Responsibilities and Authorities</div>
+                    <div class="doc-text">"Top management shall ensure that the responsibilities and authorities for relevant roles are assigned, communicated and understood within the organization. Top management shall assign the responsibility and authority for: (a) ensuring that the AI management system conforms to the requirements of this document; (b) ensuring that AI system performance is in accordance with stated objectives; (c) reporting on the performance of the AI management system to top management..."</div>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <span class="alert-icon">✅</span>
+                <div>
+                    <strong>Policy Status: Active & Signed</strong><br>
+                    Your AI Policy has been reviewed and approved by top management. Last updated: January 15, 2025
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Policy Editor Section -->
+        <div class="policy-section">
+            <div class="section-header">
+                <h2>📝 AI Policy Declaration (Virtual Pledge Wall) <span class="tooltip" data-tooltip="Digital charter for AI governance - establishes commitment to responsible AI deployment">ℹ️</span></h2>
+                <div class="action-buttons" style="margin: 0;">
+                    <button class="btn btn-secondary" style="flex: none; padding: 8px 20px;">Edit Policy</button>
+                    <button class="btn btn-secondary" style="flex: none; padding: 8px 20px;">View History</button>
+                </div>
+            </div>
+
+            <div class="policy-editor">
+                <div class="editor-toolbar">
+                    <button class="editor-btn"><strong>B</strong></button>
+                    <button class="editor-btn"><em>I</em></button>
+                    <button class="editor-btn"><u>U</u></button>
+                    <button class="editor-btn">📎 Insert Link</button>
+                    <button class="editor-btn">📋 Use Template</button>
+                </div>
+                
+                <div class="policy-content">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">FinAI Solutions AI Management Policy</h3>
+                    
+                    <p><strong>Effective Date:</strong> January 1, 2025</p>
+                    
+                    <p style="margin-top: 20px;"><strong>Our Commitment:</strong></p>
+                    <p>At FinAI Solutions, we commit to the <strong>responsible development, deployment, and management of artificial intelligence systems</strong> for fraud detection in financial services. We pledge to maintain the highest standards of ethical AI practices, transparency, and accountability.</p>
+                    
+                    <p style="margin-top: 15px;"><strong>Core Principles:</strong></p>
+                    <p>✓ <strong>Zero Tolerance for Bias:</strong> We commit to developing AI systems that are fair, unbiased, and do not discriminate based on protected characteristics including race, gender, age, or socioeconomic status.</p>
+                    
+                    <p>✓ <strong>Transparency & Explainability:</strong> Our AI fraud detection models will be explainable to stakeholders, with clear documentation of decision-making processes and the ability to provide justification for flagged transactions.</p>
+                    
+                    <p>✓ <strong>Data Privacy & Security:</strong> We protect customer data with state-of-the-art encryption and access controls, complying with GDPR, CCPA, and financial industry regulations.</p>
+                    
+                    <p>✓ <strong>Continuous Monitoring & Improvement:</strong> We continuously monitor AI system performance, conduct regular audits, and implement improvements to enhance accuracy and reduce false positives.</p>
+                    
+                    <p>✓ <strong>Human Oversight:</strong> Critical decisions impacting customer accounts will maintain human review capabilities, with trained personnel able to override AI recommendations when appropriate.</p>
+                    
+                    <p style="margin-top: 15px;"><strong>Scope:</strong></p>
+                    <p>This policy applies to all AI systems developed and deployed by FinAI Solutions, including machine learning models for fraud detection, risk assessment algorithms, and automated decision-making systems. It covers the entire AI lifecycle from development through deployment and decommissioning.</p>
+                    
+                    <p style="margin-top: 15px;"><strong>Accountability:</strong></p>
+                    <p>Top management takes full accountability for the implementation and effectiveness of this AI Management System. We allocate necessary resources, provide training, and ensure regular management reviews to maintain compliance with ISO 42001:2023 standards.</p>
+                </div>
+
+                <div class="signature-section">
+                    <h4 style="color: #667eea;">Digital Signature & Commitment</h4>
+                    <div class="signature-box">
+                        <div>
+                            <div class="signature">John Mitchell</div>
+                            <p style="margin-top: 5px;"><strong>John Mitchell</strong>, Chief Executive Officer</p>
+                            <p class="signature-date">Signed digitally on January 15, 2025 at 14:32 EST</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 40px; margin-bottom: 10px;">✓</div>
+                            <p style="font-size: 12px; color: #667eea; font-weight: bold;">CERTIFIED AUTHENTIC</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid with Org Chart and Annexes -->
+        <div class="main-grid">
+            <!-- Organizational Chart Section -->
+            <div class="org-chart-section">
+                <div class="section-header">
+                    <h2>👥 Organizational Chart Builder <span class="tooltip" data-tooltip="Interactive hierarchy showing AI governance roles and responsibilities aligned with Clause 5.3">ℹ️</span></h2>
+                    <button class="btn btn-secondary" style="flex: none; padding: 8px 20px;">+ Add Role</button>
+                </div>
+
+                <div class="org-chart">
+                    <!-- Level 1: Executive -->
+                    <div class="org-level org-level-1">
+                        <div class="org-node">
+                            <h4>👔 John Mitchell</h4>
+                            <p>Chief Executive Officer</p>
+                            <div class="responsibility">Overall AI MS Accountability</div>
+                            <div class="responsibility">Clause 5.1 Leadership Owner</div>
+                            <p class="salary">💰 $280,000/year</p>
+                        </div>
+                    </div>
+
+                    <!-- Level 2: C-Suite -->
+                    <div class="org-level org-level-2">
+                        <div class="org-node org-node-secondary">
+                            <h4>💻 Sarah Chen</h4>
+                            <p>Chief Technology Officer</p>
+                            <div class="responsibility">AI Risk Oversight - 80% assigned</div>
+                            <div class="responsibility">Clause 6 & 8 Responsibility</div>
+                            <p class="salary">💰 $220,000/year</p>
+                        </div>
+                        <div class="org-node org-node-secondary">
+                            <h4>⚖️ Michael Torres</h4>
+                            <p>Chief Compliance Officer</p>
+                            <div class="responsibility">Regulatory Compliance</div>
+                            <div class="responsibility">2 Audits/year authority</div>
+                            <p class="salary">💰 $195,000/year</p>
+                        </div>
+                        <div class="org-node org-node-secondary">
+                            <h4>🛡️ Emma Rodriguez</h4>
+                            <p>Chief Information Security Officer</p>
+                            <div class="responsibility">Data Privacy & Security</div>
+                            <div class="responsibility">Incident Response Lead</div>
+                            <p class="salary">💰 $210,000/year</p>
+                        </div>
+                    </div>
+
+                    <!-- Level 3: Department Heads -->
+                    <div class="org-level org-level-3">
+                        <div class="org-node org-node-tertiary">
+                            <h4>🧠 Dr. James Park</h4>
+                            <p>AI Ethics Lead</p>
+                            <div class="responsibility">Bias Testing & Fairness</div>
+                            <div class="responsibility">Ethics Review Board Chair</div>
+                            <p class="salary">💰 $145,000/year</p>
+                        </div>
+                        <div class="org-node org-node-tertiary">
+                            <h4>📊 Lisa Wang</h4>
+                            <p>AI Performance Manager</p>
+                            <div class="responsibility">Model Monitoring</div>
+                            <div class="responsibility">Performance Reporting</div>
+                            <p class="salary">💰 $120,000/year</p>
+                        </div>
+                        <div class="org-node org-node-tertiary">
+                            <h4>🔧 David Kim</h4>
+                            <p>MLOps Engineering Lead</p>
+                            <div class="responsibility">Deployment Pipeline</div>
+                            <div class="responsibility">Infrastructure Management</div>
+                            <p class="salary">💰 $135,000/year</p>
+                        </div>
+                        <div class="org-node org-node-tertiary">
+                            <h4>📋 Priya Patel</h4>
+                            <p>Quality Assurance Manager</p>
+                            <div class="responsibility">Testing & Validation</div>
+                            <div class="responsibility">Documentation Owner</div>
+                            <p class="salary">💰 $110,000/year</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning" style="margin-top: 30px;">
+                    <span class="alert-icon">⚠️</span>
+                    <div>
+                        <strong>Action Required: Role Coverage Gap Detected</strong><br>
+                        Consider adding a Data Protection Officer role for enhanced GDPR compliance. Recommended salary band: $115K-$135K
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annex Reference Panel -->
+            <div class="annex-panel">
+                <div class="section-header">
+                    <h2>📚 Annex References <span class="tooltip" data-tooltip="Quick access to ISO 42001 annexes with contextual guidance">ℹ️</span></h2>
+                </div>
+
+                <div class="annex-tabs">
+                    <button class="annex-tab active">A</button>
+                    <button class="annex-tab">B</button>
+                    <button class="annex-tab">C</button>
+                    <button class="annex-tab">D</button>
+                </div>
+
+                <div class="annex-content">
+                    <h4>📌 Annex A: Control Objectives</h4>
+                    <ul>
+                        <li><strong>A.2 Policies related to AI:</strong> Establish comprehensive AI governance policies covering development, deployment, and monitoring</li>
+                        <li><strong>A.3 Organization of AI accountability:</strong> Define clear accountability structures with documented responsibilities</li>
+                        <li><strong>A.5 Leadership in AI ethics:</strong> Top management must champion ethical AI practices throughout the organization</li>
+                        <li><strong>A.7 Stakeholder engagement:</strong> Ensure regular communication with all stakeholders about AI governance</li>
+                    </ul>
+                </div>
+
+                <div class="annex-content">
+                    <h4>📖 Annex B: Implementation Guidance</h4>
+                    <ul>
+                        <li><strong>Leadership roles in AI governance:</strong> CEO maintains ultimate accountability; CTO oversees technical implementation; CCO ensures regulatory compliance</li>
+                        <li><strong>Management review frequency:</strong> Quarterly reviews recommended for high-risk AI systems; annual minimum for lower-risk applications</li>
+                        <li><strong>Policy communication:</strong> All-hands meetings, intranet portals, training sessions, and email campaigns ensure policy awareness</li>
+                        <li><strong>Resource allocation:</strong> Budget 15-20% of AI project costs for governance, compliance, and monitoring activities</li>
+                    </ul>
+                </div>
+
+                <div class="annex-content">
+                    <h4>🎯 Annex C: AI Objectives Framework</h4>
+                    <ul>
+                        <li><strong>Foster AI innovation without compromising fairness:</strong> Balance speed-to-market with rigorous bias testing</li>
+                        <li><strong>Maintain transparency in AI decision-making:</strong> Implement explainable AI (XAI) techniques for all customer-facing models</li>
+                        <li><strong>Build stakeholder trust:</strong> Regular transparency reports and public commitment to ethical AI</li>
+                        <li><strong>Achieve operational excellence:</strong> Target 95%+ model accuracy with <2% false positive rate</li>
+                    </ul>
+                </div>
+
+                <div class="annex-content">
+                    <h4>🏢 Annex D: Sector-Specific Insights</h4>
+                    <ul>
+                        <li><strong>Financial Services - Fraud Detection:</strong> Leadership must address algorithmic bias in lending and fraud detection; prioritize explainability for regulatory compliance</li>
+                        <li><strong>Regulatory expectations:</strong> SEC, OCC, and CFPB require board-level oversight of AI risk; document all model decisions affecting customers</li>
+                        <li><strong>Industry best practices:</strong> Establish Model Risk Management (MRM) framework; conduct annual model validation by independent third party</li>
+                        <li><strong>Public accountability:</strong> Consider publishing annual AI ethics report demonstrating commitment to fair lending practices</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-primary" style="margin-top: 15px;">🔗 Link to Full Annex Documentation</button>
+            </div>
+        </div>
+
+        <!-- Commitment Checklist Section -->
+        <div class="checklist-section">
+            <div class="section-header">
+                <h2>✅ Leadership Commitment Checklist <span class="tooltip" data-tooltip="Track progress against ISO 42001 Clause 5 requirements with automatic scoring">ℹ️</span></h2>
+                <span class="clause-reference">Score: 80/100</span>
+            </div>
+
+            <div class="checklist-items">
+                <div class="checklist-item completed">
+                    <div class="checklist-text">
+                        <h4>AI Policy Established & Documented</h4>
+                        <p>Comprehensive AI policy created, signed by CEO, and published on company intranet</p>
+                    </div>
+                    <div class="checklist-score">
+                        <div class="score-value">10/10</div>
+                        <div class="score-label">Points</div>
+                    </div>
+                </div>
+
+                <div class="checklist-item completed">
+                    <div class="checklist-text">
+                        <h4>Top Management Accountability Assigned</h4>
+                        <p>CEO formally accepts accountability for AI MS effectiveness in writing</p>
+                    </div>
+                    <div class="checklist-score">
+                        <div class="score-value">10/10</div>
+                        <div class="score-label">Points</div>
+                    </div>
+                </div>
+
+                <div class="checklist-item completed">
+                    <div class="checklist-text">
+                        <h4>AI Policy Communicated Organization-Wide</h4>
+                        <p>All-hands meeting held; policy sent via email; 94% employee acknowledgment rate</p>
+                    </div>
+                    <div class="checklist-score">
+                        <div class="score-value">10/10</div>
+                        <div class="score-label">Points</div>
+                    </div>
+                </div>
+
+                <div class="checklist-item completed">
+                    <div class="checklist-text">
+                        <h4>Roles & Responsibilities Documented</h4>
+                        <p>12 key roles defined with clear authorities and reporting structures</p>
+                    </div>
+                    <div class="checklist-score">
+                        <div class="score-value">10/10</div>
+                        <div class="score-label">Points</div>
+                    </div>
+                </div>
+
+                <div class="checklist-item completed">
+                    <div class="checklist-text">
+                        <h4>Resources Allocated for AI MS</h4>
+                        <p>$850K annual budget approved; 8 FTEs dedicated to AI governance</p>
+                    </div>
+                    <div class="checklist-score">
+                        <div class="score-value">10/10</div>
+                        <div class="score-label">Points</div>
+                    </div>
+                </div>
+
+                <div class="checklist-item partial">
+                    <div class="checklist-text">
+                        <h4>Management Review Schedule Established</h4>
+                        <p>Quarterly reviews planned; Q1 2025 completed. Q2 review pending (Due: April 15)</p>
+                    </div>
+                    <div class="checklist-score">
+                        <div class="score-value">8/10</div>
+                        <div class="score-label">Points</div>
+                    </div>
+                </div>
+
+                <div class="checklist-item completed">
+                    <div class="checklist-text">
+                        <h4>AI Objectives Aligned with Strategy</h4>
+                        <p>AI objectives linked to corporate goals; board approved strategic AI roadmap</p>
+                    </div>
+                    <div class="checklist-score">
+                        <div class="score-value">10/10</div>
+                        <div class="score-label">Points</div>
+                    </div>
+                </div>
+
+                <div class="checklist-item completed">
+                    <div class="checklist-text">
+                        <h4>AI MS Integration into Business Processes</h4>
+                        <p>AI governance integrated into product development lifecycle and procurement</p>
+                    </div>
+                    <div class="checklist-score">
+                        <div class="score-value">10/10</div>
+                        <div class="score-label">Points</div>
+                    </div>
+                </div>
+
+                <div class="checklist-item incomplete">
+                    <div class="checklist-text">
+                        <h4>External Stakeholder Communication</h4>
+                        <p>Policy not yet published for customers and partners. Action required.</p>
+                    </div>
+                    <div class="checklist-score">
+                        <div class="score-value">2/10</div>
+                        <div class="score-label">Points</div>
+                    </div>
+                </div>
+
+                <div class="checklist-item partial">
+                    <div class="checklist-text">
+                        <h4>Continual Improvement Commitment</h4>
+                        <p>Improvement process defined; 3 improvement initiatives launched. More needed.</p>
+                    </div>
+                    <div class="checklist-score">
+                        <div class="score-value">8/10</div>
+                        <div class="score-label">Points</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visualization Section -->
+        <div class="viz-section">
+            <div class="section-header">
+                <h2>📊 Responsibility Assignment Matrix (RACI Heatmap) <span class="tooltip" data-tooltip="Visual representation of role assignments across ISO 42001 clauses - Green=Assigned, Orange=Partial, Red=Unassigned">ℹ️</span></h2>
+            </div>
+
+            <div class="viz-grid">
+                <div class="heatmap">
+                    <table class="heatmap-table">
+                        <thead>
+                            <tr>
+                                <th>Role / Clause</th>
+                                <th>Cl. 4<br>Context</th>
+                                <th>Cl. 5<br>Leadership</th>
+                                <th>Cl. 6<br>Planning</th>
+                                <th>Cl. 7<br>Support</th>
+                                <th>Cl. 8<br>Operation</th>
+                                <th>Cl. 9<br>Performance</th>
+                                <th>Cl. 10<br>Improvement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="role-name">CEO - John Mitchell</td>
+                                <td class="high" title="Accountable">A</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Accountable">A</td>
+                                <td class="high" title="Accountable">A</td>
+                                <td class="high" title="Accountable">A</td>
+                                <td class="high" title="Accountable">A</td>
+                                <td class="high" title="Responsible">R</td>
+                            </tr>
+                            <tr>
+                                <td class="role-name">CTO - Sarah Chen</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="high" title="Consulted">C</td>
+                            </tr>
+                            <tr>
+                                <td class="role-name">CCO - Michael Torres</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="medium" title="Consulted">C</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Consulted">C</td>
+                            </tr>
+                            <tr>
+                                <td class="role-name">CISO - Emma Rodriguez</td>
+                                <td class="medium" title="Informed">I</td>
+                                <td class="medium" title="Informed">I</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="medium" title="Informed">I</td>
+                                <td class="medium" title="Consulted">C</td>
+                            </tr>
+                            <tr>
+                                <td class="role-name">AI Ethics Lead - Dr. Park</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="medium" title="Informed">I</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="high" title="Consulted">C</td>
+                            </tr>
+                            <tr>
+                                <td class="role-name">AI Performance Mgr - Lisa Wang</td>
+                                <td class="medium" title="Informed">I</td>
+                                <td class="none" title="Not Assigned">-</td>
+                                <td class="medium" title="Consulted">C</td>
+                                <td class="medium" title="Informed">I</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Consulted">C</td>
+                            </tr>
+                            <tr>
+                                <td class="role-name">MLOps Lead - David Kim</td>
+                                <td class="medium" title="Informed">I</td>
+                                <td class="none" title="Not Assigned">-</td>
+                                <td class="medium" title="Informed">I</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="medium" title="Consulted">C</td>
+                                <td class="medium" title="Consulted">C</td>
+                            </tr>
+                            <tr>
+                                <td class="role-name">QA Manager - Priya Patel</td>
+                                <td class="medium" title="Informed">I</td>
+                                <td class="none" title="Not Assigned">-</td>
+                                <td class="medium" title="Consulted">C</td>
+                                <td class="medium" title="Consulted">C</td>
+                                <td class="high" title="Responsible">R</td>
+                                <td class="high" title="Consulted">C</td>
+                                <td class="medium" title="Informed">I</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 15px; font-size: 13px; color: #666;">
+                        <strong>Legend:</strong> R = Responsible | A = Accountable | C = Consulted | I = Informed | - = Not Assigned
+                    </div>
+                </div>
+
+                <div class="donut-chart-container">
+                    <h3 style="margin-bottom: 20px; color: #667eea;">Role Coverage Distribution</h3>
+                    <div class="donut-chart">
+                        <div class="donut-hole">
+                            <div class="percentage">88%</div>
+                            <div class="label">Coverage</div>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #667eea;"></div>
+                            <div class="legend-text">Technical Roles</div>
+                            <div class="legend-value">60%</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #fa709a;"></div>
+                            <div class="legend-text">Ethical/Compliance Roles</div>
+                            <div class="legend-value">40%</div>
+                        </div>
+                    </div>
+                    <div class="alert alert-success" style="margin-top: 20px; font-size: 13px;">
+                        <span class="alert-icon">✓</span>
+                        <div>
+                            <strong>Good Balance!</strong><br>
+                            Your organization maintains a healthy balance between technical and ethical oversight
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Section -->
+        <div class="timeline-section">
+            <div class="section-header">
+                <h2>📅 Management Review Timeline <span class="tooltip" data-tooltip="Scheduled leadership reviews and key AI governance milestones">ℹ️</span></h2>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">✅ January 15, 2025 - COMPLETED</div>
+                        <div class="timeline-title">AI Policy Approval & Signature</div>
+                        <div class="timeline-desc">CEO John Mitchell signed comprehensive AI policy during board meeting. Policy distributed to all 247 employees. 94% acknowledgment rate achieved within 2 weeks.</div>
+                    </div>
+                    <div class="timeline-icon">📝</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">✅ February 28, 2025 - COMPLETED</div>
+                        <div class="timeline-title">Q1 Management Review</div>
+                        <div class="timeline-desc">First quarterly review conducted. Key findings: AI MS implementation at 65%, 3 minor non-conformities identified, budget increased by $150K for additional training. Action items assigned to CTO and CCO.</div>
+                    </div>
+                    <div class="timeline-icon">📊</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">⏳ April 15, 2025 - UPCOMING (28 days)</div>
+                        <div class="timeline-title">Q2 Management Review</div>
+                        <div class="timeline-desc">Scheduled review focusing on: AI policy adherence metrics, bias testing results from 47 fraud detection models, stakeholder feedback analysis, and resource allocation assessment. CEO, CTO, CCO, CISO attendance required.</div>
+                    </div>
+                    <div class="timeline-icon">🎯</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">📅 July 20, 2025 - SCHEDULED</div>
+                        <div class="timeline-title">Q3 Management Review</div>
+                        <div class="timeline-desc">Mid-year comprehensive review. Planned topics: external audit preparation, AI MS maturity assessment, performance against objectives, continual improvement initiatives. Pre-certification audit readiness check.</div>
+                    </div>
+                    <div class="timeline-icon">🔍</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">📅 October 10, 2025 - SCHEDULED</div>
+                        <div class="timeline-title">Pre-Certification Audit</div>
+                        <div class="timeline-desc">External certification body conducts Stage 1 audit. Assessment of AI MS documentation, leadership commitment evidence, and organizational readiness. Gap analysis and remediation planning.</div>
+                    </div>
+                    <div class="timeline-icon">🏆</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">📅 December 5, 2025 - SCHEDULED</div>
+                        <div class="timeline-title">Certification Audit (Stage 2)</div>
+                        <div class="timeline-desc">Final certification audit. On-site assessment of AI MS implementation effectiveness, interviews with leadership team, evidence review, and certification decision. Target: ISO 42001:2023 certificate issuance by December 20, 2025.</div>
+                    </div>
+                    <div class="timeline-icon">🎖️</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Dashboard -->
+        <div class="metrics-dashboard">
+            <div class="section-header">
+                <h2>📈 Leadership Commitment Metrics Dashboard</h2>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card" style="background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);">
+                    <div class="metric-label">Overall Commitment Level</div>
+                    <div class="metric-value">75%</div>
+                    <div class="metric-change">↑ 12% from last month</div>
+                    <div class="metric-gauge">
+                        <div class="gauge-fill" style="width: 75%;"></div>
+                    </div>
+                </div>
+
+                <div class="metric-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="metric-label">Policy Completeness Score</div>
+                    <div class="metric-value">92%</div>
+                    <div class="metric-change">All sections documented</div>
+                    <div class="metric-gauge">
+                        <div class="gauge-fill" style="width: 92%;"></div>
+                    </div>
+                </div>
+
+                <div class="metric-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <div class="metric-label">Role Assignment Coverage</div>
+                    <div class="metric-value">88%</div>
+                    <div class="metric-change">12 of 14 critical roles filled</div>
+                    <div class="metric-gauge">
+                        <div class="gauge-fill" style="width: 88%;"></div>
+                    </div>
+                </div>
+
+                <div class="metric-card" style="background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);">
+                    <div class="metric-label">Employee Awareness Rate</div>
+                    <div class="metric-value">94%</div>
+                    <div class="metric-change">232 of 247 staff acknowledged</div>
+                    <div class="metric-gauge">
+                        <div class="gauge-fill" style="width: 94%;"></div>
+                    </div>
+                </div>
+
+                <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="metric-label">Management Review Status</div>
+                    <div class="metric-value">ON TRACK</div>
+                    <div class="metric-change">Q2 review in 28 days</div>
+                    <div class="metric-gauge">
+                        <div class="gauge-fill" style="width: 66%;"></div>
+                    </div>
+                </div>
+
+                <div class="metric-card" style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);">
+                    <div class="metric-label">Resource Allocation</div>
+                    <div class="metric-value">$850K</div>
+                    <div class="metric-change">17% of AI project budget</div>
+                    <div class="metric-gauge">
+                        <div class="gauge-fill" style="width: 85%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="policy-section">
+            <div class="section-header">
+                <h2>🚀 Actions & Simulations</h2>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary">
+                    <span style="font-size: 20px;">🔍</span> Simulate Certification Audit
+                </button>
+                <button class="btn btn-success">
+                    <span style="font-size: 20px;">📤</span> Export Leadership Report
+                </button>
+                <button class="btn btn-warning">
+                    <span style="font-size: 20px;">📋</span> Schedule Management Review
+                </button>
+                <button class="btn btn-secondary">
+                    <span style="font-size: 20px;">🔗</span> Jump to Annex Documentation
+                </button>
+            </div>
+
+            <div class="alert alert-warning" style="margin-top: 20px;">
+                <span class="alert-icon">⚠️</span>
+                <div>
+                    <strong>Simulation Alert: Low Commitment Detected!</strong><br>
+                    Based on Annex D financial sector insights: In finance, leadership must address bias in lending AI. Recommendation: Add quarterly bias testing reviews to management agenda. Also consider appointing a dedicated Data Protection Officer (DPO) to strengthen GDPR compliance for customer data handling.
+                </div>
+            </div>
+
+            <div class="alert alert-success" style="margin-top: 15px;">
+                <span class="alert-icon">💡</span>
+                <div>
+                    <strong>Best Practice Tip from Annex B:</strong><br>
+                    Leading organizations in AI governance conduct monthly "AI Ethics Roundtables" with cross-functional teams. Consider implementing this practice to strengthen your continuous improvement culture and demonstrate ongoing leadership commitment.
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; padding: 30px; color: white; margin-top: 20px;">
+            <p style="font-size: 14px; opacity: 0.9;">ISO 42001:2023 AI Management System | FinAI Solutions | Dashboard v2.1.0</p>
+            <p style="font-size: 12px; opacity: 0.7; margin-top: 10px;">Last Updated: March 18, 2025 | Next Sync: Real-time | Data Source: AI MS Database</p>
+            <p style="font-size: 12px; opacity: 0.7; margin-top: 10px;">© 2025 FinAI Solutions. All rights reserved. Confidential and proprietary.</p>
+        </div>
+    </div>
+
+    <script>
+        // Simple interactivity for demo purposes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Annex tabs functionality
+            const annexTabs = document.querySelectorAll('.annex-tab');
+            const annexContents = document.querySelectorAll('.annex-content');
+            
+            annexTabs.forEach((tab, index) => {
+                tab.addEventListener('click', function() {
+                    annexTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    annexContents.forEach((content, i) => {
+                        content.style.display = i === index ? 'block' : 'none';
+                    });
+                });
+            });
+
+            // Show first annex by default
+            annexContents.forEach((content, i) => {
+                content.style.display = i === 0 ? 'block' : 'none';
+            });
+
+            // Button click handlers
+            document.querySelectorAll('.btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (this.textContent.includes('Simulate')) {
+                        alert('🔍 Audit Simulation Initiated!\n\nScanning AI MS for compliance...\n\nResults:\n✅ Policy documentation: PASS\n✅ Role assignments: PASS\n⚠️ External communication: NEEDS IMPROVEMENT\n✅ Management reviews: PASS\n\nOverall Readiness: 85%\n\nRecommendation: Address external stakeholder communication before certification audit.');
+                    } else if (this.textContent.includes('Export')) {
+                        alert('📤 Leadership Report Generated!\n\nThe comprehensive leadership dashboard has been exported to PDF format. Report includes:\n- AI Policy document\n- Org chart\n- Commitment metrics\n- Timeline\n- RACI matrix\n\nFile ready for download.');
+                    } else if (this.textContent.includes('Schedule')) {
+                        alert('📋 Management Review Scheduler\n\nNext review scheduled for: April 15, 2025\nAttendees: CEO, CTO, CCO, CISO\nAgenda items: 7\nDuration: 3 hours\n\nCalendar invites sent!');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO/IEC 42001 - Inputs & Outputs Guide</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: white; margin: 20px; padding: 20px; color: #333; line-height: 1.6; max-width: 1400px; margin: 0 auto; }
+        .header { text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; margin-bottom: 30px; }
+        .header h1 { margin: 0; font-size: 2.2em; }
+        .header p { margin: 10px 0 0 0; font-size: 1.1em; }
+        .clause-section { background: #f8f9fa; border-left: 5px solid #667eea; padding: 20px; margin-bottom: 30px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .clause-title { font-size: 1.5em; font-weight: bold; color: #667eea; margin-bottom: 15px; }
+        .sub-clause { background: white; padding: 20px; margin: 15px 0; border-radius: 5px; border: 1px solid #e0e0e0; }
+        .sub-clause-title { font-size: 1.2em; font-weight: bold; color: #764ba2; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0; }
+        .io-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; }
+        @media (max-width: 1024px) { .io-container { grid-template-columns: 1fr; } }
+        .inputs, .outputs { background: #fafafa; padding: 15px; border-radius: 5px; }
+        .inputs { border-left: 4px solid #4CAF50; }
+        .outputs { border-left: 4px solid #2196F3; }
+        .io-title { font-weight: bold; font-size: 1.1em; margin-bottom: 10px; display: flex; align-items: center; }
+        .inputs .io-title { color: #4CAF50; }
+        .outputs .io-title { color: #2196F3; }
+        .io-item { margin: 12px 0; padding: 10px; background: white; border-radius: 4px; border-left: 3px solid #ddd; }
+        .io-item-title { font-weight: bold; margin-bottom: 5px; color: #555; }
+        .io-item-example { font-style: italic; color: #666; font-size: 0.95em; margin-top: 5px; padding-left: 10px; border-left: 2px solid #e0e0e0; }
+        .cross-ref { background: #fff3cd; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: #856404; font-weight: bold; }
+        .icon { margin-right: 8px; }
+        .note { background: #e7f3ff; border-left: 4px solid #2196F3; padding: 15px; margin: 20px 0; font-size: 0.95em; border-radius: 4px; }
+        .summary-box { background: rgba(102, 126, 234, 0.1); border: 2px solid #667eea; padding: 20px; margin: 30px 0; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ISO/IEC 42001:2023</h1>
+        <p>AI Management System - Inputs & Outputs by Sub-Clause</p>
+        <p style="font-size: 0.9em; margin-top: 10px;">Information Technology — Artificial Intelligence — Management System</p>
+        <p style="font-size: 0.85em; margin-top: 15px; opacity: 0.9;">Comprehensive Guide with Real-World Examples & Cross-References</p>
+    </div>
+
+    <div class="note">
+        <strong>📚 How to Use This Guide:</strong>
+        <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+            <li><strong>Cross-References:</strong> Yellow tags show how outputs from one sub-clause feed into others (e.g., <span class="cross-ref">→ to 6.1.2</span>)</li>
+            <li><strong>Real-World Examples:</strong> Each input/output includes practical examples from healthcare, finance, retail, etc.</li>
+            <li><strong>Interconnected System:</strong> ISO 42001 is a system where outputs from earlier clauses become inputs to later ones</li>
+            <li><strong>Customization:</strong> Adapt these examples to your organization's context, industry, and AI use cases</li>
+        </ul>
+    </div>
+
+
+    <!-- Clause 4: Context of the Organization -->
+    <div class="clause-section">
+        <div class="clause-title">4. Context of the Organization</div>
+        
+        <div class="sub-clause">
+            <div class="sub-clause-title">4.1 Understanding the Organization and its Context</div>
+            <div class="io-container">
+                <div class="inputs">
+                    <div class="io-title"><span class="icon">📥</span>Inputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Business strategy documents</div>
+                        <div class="io-item-example">Example: A healthcare company's 5-year digital transformation plan that includes AI-powered diagnostic tools for radiology departments, telemedicine chatbots, and predictive patient flow management systems.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Industry analysis & market research</div>
+                        <div class="io-item-example">Example: Financial services firm analyzing competitor AI chatbot capabilities, customer expectations for automated loan processing, and emerging fintech AI solutions for fraud detection.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Regulatory landscape assessment</div>
+                        <div class="io-item-example">Example: EU-based company reviewing AI Act requirements (risk classification, transparency obligations), GDPR implications for automated decision-making, and sector-specific regulations like medical device rules for AI diagnostic tools.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">4. Stakeholder feedback & concerns</div>
+                        <div class="io-item-example">Example: Customer complaints about algorithmic bias in insurance premium calculations (20% increase in complaints), employee concerns about AI surveillance tools affecting privacy, union demands for transparency in AI-based performance evaluations.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">5. Technology trends & AI capabilities</div>
+                        <div class="io-item-example">Example: Emerging capabilities in large language models, computer vision advances for quality control, generative AI for content creation, and limitations like hallucinations and bias in current AI systems.</div>
+                    </div>
+                </div>
+                <div class="outputs">
+                    <div class="io-title"><span class="icon">📤</span>Outputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Context analysis document <span class="cross-ref">→ to 4.2, 4.3, 6.1</span></div>
+                        <div class="io-item-example">Example: Comprehensive report identifying: operates in highly regulated healthcare sector, faces increasing AI competition from tech giants, must address patient trust concerns, skilled AI talent shortage, legacy system integration challenges.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. External & internal issues register</div>
+                        <div class="io-item-example">Example: External issues: rising regulatory scrutiny on AI transparency, competitor AI capabilities, public concern about AI ethics. Internal: skills gap in ML engineering, legacy systems integration, organizational AI maturity level 2/5.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. AI opportunity & risk landscape <span class="cross-ref">→ to 6.1.2</span></div>
+                        <div class="io-item-example">Example: Opportunities matrix: automated diagnosis (high value), personalized treatment (medium value), operational efficiency (medium value). Risks: misdiagnosis liability (high), data breaches (high), algorithmic bias (medium), patient trust erosion (high).</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-clause">
+            <div class="sub-clause-title">4.2 Understanding the Needs and Expectations of Interested Parties</div>
+            <div class="io-container">
+                <div class="inputs">
+                    <div class="io-title"><span class="icon">📥</span>Inputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Context analysis <span class="cross-ref">from 4.1</span></div>
+                        <div class="io-item-example">Example: Understanding that operating in financial services means regulators (SEC, banking authorities) and investors are key stakeholders with high transparency and risk disclosure expectations.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Stakeholder mapping exercise</div>
+                        <div class="io-item-example">Example: Retail company identifies primary stakeholders: customers (want personalized experience without privacy invasion), employees (concerned about job displacement), regulators (GDPR compliance), suppliers (data sharing concerns), civil society organizations (algorithmic fairness), affected communities (bias impacts).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Legal & contractual obligations</div>
+                        <div class="io-item-example">Example: GDPR Article 22 rights to human review of automated decisions, AI Act conformity requirements, contractual SLAs with enterprise clients requiring 99.9% uptime and AI decision explainability within 24 hours.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">4. Previous audit findings & complaints</div>
+                        <div class="io-item-example">Example: Data protection authority raised concerns about facial recognition system lacking legal basis, 150 customer complaints about discriminatory credit scoring outcomes, internal audit found insufficient AI documentation.</div>
+                    </div>
+                </div>
+                <div class="outputs">
+                    <div class="io-title"><span class="icon">📤</span>Outputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Interested parties register <span class="cross-ref">→ to 4.3, 6.1, 9.3</span></div>
+                        <div class="io-item-example">Example: Comprehensive table listing: Regulators (GDPR compliance, AI Act conformity, sector regulations), Customers (fairness, transparency, privacy), Employees (job security, fair treatment), Investors (risk disclosure, ESG reporting), Civil society (algorithmic justice), Affected communities (non-discrimination).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Stakeholder requirements matrix</div>
+                        <div class="io-item-example">Example: HR department needs: AI recruitment tool must be bias-free, auditable, EEOC compliant. Legal needs: full documentation for regulatory defense, incident logs, DPIA records. Customers need: transparency about AI use, opt-out options, explanation rights.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Compliance obligations list <span class="cross-ref">→ to 6.1.3</span></div>
+                        <div class="io-item-example">Example: Must conduct DPIAs for all high-risk AI systems, provide algorithm explanations upon user request within 48 hours, maintain training data lineage for 7 years, notify authorities of serious AI incidents within 72 hours, annual external AI audit required.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-clause">
+            <div class="sub-clause-title">4.3 Determining the Scope of the AI Management System</div>
+            <div class="io-container">
+                <div class="inputs">
+                    <div class="io-title"><span class="icon">📥</span>Inputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Context analysis <span class="cross-ref">from 4.1</span></div>
+                        <div class="io-item-example">Example: Understanding organizational boundaries: headquarters in Germany, regional offices in 15 countries, business units using AI in retail banking, investment banking, and insurance operations.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Interested parties requirements <span class="cross-ref">from 4.2</span></div>
+                        <div class="io-item-example">Example: EU customers require GDPR compliance and AI Act adherence, US healthcare clients need HIPAA compliance, financial regulators in each jurisdiction have specific AI governance expectations - influences geographic and functional scope decisions.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. AI system inventory</div>
+                        <div class="io-item-example">Example: Bank operates 47 AI systems including: fraud detection (real-time, 100K transactions/day), credit scoring (15 different models), customer service chatbots (5 languages), trading algorithms (high-frequency), risk management models, back-office automation (document processing) across 12 countries.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">4. Organizational structure & boundaries</div>
+                        <div class="io-item-example">Example: Multinational with centralized AI development in HQ (200 staff), deployment managed by regional offices, third-party vendors providing AI-as-a-service (chatbot platform, fraud detection), joint venture AI lab with university.</div>
+                    </div>
+                </div>
+                <div class="outputs">
+                    <div class="io-title"><span class="icon">📤</span>Outputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Scope statement (documented) <span class="cross-ref">→ to 5.1, 7.5, 9.1</span></div>
+                        <div class="io-item-example">Example: "AIMS covers all customer-facing and risk-significant AI systems in EU and US operations including credit scoring, fraud detection, chatbots, and trading algorithms. Excludes: internal R&D prototypes (pre-production), Asia-Pacific subsidiary (separate management system), simple rule-based automation (not AI)."</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. In-scope AI systems list <span class="cross-ref">→ to 6.2.2, Annex A</span></div>
+                        <div class="io-item-example">Example: Documented register of 23 in-scope AI applications with details: System name, risk classification (3 critical, 12 high, 8 medium), business owner, affected stakeholder groups, data sensitivity, applicable controls, deployment status, review dates.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Exclusions justification</div>
+                        <div class="io-item-example">Example: "Research AI lab excluded as systems are non-operational and used only for experimentation; will be brought into AIMS scope upon decision to deploy to production. Asia-Pacific subsidiary excluded as it operates under local ISO 42001 implementation with separate certification."</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clause 5: Leadership -->
+    <div class="clause-section">
+        <div class="clause-title">5. Leadership</div>
+        
+        <div class="sub-clause">
+            <div class="sub-clause-title">5.2 AI Policy</div>
+            <div class="io-container">
+                <div class="inputs">
+                    <div class="io-title"><span class="icon">📥</span>Inputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Leadership commitment <span class="cross-ref">from 5.1</span></div>
+                        <div class="io-item-example">Example: CEO's public commitment to responsible AI provides mandate for comprehensive policy covering ethics principles, governance structure, prohibited uses, and accountability mechanisms.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Stakeholder requirements <span class="cross-ref">from 4.2</span></div>
+                        <div class="io-item-example">Example: Customer demands for explainable AI, regulator expectations for human oversight, employee concerns about job displacement, civil society demands for fairness audits - all inform policy content and commitments.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Legal & ethical frameworks</div>
+                        <div class="io-item-example">Example: EU AI Act risk-based approach, IEEE Ethically Aligned Design principles, OECD AI Principles, industry codes (e.g., financial services responsible AI guidelines), company values statement.</div>
+                    </div>
+                </div>
+                <div class="outputs">
+                    <div class="io-title"><span class="icon">📤</span>Outputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. AI Policy (documented) <span class="cross-ref">→ to 5.3, 6.2, 7.3, 7.5</span></div>
+                        <div class="io-item-example">Example: 15-page policy covering: AI principles (fairness, transparency, accountability, privacy), prohibited uses (mass surveillance, social scoring), risk appetite statement, governance structure, roles & responsibilities, compliance requirements, review frequency (annual).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. AI objectives framework <span class="cross-ref">→ to 6.2</span></div>
+                        <div class="io-item-example">Example: Policy commits to measurable objectives: "Achieve zero unmitigated high-risk AI deployments," "100% of AI systems with completed impact assessments," "Annual independent external audits," "Fairness metrics within tolerance for all protected groups."</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Communication plan <span class="cross-ref">→ to 7.4</span></div>
+                        <div class="io-item-example">Example: Policy published on corporate website, mandatory e-learning for all staff, quarterly town halls on AI ethics topics, annual public transparency report, customer-facing disclosures about AI use, media kit for external communications.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-clause">
+            <div class="sub-clause-title">5.3 Organizational Roles, Responsibilities and Authorities</div>
+            <div class="io-container">
+                <div class="inputs">
+                    <div class="io-title"><span class="icon">📥</span>Inputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. AI Policy <span class="cross-ref">from 5.2</span></div>
+                        <div class="io-item-example">Example: Policy requirement for "independent AI ethics oversight with authority to halt deployments" drives creation of Chief AI Ethics Officer role reporting directly to CEO with veto power.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. AIMS process requirements <span class="cross-ref">from 4.4</span></div>
+                        <div class="io-item-example">Example: Need for risk assessment, impact assessment, monitoring, incident response, supplier management processes requires defining who is Responsible, Accountable, Consulted, Informed for each activity.</div>
+                    </div>
+                </div>
+                <div class="outputs">
+                    <div class="io-title"><span class="icon">📤</span>Outputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. RACI matrix / responsibility assignments <span class="cross-ref">→ to 6.1, 8.1, 9.1</span></div>
+                        <div class="io-item-example">Example: Risk Assessment - Data Scientists (Responsible for execution), AI Ethics Officer (Accountable for approval), Legal (Consulted on compliance), CISO (Informed on security risks), Business Unit Head (Informed on decisions).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. AI governance structure <span class="cross-ref">→ to 9.3</span></div>
+                        <div class="io-item-example">Example: Three-tier structure: (1) Board AI Committee (quarterly, strategic oversight, budget approval), (2) AI Steering Committee (monthly, portfolio management, policy updates), (3) AI Ethics Review Board (weekly, case-by-case reviews, deployment approvals).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Role descriptions & authorities <span class="cross-ref">→ to 7.2</span></div>
+                        <div class="io-item-example">Example: Chief AI Officer: Authority to halt high-risk AI deployments pending review, approve AI investments >$500K, veto power on sensitive use cases (facial recognition, employee monitoring), represent company to regulators, sign-off on external AI audits.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clause 6: Planning -->
+    <div class="clause-section">
+        <div class="clause-title">6. Planning</div>
+        
+        <div class="sub-clause">
+            <div class="sub-clause-title">6.1.2 AI Risk Assessment</div>
+            <div class="io-container">
+                <div class="inputs">
+                    <div class="io-title"><span class="icon">📥</span>Inputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Context & stakeholder requirements <span class="cross-ref">from 4.1, 4.2</span></div>
+                        <div class="io-item-example">Example: Operating in healthcare with vulnerable populations (elderly, children, disabled) informs higher risk sensitivity. Patient advocacy groups' concerns about diagnostic AI errors influences risk criteria (patient harm severity weighted heavily).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. AI system specifications & use case</div>
+                        <div class="io-item-example">Example: Automated loan approval system: processes 10,000 applications daily, 95% fully automated (no human review), average loan value €500K, affects credit access for families and small businesses, operates across 5 EU countries.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Historical data & incident reports</div>
+                        <div class="io-item-example">Example: Industry reports show facial recognition has 35% higher error rates for darker skin tones, competitor faced €5M fine for discriminatory credit algorithm, internal near-miss: fraud detection false positive almost blocked legitimate large transaction.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">4. Legal obligations <span class="cross-ref">from 4.2</span></div>
+                        <div class="io-item-example">Example: EU AI Act classifies automated credit scoring as high-risk AI, GDPR requires DPIA for automated profiling, national equal credit laws mandate fairness across protected groups, financial regulations require explainability for adverse decisions.</div>
+                    </div>
+                </div>
+                <div class="outputs">
+                    <div class="io-title"><span class="icon">📤</span>Outputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. AI risk register <span class="cross-ref">→ to 6.1.3, 6.2.2, Annex A</span></div>
+                        <div class="io-item-example">Example: Portfolio risk register documenting 37 identified risks: Discriminatory outcomes (HIGH - likelihood: medium, impact: severe), Data poisoning attacks (MEDIUM), Model drift degrading performance (MEDIUM), Privacy breaches (HIGH), Adversarial attacks (MEDIUM), Vendor dependency (LOW).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Risk assessment reports per AI system <span class="cross-ref">→ to 8.2, 9.1.2</span></div>
+                        <div class="io-item-example">Example: Credit Scoring AI Risk Assessment: Overall risk: HIGH. Key risks: (1) Discrimination - protected groups (HIGH), (2) Financial harm from errors (HIGH), (3) Limited explainability (MEDIUM), (4) Data quality dependency (MEDIUM). Requires: bias testing, human oversight, monitoring, regular audits.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Risk treatment priorities <span class="cross-ref">→ to 6.1.3</span></div>
+                        <div class="io-item-example">Example: Priority 1 (Immediate): Address demonstrated bias in hiring AI (reputational + legal risk + ethical concern). Priority 2 (Q1): Implement comprehensive model monitoring for fraud detection (operational + financial risk). Priority 3 (Q2): Enhance chatbot privacy controls.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-clause">
+            <div class="sub-clause-title">6.1.3 AI Risk Treatment</div>
+            <div class="io-container">
+                <div class="inputs">
+                    <div class="io-title"><span class="icon">📥</span>Inputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Risk assessment results <span class="cross-ref">from 6.1.2</span></div>
+                        <div class="io-item-example">Example: Hiring AI assessed HIGH discrimination risk (likelihood: medium, impact: severe including legal penalties up to €10M, reputational damage, loss of diverse talent, lawsuits from rejected candidates).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Control objectives from Annex A</div>
+                        <div class="io-item-example">Example: Applicable controls for hiring AI: A.2.2 (Impact assessment), A.3.2 (Data quality), A.5.2 (Bias identification), A.6.3 (Human oversight), A.7.4 (Performance monitoring), A.9.1 (Data governance).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Available resources <span class="cross-ref">from 7.1</span></div>
+                        <div class="io-item-example">Example: Approved budget: €200K for fairness testing tools and services, 2 FTE dedicated to bias auditing, access to diverse demographic test datasets, external bias audit consultants (€80K contract), legal review capacity.</div>
+                    </div>
+                </div>
+                <div class="outputs">
+                    <div class="io-title"><span class="icon">📤</span>Outputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Risk treatment plan <span class="cross-ref">→ to 6.2, 8.1</span></div>
+                        <div class="io-item-example">Example: Hiring AI Treatment Plan: (1) Pre-deployment: Comprehensive bias testing across demographics (2 weeks), (2) Design change: Remove proxy variables (gender-associated fields), (3) Process: Human review for all rejections (ongoing), (4) Monitoring: Quarterly fairness audits, (5) Data: Augment training data with underrepresented groups.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Selected Annex A controls <span class="cross-ref">→ to Annex A, 8.1</span></div>
+                        <div class="io-item-example">Example: Implementing 12 controls including: A.5.2 (bias identification & mitigation), A.6.3 (human oversight mechanisms), A.7.4 (continuous performance monitoring), A.9.1 (data quality management), A.2.2 (impact assessment), A.10.3 (incident management).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Statement of Applicability (SoA) <span class="cross-ref">→ to 7.5, 9.2</span></div>
+                        <div class="io-item-example">Example: 39 of 42 Annex A controls selected as applicable. Excluded: A.8.6 (AI for vulnerability discovery - not in our scope), A.10.5 (AI in third-party systems - we don't provide AI to others), A.4.7 (Specific medical AI controls - not healthcare provider).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">4. Residual risk documentation <span class="cross-ref">→ to 9.3</span></div>
+                        <div class="io-item-example">Example: After implementing all planned controls, residual discrimination risk reduced to LOW (from HIGH). Management accepts remaining 5% potential for unconscious bias in edge cases, with commitment to quarterly monitoring and immediate remediation if detected.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-clause">
+            <div class="sub-clause-title">6.2 AI Objectives and Planning to Achieve Them</div>
+            <div class="io-container">
+                <div class="inputs">
+                    <div class="io-title"><span class="icon">📥</span>Inputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. AI Policy commitments <span class="cross-ref">from 5.2</span></div>
+                        <div class="io-item-example">Example: Policy commits to "achieve measurable fairness across all protected groups," "100% explainability for high-risk decisions," "annual external ethics audits," "transparent public reporting on AI impacts."</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Risk treatment plans <span class="cross-ref">from 6.1.3</span></div>
+                        <div class="io-item-example">Example: Need to address 15 identified high-priority risks drives objectives like "reduce demographic parity difference to <5% within 12 months" and "implement automated bias detection in CI/CD pipeline by Q2."</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Stakeholder requirements <span class="cross-ref">from 4.2</span></div>
+                        <div class="io-item-example">Example: Regulator mandates annual external AI audit, customers demand real-time explanations for credit decisions, employees need quarterly AI ethics training, board requires monthly AI risk dashboard.</div>
+                    </div>
+                </div>
+                <div class="outputs">
+                    <div class="io-title"><span class="icon">📤</span>Outputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. AI objectives (documented & measurable) <span class="cross-ref">→ to 7.5, 9.1.1, 9.3</span></div>
+                        <div class="io-item-example">Example: FY2024 Objectives: (1) Zero critical AI incidents (target: 0, current: 2 last year), (2) 95% staff AI ethics training completion (current: 78%), (3) Fairness metrics within tolerance for ALL high-risk AI by Dec 31 (current: 85%), (4) External audit score >90% (baseline: 82%).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Action plans with timelines & responsibilities <span class="cross-ref">→ to 8.1</span></div>
+                        <div class="io-item-example">Example: Q1: Deploy bias testing platform (Owner: ML Team Lead, Budget: €50K). Q2: Complete fairness audits on 23 systems (Owner: AI Ethics Officer, 3 FTE). Q3: Remediate all findings (Owners: Product Teams). Q4: External certification audit (Owner: Compliance).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Performance indicators (KPIs) <span class="cross-ref">→ to 9.1.1</span></div>
+                        <div class="io-item-example">Example: Monthly tracking: % AI systems with current risk assessments (target: 100%), mean time to incident resolution (target: <72h), fairness metric scores by demographic, audit findings closure rate (target: >90% within 30 days), training completion rate.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clause 7, 8, 9 -->
+    <div class="clause-section">
+        <div class="clause-title">7. Support / 8. Operation / 9. Performance Evaluation</div>
+        <div class="note">
+            <strong>Key Sub-Clauses Summary:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li><strong>7.2 Competence:</strong> Inputs: Role requirements, skill gaps. Outputs: Training programs, competency assessments, certification records.</li>
+                <li><strong>7.4 Communication:</strong> Inputs: Stakeholder needs, policy requirements. Outputs: Communication plans, transparency reports, user disclosures.</li>
+                <li><strong>7.5 Documented Information:</strong> Inputs: All AIMS outputs. Outputs: Document repository, templates, version control, audit trails.</li>
+                <li><strong>8.1 Operational Planning:</strong> Inputs: Risk plans, objectives. Outputs: Procedures, process controls, change management.</li>
+                <li><strong>8.2 AI System Design:</strong> Inputs: Requirements, risks, controls. Outputs: Design docs, model cards, validation plans, deployed systems.</li>
+                <li><strong>8.3 Suppliers:</strong> Inputs: Vendor AI, risk assessments. Outputs: Supplier criteria, contracts, assessments, monitoring plans.</li>
+                <li><strong>9.1.1 Monitoring:</strong> Inputs: Objectives, KPIs. Outputs: Dashboards, metrics, trend analysis, compliance reports.</li>
+                <li><strong>9.1.2 Impact Assessment:</strong> Inputs: System design, risks, monitoring data. Outputs: Impact reports, mitigation measures, monitoring requirements.</li>
+                <li><strong>9.2 Internal Audit:</strong> Inputs: AIMS scope, SoA, previous findings. Outputs: Audit reports, non-conformities, corrective actions.</li>
+                <li><strong>9.3 Management Review:</strong> Inputs: Performance data, audits, stakeholder feedback. Outputs: AIMS effectiveness conclusions, improvement decisions, resource allocations.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Clause 10 & Annex A -->
+    <div class="clause-section">
+        <div class="clause-title">10. Improvement & Annex A Examples</div>
+        
+        <div class="sub-clause">
+            <div class="sub-clause-title">10.1 Nonconformity and Corrective Action</div>
+            <div class="io-container">
+                <div class="inputs">
+                    <div class="io-title"><span class="icon">📥</span>Inputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Non-conformities from audits <span class="cross-ref">from 9.2</span></div>
+                        <div class="io-item-example">Example: Hiring AI deployed without completed impact assessment, bias testing not performed quarterly as required, training records incomplete for 15 staff members.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Incidents & near-misses <span class="cross-ref">from 9.1.2</span></div>
+                        <div class="io-item-example">Example: Loan approval AI discriminated against elderly applicants - root cause: training data skewed toward younger demographics (75% under 45), lack of age-based fairness testing, no monitoring alerts configured.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Performance monitoring gaps <span class="cross-ref">from 9.1.1</span></div>
+                        <div class="io-item-example">Example: Fairness metrics breached for 2 months before detection because monitoring dashboard not reviewed regularly, alert thresholds set incorrectly, responsible team member on extended leave without backup.</div>
+                    </div>
+                </div>
+                <div class="outputs">
+                    <div class="io-title"><span class="icon">📤</span>Outputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Root cause analysis reports <span class="cross-ref">→ to 7.5</span></div>
+                        <div class="io-item-example">Example: Loan Discrimination RCA: Root causes identified: (1) Unrepresentative training data (age bias), (2) No age-based fairness testing pre-deployment, (3) Inadequate monitoring configuration, (4) Unclear process ownership, (5) Insufficient competency in fairness testing.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Corrective action plans <span class="cross-ref">→ to 6.2, 7.5</span></div>
+                        <div class="io-item-example">Example: Immediate (Week 1): Suspend model, manual review all decisions from past 6 months, notify affected applicants. Short-term (Month 1-2): Retrain model with balanced age distribution, implement age fairness testing. Long-term (Quarter): Automated fairness gates in all ML pipelines.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Lessons learned documentation <span class="cross-ref">→ to 7.2, 7.3</span></div>
+                        <div class="io-item-example">Example: Case study created: "Loan AI Age Discrimination Incident" documenting timeline, impact (200 unfairly rejected applications), cost (€150K remediation + €50K legal), root causes, corrective actions, prevention measures. Used in mandatory training for all AI teams.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">4. Process improvements <span class="cross-ref">→ to 8.1, 10.2</span></div>
+                        <div class="io-item-example">Example: Enhanced processes: Added mandatory fairness testing stage-gate (all protected characteristics), automated bias testing in CI/CD (prevents deployment if fails), improved incident escalation (automated alerts to ethics team), enhanced documentation templates with fairness checklist.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-clause">
+            <div class="sub-clause-title">Annex A.5.2 - Bias Identification and Documentation (Example)</div>
+            <div class="io-container">
+                <div class="inputs">
+                    <div class="io-title"><span class="icon">📥</span>Inputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. AI system & training data <span class="cross-ref">from 8.2</span></div>
+                        <div class="io-item-example">Example: Facial recognition system trained on 100,000 images for access control - need to assess demographic representation in training data, potential annotation biases, fairness across age/race/gender groups.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Protected characteristics <span class="cross-ref">from 4.2</span></div>
+                        <div class="io-item-example">Example: Applicable protected groups based on legal requirements and stakeholder concerns: race/ethnicity, gender, age, disability status, religion (visible characteristics like headwear), skin tone.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Fairness metrics definition</div>
+                        <div class="io-item-example">Example: Selected fairness metrics: (1) Demographic parity (equal recognition rate across groups), (2) Equalized odds (equal true/false positive rates), (3) Individual fairness (similar accuracy for similar individuals), (4) Calibration (confidence scores meaningful across groups).</div>
+                    </div>
+                </div>
+                <div class="outputs">
+                    <div class="io-title"><span class="icon">📤</span>Outputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Bias assessment report <span class="cross-ref">→ to 7.5, 9.1.2</span></div>
+                        <div class="io-item-example">Example: Findings: Overall accuracy 95% but varies significantly: 97% for lighter skin (types I-III), 87% for darker skin (types IV-VI). Gender parity difference: 12% (favoring male faces). Age bias: 8% lower accuracy for 65+ years. Training data: 70% lighter skin tones, 60% male, 80% ages 25-50.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Root causes identified <span class="cross-ref">→ to 6.1.3, 10.1</span></div>
+                        <div class="io-item-example">Example: Root causes: (1) Training dataset unrepresentative (over-samples young, light-skinned, male faces), (2) Annotation quality varies by demographic (fewer training examples for minorities led to lower-quality labels), (3) Algorithm architecture optimized for majority group performance metrics.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Bias mitigation plan <span class="cross-ref">→ to 8.2, 10.1</span></div>
+                        <div class="io-item-example">Example: Mitigation strategies: (1) Collect 20,000 additional diverse images (focus on underrepresented groups), (2) Apply data augmentation techniques, (3) Use fairness-constrained training algorithms, (4) Implement group-specific confidence thresholds, (5) Add human review for low-confidence predictions, (6) Regular fairness audits.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">4. Ongoing monitoring plan <span class="cross-ref">→ to 9.1.1</span></div>
+                        <div class="io-item-example">Example: Monthly fairness metrics tracking per demographic group (race, gender, age), automated alerts if any group's accuracy drops >5% below average, quarterly comprehensive fairness audits by independent team, semi-annual external bias audit, public annual fairness report.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-clause">
+            <div class="sub-clause-title">Annex A.6.3 - Human Oversight and Decision-Making (Example)</div>
+            <div class="io-container">
+                <div class="inputs">
+                    <div class="io-title"><span class="icon">📥</span>Inputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Risk assessment <span class="cross-ref">from 6.1.2</span></div>
+                        <div class="io-item-example">Example: Autonomous vehicle AI classified CRITICAL risk (life-safety implications) requires robust human oversight mechanisms for: system failures, edge cases, ethical dilemmas (trolley problem scenarios), handover to human driver, emergency interventions.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Legal requirements <span class="cross-ref">from 4.2</span></div>
+                        <div class="io-item-example">Example: EU AI Act mandates meaningful human oversight for high-risk AI with ability to interpret outputs and intervene. GDPR Article 22 grants right to human review of automated decisions. Employment law requires human involvement in hiring/firing decisions.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. AI limitations & edge cases <span class="cross-ref">from 8.2</span></div>
+                        <div class="io-item-example">Example: Credit scoring AI performs well for standard cases (95% accuracy) but struggles with: non-traditional income sources (gig economy), recent immigrants (no credit history), self-employed individuals (variable income), unique circumstances requiring human judgment - these cases need human review.</div>
+                    </div>
+                </div>
+                <div class="outputs">
+                    <div class="io-title"><span class="icon">📤</span>Outputs</div>
+                    <div class="io-item">
+                        <div class="io-item-title">1. Human oversight framework <span class="cross-ref">→ to 8.1, 8.2</span></div>
+                        <div class="io-item-example">Example: Multi-layered oversight: (1) Real-time monitoring dashboard - Level 1 operators (24/7), (2) Human review queue for flagged cases - Level 2 specialists (all adverse decisions, low confidence scores, edge cases), (3) Escalation path - Level 3 senior reviewer + AI ethics team (complex cases, policy questions, incidents).</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">2. Human-in-the-loop procedures <span class="cross-ref">→ to 8.1</span></div>
+                        <div class="io-item-example">Example: Loan decisions: AI provides recommendation + explanation + confidence score. Human reviewer: (1) Must review all rejections >€50K, (2) Can override with documented justification, (3) Has access to full application and AI reasoning, (4) Can request additional information, (5) Decision logged. Override analysis conducted monthly to identify patterns.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">3. Override mechanisms & authority <span class="cross-ref">→ to 5.3</span></div>
+                        <div class="io-item-example">Example: Credit officers authorized to override any AI decision. Must select override reason from 15 categories (e.g., "AI missed relevant context," "Extenuating circumstances," "Data quality issue," "Fairness concern"). All overrides logged in system, patterns analyzed quarterly, significant patterns trigger model review or retraining.</div>
+                    </div>
+                    <div class="io-item">
+                        <div class="io-item-title">4. Competence requirements <span class="cross-ref">→ to 7.2</span></div>
+                        <div class="io-item-example">Example: Human reviewers must complete: (1) AI Literacy (8h) - understand ML basics, limitations, (2) Model-Specific Training (16h) - this AI system's logic, (3) Bias Awareness (4h) - recognize discriminatory patterns, (4) Decision-Making Ethics (8h) - ethical frameworks, (5) Annual recertification. Performance assessed quarterly through case reviews.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="clause-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-left: none;">
+        <div class="clause-title" style="color: white;">🎯 Key Takeaways</div>
+        <div style="padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 20px;">
+            <h3 style="margin-top: 0; color: white;">Understanding ISO/IEC 42001 Inputs & Outputs</h3>
+            
+            <div style="margin: 20px 0;">
+                <h4 style="color: white; margin-bottom: 10px;">🔄 Interconnected System</h4>
+                <p>Outputs from one sub-clause typically become inputs to others, creating an integrated AI management system:</p>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li><strong>Context (4.1)</strong> → feeds into → <strong>Stakeholder Analysis (4.2)</strong> → which informs → <strong>Scope (4.3)</strong> and <strong>Risk Assessment (6.1.2)</strong></li>
+                    <li><strong>Risk Assessment (6.1.2)</strong> → drives → <strong>Risk Treatment (6.1.3)</strong> → which defines → <strong>Operational Controls (8.1)</strong> and <strong>Monitoring (9.1)</strong></li>
+                    <li><strong>Monitoring Results (9.1.1)</strong> → inform → <strong>Management Review (9.3)</strong> → which drives → <strong>Continual Improvement (10.1, 10.2)</strong></li>
+                </ul>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h4 style="color: white; margin-bottom: 10px;">📋 Document Everything</h4>
+                <p>ISO 42001 requires documented information (7.5) for most outputs. This creates an audit trail demonstrating:</p>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Compliance with legal and regulatory requirements</li>
+                    <li>Systematic approach to AI risk management</li>
+                    <li>Continual improvement over time</li>
+                    <li>Accountability and transparency to stakeholders</li>
+                </ul>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h4 style="color: white; margin-bottom: 10px;">🎛️ Annex A Controls</h4>
+                <p>The 42 controls in Annex A provide specific implementation guidance across 10 categories:</p>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Organizations select applicable controls based on risk assessment (6.1.3)</li>
+                    <li>Document selection decisions in Statement of Applicability (SoA)</li>
+                    <li>Controls cover: governance, data, models, transparency, human oversight, monitoring, security, third parties, etc.</li>
+                </ul>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h4 style="color: white; margin-bottom: 10px;">🌍 Real-World Implementation</h4>
+                <p>Success requires translating generic requirements into context-specific practices:</p>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li><strong>Healthcare:</strong> Emphasis on patient safety, clinical validation, medical device regulations</li>
+                    <li><strong>Financial Services:</strong> Focus on fairness, explainability, regulatory reporting, fraud prevention</li>
+                    <li><strong>Retail/E-commerce:</strong> Customer privacy, personalization ethics, algorithmic transparency</li>
+                    <li><strong>Manufacturing:</strong> Safety-critical AI, quality control, supply chain optimization</li>
+                </ul>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h4 style="color: white; margin-bottom: 10px;">💡 Implementation Tips</h4>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Start with context and stakeholder analysis - foundation for everything else</li>
+                    <li>Risk assessment drives control selection - not all controls apply to all systems</li>
+                    <li>Document as you go - retroactive documentation is painful and error-prone</li>
+                    <li>Integrate into existing processes - don't create parallel bureaucracy</li>
+                    <li>Focus on high-risk AI systems first - can't do everything at once</li>
+                    <li>Engage stakeholders early and often - prevents costly late-stage changes</li>
+                    <li>Treat as journey not destination - continual improvement is the goal</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Note -->
+    <div style="text-align: center; margin-top: 40px; padding: 25px; background: #f8f9fa; border-radius: 10px; border: 2px solid #667eea;">
+        <h3 style="color: #667eea; margin-top: 0;">ISO/IEC 42001:2023</h3>
+        <p style="font-size: 1.1em; color: #333; margin: 15px 0;"><strong>Information Technology — Artificial Intelligence — Management System</strong></p>
+        <p style="font-size: 0.95em; color: #666; margin: 10px 0; line-height: 1.6;">
+            This visualization provides educational guidance on typical inputs and outputs for each sub-clause of ISO/IEC 42001.<br>
+            The real-world examples are illustrative and should be adapted to your specific organizational context, industry, and AI use cases.<br>
+            <strong>Always refer to the official ISO/IEC 42001:2023 standard for authoritative requirements.</strong>
+        </p>
+        <p style="font-size: 0.85em; color: #999; margin-top: 20px;">
+            Created for learning and implementation planning purposes | Not a substitute for professional certification guidance or legal advice
+        </p>
+    </div>
+
+</body>
+</html>
